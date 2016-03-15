@@ -79,8 +79,11 @@ private:
 	QAction*		m_actionQuit;
 	QAction*		m_actionThreshold;
 	QAction*		m_actionContrast ;
-    
     QAction*        m_actionQuantization;
+    
+    //groupbox
+    QGroupBox*      m_groupBoxMode;
+    QGroupBox*      m_groupBoxDisplay;
 
 	// homework objects
 	ImageFilter*		m_imageFilterType[MAXFILTERS];

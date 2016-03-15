@@ -110,6 +110,8 @@ MainWindow::createMenus()
 	m_menuPtOps->addAction(m_actionContrast );
     
     m_menuPtOps->addAction(m_actionQuantization);
+    
+    m_menuPtOps->setEnabled(false);
 }
 
 
@@ -268,7 +270,7 @@ QGroupBox*
 MainWindow::createDisplayButtons()
 {
 	// init group box
-	QGroupBox *groupBox = new QGroupBox("Display");
+	m_groupBoxDisplay = new QGroupBox("Display");
 
 	// create radio buttons
 	m_radioDisplay[0] = new QRadioButton("Input");
@@ -291,13 +293,15 @@ MainWindow::createDisplayButtons()
 	vbox->addWidget(m_radioDisplay[0]);
 	vbox->addWidget(m_radioDisplay[1]);
 	vbox->addWidget(m_checkboxHisto);
-	groupBox->setLayout(vbox);
+	m_groupBoxDisplay->setLayout(vbox);
 
 	// init signal/slot connections
 	connect(m_radioDisplay[0], SIGNAL(clicked()), this, SLOT(displayIn()));
 	connect(m_radioDisplay[1], SIGNAL(clicked()), this, SLOT(displayOut()));
+    
+    m_groupBoxDisplay->setEnabled(false);
 
-	return groupBox;
+	return m_groupBoxDisplay;
 }
 
 
@@ -311,7 +315,7 @@ QGroupBox*
 MainWindow::createModeButtons()
 {
 	// init group box
-	QGroupBox *groupBox = new QGroupBox("Mode");
+	m_groupBoxMode = new QGroupBox("Mode");
 
 	// create radio buttons
 	m_radioMode[0] = new QRadioButton("RGB");
@@ -330,13 +334,15 @@ MainWindow::createModeButtons()
 	vbox->addWidget(m_radioMode[0]);
 	vbox->addWidget(m_radioMode[1]);
 	vbox->addWidget(m_radioMode[1]);	// redundant radiobutton won't display; placeholder
-	groupBox->setLayout(vbox);
+	m_groupBoxMode->setLayout(vbox);
 
 	// init signal/slot connections
 	connect(m_radioMode[0], SIGNAL(clicked()), this, SLOT(modeRGB ()));
 	connect(m_radioMode[1], SIGNAL(clicked()), this, SLOT(modeGray()));
+    
+    m_groupBoxMode->setEnabled(false);
 
-	return groupBox;
+	return m_groupBoxMode;
 }
 
 
@@ -436,6 +442,12 @@ MainWindow::open() {
 	// init vars
 	m_width  = m_imageSrc->width ();
 	m_height = m_imageSrc->height();
+    
+    
+    m_groupBoxDisplay->setEnabled(true);
+    m_groupBoxMode->setEnabled(true);
+    m_menuPtOps->setEnabled(true);
+    
 	preview();
 }
 
