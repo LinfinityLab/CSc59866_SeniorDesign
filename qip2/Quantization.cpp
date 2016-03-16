@@ -37,13 +37,13 @@ Quantization::applyFilter(ImagePtr I1, ImagePtr I2)
     // get threshold value
     int qtz = m_slider->value();
     
-    int if_d = m_checkBox->checkState();
+    int ditherState = m_checkBox->checkState();
     
     // error checking
     if(qtz < 0 || qtz > MXGRAY) return 0;
     
     // apply filter
-    quantization(I1, qtz, if_d, I2);
+    quantization(I1, qtz, ditherState, I2);
     
     return 1;
 }
@@ -75,14 +75,14 @@ Quantization::controlPanel()
     m_slider->setTickInterval(25);
     m_slider->setMinimum(1);
     m_slider->setMaximum(MXGRAY);
-    m_slider->setValue  (MXGRAY>>1);
+    m_slider->setValue  (4);
 
     
     // create spinbox
     m_spinBox = new QSpinBox(m_ctrlGrp);
     m_spinBox->setMinimum(1);
     m_spinBox->setMaximum(MXGRAY);
-    m_spinBox->setValue  (MXGRAY>>1);
+    m_spinBox->setValue  (4);
 
     
     // create checkbox
@@ -135,9 +135,9 @@ Quantization::changeQtz(int qtz)
 }
 
 void
-Quantization::changeDtr(int if_d)
+Quantization::changeDtr(int ditherState)
 {
-    qDebug() << "dither " << if_d;
+    qDebug() << "dither " << ditherState;
     applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
     
     // display output
@@ -147,7 +147,7 @@ Quantization::changeDtr(int if_d)
 
 //
 void
-Quantization::quantization(ImagePtr I1, int qtz, int if_d, ImagePtr I2) {
+Quantization::quantization(ImagePtr I1, int qtz, int ditherState, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
     int h = I1->height();
@@ -159,21 +159,32 @@ Quantization::quantization(ImagePtr I1, int qtz, int if_d, ImagePtr I2) {
     int scale = MXGRAY / levels;
     double bias = scale/2.0;
 
-    // if diter checkbox is unchecked
-    if (if_d == 0) {
-        for(i=0; i<MXGRAY; i++) lut[i] = int(scale * (i/scale) + bias);
-        
-        int type;
-        ChannelPtr<uchar> p1, p2, endd;
+    for(i=0; i<MXGRAY; i++) lut[i] = CLIP(int(scale * (i/scale) + bias), 0, 255);
+    
+    int type;
+    ChannelPtr<uchar> p1, p2, endd;
+    if (ditherState == 0){
         for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
             IP_getChannel(I2, ch, p2, type);
             for(endd = p1 + total; p1<endd;) *p2++ = lut[*p1++];
         }
+    
+    // if dither checkbox is checked
+    } else if (ditherState == 2) {
+        qDebug() << "dither " << ditherState;
         
-    }
-    // if diter checkbox is checked
-    if (if_d == 2) {
-        qDebug() << "dither " << if_d;
+        int pixelPoint = 0;
+        int k;
+        for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
+            IP_getChannel(I2, ch, p2, type);
+            for(endd = p1 + total; p1<endd; p1++, pixelPoint++) {
+                if (pixelPoint % 2 == 0)
+                    k = CLIP(*p1 + (rand() % (int) bias), 0, 255);
+                else
+                    k = CLIP(*p1 - (rand() % (int) bias), 0, 255);
+                *p2++ = lut[k];
+            }
+        }
     }
 
 }
@@ -187,6 +198,6 @@ Quantization::quantization(ImagePtr I1, int qtz, int if_d, ImagePtr I2) {
 //
 void
 Quantization::reset() {
-    changeQtz(128);
+    changeQtz(4);
     changeDtr(0);
 }
