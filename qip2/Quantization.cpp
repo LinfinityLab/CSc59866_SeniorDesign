@@ -38,7 +38,7 @@ Quantization::applyFilter(ImagePtr I1, ImagePtr I2)
     int qtz = m_slider->value();
     
     int ditherState = m_checkBox->checkState();
-    
+//    bool isDither = m_checkBox->ischecked();
     // error checking
     if(qtz < 0 || qtz > MXGRAY) return 0;
     

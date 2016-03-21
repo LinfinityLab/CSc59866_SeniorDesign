@@ -80,6 +80,7 @@ private:
 	QAction*		m_actionThreshold;
 	QAction*		m_actionContrast ;
     QAction*        m_actionQuantization;
+    QAction*        m_actionIntensity;
     
     //groupbox
     QGroupBox*      m_groupBoxMode;
