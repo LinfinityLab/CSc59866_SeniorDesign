@@ -1,34 +1,35 @@
 //
-//  Intensity.h
+//  HistogramStretch.h
 //  qip
 //
 //  Created by Weifan Lin on 3/17/16.
 //
 //
 
-#ifndef Intensity_h
-#define Intensity_h
+#ifndef HistogramStretch_h
+#define HistogramStretch_h
 
 #include "ImageFilter.h"
 
 #define DEFAULTMAX	255
 #define DEFAULTMIN	0
-class Intensity : public ImageFilter {
+class HistogramStretch : public ImageFilter {
     Q_OBJECT
     
 public:
-    Intensity   (QWidget *parent = 0);		// constructor
+    HistogramStretch   (QWidget *parent = 0);		// constructor
     QGroupBox*	controlPanel	();		// create control panel
     bool		applyFilter(ImagePtr, ImagePtr);// apply filter to input to init output
     void		reset		();		// reset parameters
     
 protected:
-    void intensity(ImagePtr I1, int min, int max, ImagePtr I2);
+    void stretch(ImagePtr I1, int min, int max, ImagePtr I2);
     
     protected slots:
     void changeMin (int);
     void changeMax (int);
-    void changeAuto(int);
+    void autoMin   (int);
+    void autoMax   (int);
     void autoSliderAndSpinBox(QSlider*, QSpinBox*, int);
     
 private:
@@ -39,7 +40,8 @@ private:
     QSpinBox	*m_spinBoxMin;	// stretch spin boxes
     QSpinBox	*m_spinBoxMax;	// stretch spin boxes
 
-    QCheckBox   *m_checkBox;
+    QCheckBox   *m_checkBoxMin;
+    QCheckBox   *m_checkBoxMax;
     
     
     // widgets and groupbox
@@ -49,4 +51,4 @@ private:
 
 
 
-#endif /* Intensity_h */
+#endif /* HistogramStretch_h */
