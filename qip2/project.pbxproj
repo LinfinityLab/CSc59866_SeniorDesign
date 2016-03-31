@@ -13,278 +13,389 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			name = "Qt Qmake";
 			shellPath = "/bin/sh";
-			shellScript = "make -C /Users/Linfinity/Downloads/qip2 -f qt_makeqmake.mak";
+			shellScript = "make -C /Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -f qt_makeqmake.mak";
 			showEnvVarsInLog = "0";
 		};
-		09195F792337B028602AECED = {
+		2E43057034156F5AD5E6DAFC = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/main.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/main.cpp";
 			name = "main.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		EA3D55A6D5135D7982AC31C0 = {
-			fileRef = "09195F792337B028602AECED";
+		5D5AC45635C248F1B42D92DE = {
+			fileRef = "2E43057034156F5AD5E6DAFC";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		254CD2A1D3DBCEE2DC248062 = {
+		1B8F26F7030BB9CCA914120D = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/MainWindow.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/MainWindow.cpp";
 			name = "MainWindow.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		915D61F2FA99068752348A94 = {
-			fileRef = "254CD2A1D3DBCEE2DC248062";
+		F67652C4B7FC9D4FE4202B7A = {
+			fileRef = "1B8F26F7030BB9CCA914120D";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		70CF3C3514691BFCD68EAF01 = {
+		29D2DBCDD7DD9155FF0566A3 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/ImageFilter.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/ImageFilter.cpp";
 			name = "ImageFilter.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		34940646C8FE96F5A8CE4912 = {
-			fileRef = "70CF3C3514691BFCD68EAF01";
+		BE20AD155C0626638A151161 = {
+			fileRef = "29D2DBCDD7DD9155FF0566A3";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		6D0295B51949216695B7E51F = {
+		C6F09B3E76BC0A9BFF884B9A = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/qcustomplot.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/qcustomplot.cpp";
 			name = "qcustomplot.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		F7519A7CAB087AEC23AA1AE2 = {
-			fileRef = "6D0295B51949216695B7E51F";
+		642EBD7D25BE6E135FD9224A = {
+			fileRef = "C6F09B3E76BC0A9BFF884B9A";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		48C8E2369148D9EEF83A4D50 = {
+		821B56EE1DE12326F174214B = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Dummy.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Dummy.cpp";
 			name = "Dummy.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		B5915EED2C7C62356126C349 = {
-			fileRef = "48C8E2369148D9EEF83A4D50";
+		9EE8D38042254EFB7C704F54 = {
+			fileRef = "821B56EE1DE12326F174214B";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		922BB712C4373FCC49D5155F = {
+		2A63B61AEEFABD76319815F0 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Threshold.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Threshold.cpp";
 			name = "Threshold.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		96DCE844353D28EBCA7BAA78 = {
-			fileRef = "922BB712C4373FCC49D5155F";
+		08DA71CDF682D6B1BFC40841 = {
+			fileRef = "2A63B61AEEFABD76319815F0";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		883D9729F9D78EDDA4A091F9 = {
+		35A50E2211B660E7C47DC7AB = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Contrast.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Contrast.cpp";
 			name = "Contrast.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		FACB945410E63CB00459A97B = {
-			fileRef = "883D9729F9D78EDDA4A091F9";
+		30998289E10FE7B8C71A807F = {
+			fileRef = "35A50E2211B660E7C47DC7AB";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		E275F493AEA50871BE82CABF = {
+		D1001E37DCC1610277D3D316 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Quantization.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Quantization.cpp";
 			name = "Quantization.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		FC382773D716AD5E4F7DCFB5 = {
-			fileRef = "E275F493AEA50871BE82CABF";
+		C129DFC03BBEBCC25EEAE0E6 = {
+			fileRef = "D1001E37DCC1610277D3D316";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		04F8F8495C6FE4BB5EE34C99 = {
+		60AE6DA01829743E83487572 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/moc/moc_MainWindow.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/HistogramStretch.cpp";
+			name = "HistogramStretch.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		4B217E30B3DBFE88A1FE5796 = {
+			fileRef = "60AE6DA01829743E83487572";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		6AEA7152A3C0641853D47299 = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/HistogramMatch.cpp";
+			name = "HistogramMatch.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		1385E4D2A397273F58D757AA = {
+			fileRef = "6AEA7152A3C0641853D47299";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		8ADC7C0ED1FD686D97CBEA24 = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/ErrorDiffusion.cpp";
+			name = "ErrorDiffusion.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		1BFC60661B6D68DEE2EAB1F9 = {
+			fileRef = "8ADC7C0ED1FD686D97CBEA24";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		156D39BAA6F753FA1983D585 = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_MainWindow.cpp";
 			name = "moc_MainWindow.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		7376A77CA2F76AEBCF89EAD5 = {
-			fileRef = "04F8F8495C6FE4BB5EE34C99";
+		3465B7479C0695DB9871A52D = {
+			fileRef = "156D39BAA6F753FA1983D585";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		531D69374FA21785F29C2D7D = {
+		ECABF7B64FD4190D6CC48ED2 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/moc/moc_qcustomplot.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_qcustomplot.cpp";
 			name = "moc_qcustomplot.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		1870D9FE123C2807339D2806 = {
-			fileRef = "531D69374FA21785F29C2D7D";
+		312F2583BCAEF7CC9BCCB0A4 = {
+			fileRef = "ECABF7B64FD4190D6CC48ED2";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		151568A9D9FD703FCC125FE1 = {
+		DC6095E53B4A43F5909188BF = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/moc/moc_Dummy.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_Dummy.cpp";
 			name = "moc_Dummy.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		DC1227D43C9805DB6CC831DE = {
-			fileRef = "151568A9D9FD703FCC125FE1";
+		73DC2D716C2EBCDDC2F263D6 = {
+			fileRef = "DC6095E53B4A43F5909188BF";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		FDA342391619E48E641E3184 = {
+		4912E666EAEB5DB89C5A1D77 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/moc/moc_Threshold.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_Threshold.cpp";
 			name = "moc_Threshold.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		1332BF0934F347C72873BC7C = {
-			fileRef = "FDA342391619E48E641E3184";
+		024803692F71B9B9F83DE5D6 = {
+			fileRef = "4912E666EAEB5DB89C5A1D77";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		E3FFFF4CD71F3659C354B8C6 = {
+		719F74A2BDA57E4042932F43 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/moc/moc_Contrast.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_Contrast.cpp";
 			name = "moc_Contrast.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		0F715D9F4F25FC566FADE67F = {
-			fileRef = "E3FFFF4CD71F3659C354B8C6";
+		8ABDAD2714AE100516F055C0 = {
+			fileRef = "719F74A2BDA57E4042932F43";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		67101D61A9BF6CBB40BCE5AA = {
+		5047891A52C7C36AB4475540 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/moc/moc_Quantization.cpp";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_Quantization.cpp";
 			name = "moc_Quantization.cpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.cpp.cpp";
 		};
-		15C75C2D4F4CBE1A265C312A = {
-			fileRef = "67101D61A9BF6CBB40BCE5AA";
+		D59A43F73622D08F43303B20 = {
+			fileRef = "5047891A52C7C36AB4475540";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					);
 			};
 		};
-		167C9B2A084EF9E35A4BFB3D = {
+		3AA1B48345B4A8CC6B5E0503 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/MainWindow.h";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_HistogramStretch.cpp";
+			name = "moc_HistogramStretch.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		2E09D07348B083E216D76413 = {
+			fileRef = "3AA1B48345B4A8CC6B5E0503";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		3158F3999FE1534B26AB27A5 = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_HistogramMatch.cpp";
+			name = "moc_HistogramMatch.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		E68D845F6EF766F7CCB62A52 = {
+			fileRef = "3158F3999FE1534B26AB27A5";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		3A6BE2E616A2AC2CCCD8B609 = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/moc/moc_ErrorDiffusion.cpp";
+			name = "moc_ErrorDiffusion.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		9645530B8746D702F24811B1 = {
+			fileRef = "3A6BE2E616A2AC2CCCD8B609";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		8CC6435743B0BC053D4BCD8E = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/MainWindow.h";
 			name = "MainWindow.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
-		DBA3F65EB521D1F3C08E10EB = {
+		0B8ABDBA834FDE8F3B0C8AA4 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/ImageFilter.h";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/ImageFilter.h";
 			name = "ImageFilter.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
-		C43766251A56CA5554FEAC45 = {
+		B2A375BF0D3BA8BD308F8CD7 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/qcustomplot.h";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/qcustomplot.h";
 			name = "qcustomplot.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
-		CBB468C22FE8A138BCDE0797 = {
+		73640FB84E6F2D12417360CE = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Dummy.h";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Dummy.h";
 			name = "Dummy.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
-		9BF784E1699757387955455A = {
+		0852FAB22DBF2FCC8078DD9B = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Threshold.h";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Threshold.h";
 			name = "Threshold.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
-		80D0FBB813F4BF228FAEC7D3 = {
+		68C95FB04C61857C87219A39 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Contrast.h";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Contrast.h";
 			name = "Contrast.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
-		FB132AC61965E5D632D4FCEC = {
+		F48318BA181AE33534F7D7AE = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/Quantization.h";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/Quantization.h";
 			name = "Quantization.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
-		D3D57E7A48A7B039D631FFDD = {
+		3020C9507BE8F8FDB5766B21 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/qip.pro";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/HistogramStretch.h";
+			name = "HistogramStretch.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B4CA669110940F2BA36D44EB = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/HistogramMatch.h";
+			name = "HistogramMatch.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		4826EFDBCBF17ED24822F608 = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/ErrorDiffusion.h";
+			name = "ErrorDiffusion.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B0B13AEA70351B71361E3B2C = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/qip.pro";
 			name = "qip.pro";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "text";
 		};
-		FE17BBF34C765AF7281CA394 = {
+		B4186192BA2D05F0EB4D6000 = {
 			isa = PBXFileReference;
-			path = "/Users/Linfinity/Downloads/qip2/.qmake.stash";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/.qmake.stash";
 			name = ".qmake.stash";
 			sourceTree = "<absolute>";
 		};
@@ -298,41 +409,50 @@
 		DB4B99EED9A53460A6E7DC1F = {
 			isa = PBXGroup;
 			children = (
-				"04F8F8495C6FE4BB5EE34C99",
-				"531D69374FA21785F29C2D7D",
-				"151568A9D9FD703FCC125FE1",
-				"FDA342391619E48E641E3184",
-				"E3FFFF4CD71F3659C354B8C6",
-				"67101D61A9BF6CBB40BCE5AA");
+				"156D39BAA6F753FA1983D585",
+				"ECABF7B64FD4190D6CC48ED2",
+				"DC6095E53B4A43F5909188BF",
+				"4912E666EAEB5DB89C5A1D77",
+				"719F74A2BDA57E4042932F43",
+				"5047891A52C7C36AB4475540",
+				"3AA1B48345B4A8CC6B5E0503",
+				"3158F3999FE1534B26AB27A5",
+				"3A6BE2E616A2AC2CCCD8B609");
 			name = "moc";
 			sourceTree = "<Group>";
 		};
 		2EB56BE3C2D93CDAB0C52E67 = {
 			isa = PBXGroup;
 			children = (
-				"09195F792337B028602AECED",
-				"254CD2A1D3DBCEE2DC248062",
-				"70CF3C3514691BFCD68EAF01",
-				"6D0295B51949216695B7E51F",
-				"48C8E2369148D9EEF83A4D50",
-				"922BB712C4373FCC49D5155F",
-				"883D9729F9D78EDDA4A091F9",
-				"E275F493AEA50871BE82CABF",
-				"167C9B2A084EF9E35A4BFB3D",
-				"DBA3F65EB521D1F3C08E10EB",
-				"C43766251A56CA5554FEAC45",
-				"CBB468C22FE8A138BCDE0797",
-				"9BF784E1699757387955455A",
-				"80D0FBB813F4BF228FAEC7D3",
-				"FB132AC61965E5D632D4FCEC");
+				"2E43057034156F5AD5E6DAFC",
+				"1B8F26F7030BB9CCA914120D",
+				"29D2DBCDD7DD9155FF0566A3",
+				"C6F09B3E76BC0A9BFF884B9A",
+				"821B56EE1DE12326F174214B",
+				"2A63B61AEEFABD76319815F0",
+				"35A50E2211B660E7C47DC7AB",
+				"D1001E37DCC1610277D3D316",
+				"60AE6DA01829743E83487572",
+				"6AEA7152A3C0641853D47299",
+				"8ADC7C0ED1FD686D97CBEA24",
+				"8CC6435743B0BC053D4BCD8E",
+				"0B8ABDBA834FDE8F3B0C8AA4",
+				"B2A375BF0D3BA8BD308F8CD7",
+				"73640FB84E6F2D12417360CE",
+				"0852FAB22DBF2FCC8078DD9B",
+				"68C95FB04C61857C87219A39",
+				"F48318BA181AE33534F7D7AE",
+				"3020C9507BE8F8FDB5766B21",
+				"B4CA669110940F2BA36D44EB",
+				"4826EFDBCBF17ED24822F608");
 			name = "Sources";
 			sourceTree = "<Group>";
 		};
 		74B182DB50CB5611B5C1C297 = {
 			isa = PBXGroup;
 			children = (
-				"D3D57E7A48A7B039D631FFDD",
-				"FE17BBF34C765AF7281CA394");
+				"B0B13AEA70351B71361E3B2C",
+				"B4186192BA2D05F0EB4D6000");
 			name = "Supporting Files";
 			sourceTree = "<Group>";
 		};
@@ -344,39 +464,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			name = "Qt Preprocessors";
 			shellPath = "/bin/sh";
-			shellScript = "make -C /Users/Linfinity/Downloads/qip2 -f qt_preprocess.mak";
+			shellScript = "make -C /Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -f qt_preprocess.mak";
 			showEnvVarsInLog = "0";
 		};
 		F7E50F631C51CD5B5DC0BC43 = {
 			buildActionMask = 2147483647;
 			files = (
-				"EA3D55A6D5135D7982AC31C0",
-				"915D61F2FA99068752348A94",
-				"34940646C8FE96F5A8CE4912",
-				"F7519A7CAB087AEC23AA1AE2",
-				"B5915EED2C7C62356126C349",
-				"96DCE844353D28EBCA7BAA78",
-				"FACB945410E63CB00459A97B",
-				"FC382773D716AD5E4F7DCFB5",
-				"7376A77CA2F76AEBCF89EAD5",
-				"1870D9FE123C2807339D2806",
-				"DC1227D43C9805DB6CC831DE",
-				"1332BF0934F347C72873BC7C",
-				"0F715D9F4F25FC566FADE67F",
-				"15C75C2D4F4CBE1A265C312A");
+				"5D5AC45635C248F1B42D92DE",
+				"F67652C4B7FC9D4FE4202B7A",
+				"BE20AD155C0626638A151161",
+				"642EBD7D25BE6E135FD9224A",
+				"9EE8D38042254EFB7C704F54",
+				"08DA71CDF682D6B1BFC40841",
+				"30998289E10FE7B8C71A807F",
+				"C129DFC03BBEBCC25EEAE0E6",
+				"4B217E30B3DBFE88A1FE5796",
+				"1385E4D2A397273F58D757AA",
+				"1BFC60661B6D68DEE2EAB1F9",
+				"3465B7479C0695DB9871A52D",
+				"312F2583BCAEF7CC9BCCB0A4",
+				"73DC2D716C2EBCDDC2F263D6",
+				"024803692F71B9B9F83DE5D6",
+				"8ABDAD2714AE100516F055C0",
+				"D59A43F73622D08F43303B20",
+				"2E09D07348B083E216D76413",
+				"E68D845F6EF766F7CCB62A52",
+				"9645530B8746D702F24811B1");
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 			name = "Compile Sources";
 		};
-		105717AED2C3F7AAAC8CD9FF = {
+		86C3126E4507C1F78CF479C6 = {
 			isa = PBXFileReference;
 			name = "IP_d";
-			path = "/Users/Linfinity/Downloads/qip2/IP/mac/lib/libIP_d.a";
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/lib/libIP_d.a";
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
-		F9356E78BCA1FB313FBA3B0E = {
-			fileRef = "105717AED2C3F7AAAC8CD9FF";
+		8D3DEA4E988BB98A05C24049 = {
+			fileRef = "86C3126E4507C1F78CF479C6";
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -495,7 +621,7 @@
 		};
 		AF39DD055C3EF8226FBE929D = {
 			children = (
-				"105717AED2C3F7AAAC8CD9FF",
+				"86C3126E4507C1F78CF479C6",
 				"1AD83C9A341842344D666C95",
 				"8644F0F22669C0F02FAA8A25",
 				"E1532D8C907F44807E95611E",
@@ -511,7 +637,7 @@
 		D1C883685E82D5676953459A = {
 			buildActionMask = 2147483647;
 			files = (
-				"F9356E78BCA1FB313FBA3B0E",
+				"8D3DEA4E988BB98A05C24049",
 				"BF06856FA5E244D66969D464",
 				"CF309C330937B6AD2B25C879",
 				"5B26BBA00F6538C163EB065C",
@@ -532,7 +658,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			name = "Copy Bundle Resources";
 		};
-		237D00CCB946A9EB067DCE1B = {
+		D22DBCDF4EBFB92163506BD4 = {
 			isa = PBXFileReference;
 			includeInIndex = 0;
 			explicitFileType = "wrapper.application";
@@ -541,7 +667,7 @@
 		};
 		FE0A091FDBFB3E9C31B7A1BD = {
 			children = (
-				"237D00CCB946A9EB067DCE1B");
+				"D22DBCDF4EBFB92163506BD4");
 			isa = PBXGroup;
 			name = "Products";
 			sourceTree = "<Group>";
@@ -557,7 +683,7 @@
 			name = "qip";
 			sourceTree = "<Group>";
 		};
-		52D7A7B7E0EE28357356A422 = {
+		AC76AD76C91C3A7698E28EF9 = {
 			buildPhases = (
 				"5E618435888B9D49F8540165",
 				"7EF0942E79C014DCEC8976BC");
@@ -570,18 +696,18 @@
 			productName = "Qt Preprocess";
 			name = "Qt Preprocess";
 		};
-		EB9F60F622D968564D87CD45 = {
+		3FDFCB0F01A2520BBC045CB5 = {
 			isa = PBXTargetDependency;
-			target = "52D7A7B7E0EE28357356A422";
+			target = "AC76AD76C91C3A7698E28EF9";
 		};
-		B71627C7DBFD73156F1B8E12 = {
+		D09D72385EEFC1790CBC0B0F = {
 			buildPhases = (
 				"F7E50F631C51CD5B5DC0BC43",
 				"D1C883685E82D5676953459A",
 				"30414803F31797EB689AE508");
 			dependencies = (
-				"EB9F60F622D968564D87CD45");
-			productReference = "237D00CCB946A9EB067DCE1B";
+				"3FDFCB0F01A2520BBC045CB5");
+			productReference = "D22DBCDF4EBFB92163506BD4";
 			buildConfigurationList = 6CC3B5D2136C7CD6A5CF5A59;
 			isa = PBXNativeTarget;
 			buildRules = (
@@ -604,24 +730,24 @@
 				CC = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang";
 				LDPLUSPLUS = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++";
 				INFOPLIST_FILE = "Info.plist";
-				SYMROOT = "/Users/Linfinity/Downloads/qip2";
+				SYMROOT = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2";
 				DYLIB_CURRENT_VERSION = "1.0.0";
 				DYLIB_COMPATIBILITY_VERSION = "1.0";
 				MACOSX_DEPLOYMENT_TARGET = "10.7";
 				HEADER_SEARCH_PATHS = (
 					".",
 					"IP/mac/header",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers",
 					"moc",
 					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers",
 					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/AGL.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/mkspecs/macx-clang");
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang");
 				LIBRARY_SEARCH_PATHS = (
 					"./IP/mac/lib",
-					"/Users/Linfinity/Downloads/qip2/IP/mac/lib",
+					"/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/lib",
 					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib",
 					"/System/Library/Frameworks/");
 				FRAMEWORK_SEARCH_PATHS = (
@@ -686,24 +812,24 @@
 				CC = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang";
 				LDPLUSPLUS = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++";
 				INFOPLIST_FILE = "Info.plist";
-				SYMROOT = "/Users/Linfinity/Downloads/qip2";
+				SYMROOT = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2";
 				DYLIB_CURRENT_VERSION = "1.0.0";
 				DYLIB_COMPATIBILITY_VERSION = "1.0";
 				MACOSX_DEPLOYMENT_TARGET = "10.7";
 				HEADER_SEARCH_PATHS = (
 					".",
 					"IP/mac/header",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers",
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers",
 					"moc",
 					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers",
 					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/AGL.framework/Headers",
-					"../../Qt5.5.1/5.5/clang_64/mkspecs/macx-clang");
+					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang");
 				LIBRARY_SEARCH_PATHS = (
 					"./IP/mac/lib",
-					"/Users/Linfinity/Downloads/qip2/IP/mac/lib",
+					"/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/lib",
 					"/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib",
 					"/System/Library/Frameworks/");
 				FRAMEWORK_SEARCH_PATHS = (
@@ -780,8 +906,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				"B71627C7DBFD73156F1B8E12",
-				"52D7A7B7E0EE28357356A422");
+				"D09D72385EEFC1790CBC0B0F",
+				"AC76AD76C91C3A7698E28EF9");
 			attributes = {
 				TargetAttributes = {
 				};

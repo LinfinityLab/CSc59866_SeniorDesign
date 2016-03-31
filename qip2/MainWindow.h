@@ -81,6 +81,8 @@ private:
 	QAction*		m_actionContrast ;
     QAction*        m_actionQuantization;
     QAction*        m_actionHistogramStretch;
+    QAction*        m_actionHistogramMatch;
+    QAction*        m_actionErrorDiffusion;
     
     //groupbox
     QGroupBox*      m_groupBoxMode;

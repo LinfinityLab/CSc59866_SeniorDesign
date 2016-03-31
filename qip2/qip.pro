@@ -38,6 +38,8 @@ HEADERS +=	MainWindow.h	\
 		Contrast.h	\
         Quantization.h \
         HistogramStretch.h \
+        HistogramMatch.h \
+        ErrorDiffusion.h \
 
 		
 SOURCES +=	main.cpp	\ 
@@ -49,4 +51,6 @@ SOURCES +=	main.cpp	\
 		Contrast.cpp	\
         Quantization.cpp \
         HistogramStretch.cpp \
+        HistogramMatch.cpp \
+        ErrorDiffusion.cpp \
 

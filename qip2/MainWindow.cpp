@@ -13,11 +13,13 @@
 #include "Contrast.h"
 #include "Quantization.h"
 #include "HistogramStretch.h"
+#include "HistogramMatch.h"
+#include "ErrorDiffusion.h"
 
 
 using namespace IP;
 
-enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH};
+enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION};
 enum {RGB, R, G, B, GRAY};
 
 QString GroupBoxStyle = "QGroupBox {				\
@@ -90,6 +92,16 @@ MainWindow::createActions()
     m_actionHistogramStretch->setShortcut(tr("Ctrl+I"));
     m_actionHistogramStretch->setData(HISTOGRAMSTRETCH);
     
+    m_actionHistogramMatch = new QAction("&HistogramMatch", this);
+    m_actionHistogramMatch->setShortcut(tr("Ctrl+M"));
+    m_actionHistogramMatch->setData(HISTOGRAMMATCH);
+    
+    m_actionErrorDiffusion = new QAction("&ErrorDiffusion", this);
+    m_actionErrorDiffusion->setShortcut(tr("Ctrl+E"));
+    m_actionErrorDiffusion->setData(ERRORDIFFUSION);
+    
+    
+    
 	// one signal-slot connection for all actions;
 	// execute() will resolve which action was triggered
 	connect(menuBar(), SIGNAL(triggered(QAction*)), this, SLOT(execute(QAction*)));
@@ -116,6 +128,10 @@ MainWindow::createMenus()
 	m_menuPtOps->addAction(m_actionContrast );
     m_menuPtOps->addAction(m_actionQuantization);
     m_menuPtOps->addAction(m_actionHistogramStretch);
+    m_menuPtOps->addAction(m_actionHistogramMatch);
+    m_menuPtOps->addAction(m_actionErrorDiffusion);
+
+    
     
     m_menuPtOps->setEnabled(false);
 }
@@ -164,6 +180,8 @@ MainWindow::createGroupPanel()
 	m_imageFilterType[CONTRAST ] = new Contrast;
     m_imageFilterType[QUANTIZATION] = new Quantization;
     m_imageFilterType[HISTOGRAMSTRETCH] = new HistogramStretch;
+    m_imageFilterType[HISTOGRAMMATCH] = new HistogramMatch;
+    m_imageFilterType[ERRORDIFFUSION] = new ErrorDiffusion;
 
 	// create a stacked widget to hold multiple control panels
 	m_stackWidgetPanels = new QStackedWidget;
@@ -174,6 +192,10 @@ MainWindow::createGroupPanel()
 	m_stackWidgetPanels->addWidget(m_imageFilterType[CONTRAST ]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[QUANTIZATION]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMSTRETCH]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMMATCH]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION]->controlPanel());
+    
+
 
 	// display blank dummmy panel initially
 	m_stackWidgetPanels->setCurrentIndex(0);
