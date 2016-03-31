@@ -142,10 +142,10 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
     
     unsigned char *buf;
     buf = (unsigned char *) malloc(2 * (w + 2));
-    
+    // |0|.....w.....|0||0|.....w.....|0|
     buf[0] = 0;
-    buf[w] = 0;
     buf[w+1] = 0;
+    buf[w+2] = 0;
     buf[2*(w+2)-1] = 0;
     
     unsigned char *arrPointers[2];
@@ -155,17 +155,7 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
         arrPointers[i] = &buf[i*(w+2)];
     }
     
-//    const int x = 2;
-//    unsigned char *row0, *row1, buf2[x];
-//    
-//    // create buffer.
     unsigned char *in1, *in2;
-//    buf = (unsigned char *) malloc(2 * (w + 2));
-//    // pad with 0's
-//    buf[0] = 0;
-//    buf[w] = 0;
-//    buf[w+1] = 0;
-//    buf[2*(w+2)-1] = 0;
     
     int type;
     ChannelPtr<uchar> p1, p2, endd;
@@ -175,13 +165,23 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
         // copyRowToCircBuffer(0);
         for(int i = 0; i < w; i++) {
             buf[i+1] = p1[i];
+            
         }
+        
+//        for(int i = 0; i < (w+2); i++){
+//            qDebug() << i <<": " << buf[i] ;
+//        }
         
         for(int y=0; y<h; y++) {
             
             //copyRowToCircBuffer(y+1);
             for(int i = 0; i < w; i++) {
-                buf[(y+1)*(w+2)+i] = buf[(y+1)*(w+2)+i];
+                if(y%2==0) {
+                    buf[i+1] = p1[(y+1)*w+i];
+                } else {
+                    buf[(w+2)+i+1] = p1[(y+1)*w+i];
+                }
+                //                *(buf(y+1)*(w+2)+i) = *(p1(y+1)*(w+2)+i);
                 //buf[i+1] = p1[i];
 //                *(buf+(y+1)*w+i) = *(p1+(y+1)*w+i);
                 //*(row1+i) = *(p1+(y+1)*w+i);
@@ -190,13 +190,14 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
             in1 = arrPointers[  y   % 2] + 1;
             in2 = arrPointers[(y+1) % 2] + 1;
 
+
             for(int x=0; x<w; x++) {
-                *p2 = (*in1 < 128) ? 0 : 255;
+                *p2 = (*in1 < thr) ? 0 : 255;
                 short e = *in1 - *p2;
-                in1[1] += (e*7/16.0);
+                in1[1 ] += (e*7/16.0);
                 in2[-1] += (e*3/16.0);
-                in2[0] += (e*5/16.0);
-                in2[1] += (e*1/16.0);
+                in2[0 ] += (e*5/16.0);
+                in2[1 ] += (e*1/16.0);
                 
                 in1++;
                 in2++;
