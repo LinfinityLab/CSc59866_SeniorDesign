@@ -23,6 +23,7 @@ public:
     
 protected:
     void errorDiffusion(ImagePtr I1, int thr, ImagePtr I2);
+    void copyToBuffer(ImagePtr I1, ChannelPtr<uchar> p1, int row, int bufRowsRequired, unsigned char *buffer);
     
     protected slots:
     void changeThr(int);

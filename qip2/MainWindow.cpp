@@ -15,11 +15,12 @@
 #include "HistogramStretch.h"
 #include "HistogramMatch.h"
 #include "ErrorDiffusion.h"
+#include "Blur.h"
 
 
 using namespace IP;
 
-enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION};
+enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION, BLUR};
 enum {RGB, R, G, B, GRAY};
 
 QString GroupBoxStyle = "QGroupBox {				\
@@ -100,7 +101,9 @@ MainWindow::createActions()
     m_actionErrorDiffusion->setShortcut(tr("Ctrl+E"));
     m_actionErrorDiffusion->setData(ERRORDIFFUSION);
     
-    
+    m_actionBlur = new QAction("&Blur", this);
+    m_actionBlur->setShortcut(tr("Ctrl+B"));
+    m_actionBlur->setData(BLUR);
     
 	// one signal-slot connection for all actions;
 	// execute() will resolve which action was triggered
@@ -130,6 +133,7 @@ MainWindow::createMenus()
     m_menuPtOps->addAction(m_actionHistogramStretch);
     m_menuPtOps->addAction(m_actionHistogramMatch);
     m_menuPtOps->addAction(m_actionErrorDiffusion);
+    m_menuPtOps->addAction(m_actionBlur);
 
     
     
@@ -182,6 +186,7 @@ MainWindow::createGroupPanel()
     m_imageFilterType[HISTOGRAMSTRETCH] = new HistogramStretch;
     m_imageFilterType[HISTOGRAMMATCH] = new HistogramMatch;
     m_imageFilterType[ERRORDIFFUSION] = new ErrorDiffusion;
+    m_imageFilterType[BLUR] = new Blur;
 
 	// create a stacked widget to hold multiple control panels
 	m_stackWidgetPanels = new QStackedWidget;
@@ -194,6 +199,7 @@ MainWindow::createGroupPanel()
     m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMSTRETCH]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMMATCH]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[BLUR]->controlPanel());
     
 
 

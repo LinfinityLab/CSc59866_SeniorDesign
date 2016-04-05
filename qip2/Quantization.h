@@ -28,6 +28,7 @@ protected:
     protected slots:
     void changeQtz(int);
     void changeDtr(int);
+
     
 private:
     // quantization controls

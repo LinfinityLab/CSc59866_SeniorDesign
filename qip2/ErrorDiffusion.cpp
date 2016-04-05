@@ -11,23 +11,12 @@
 
 extern MainWindow *g_mainWindowP;
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::Threshold:
-//
-// Constructor.
-//
+
 ErrorDiffusion::ErrorDiffusion(QWidget *parent) : ImageFilter(parent)
 {}
 
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::applyFilter:
-//
-// Run filter on the image, transforming I1 to I2.
-// Overrides ImageFilter::applyFilter().
-// Return 1 for success, 0 for failure.
-//
 bool
 ErrorDiffusion::applyFilter(ImagePtr I1, ImagePtr I2)
 {
@@ -47,12 +36,6 @@ ErrorDiffusion::applyFilter(ImagePtr I1, ImagePtr I2)
 }
 
 
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::controlPanel:
-//
-// Create group box for control panel.
-//
 QGroupBox*
 ErrorDiffusion::controlPanel()
 {
@@ -95,12 +78,6 @@ ErrorDiffusion::controlPanel()
 }
 
 
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::changeThr:
-//
-// Slot to process change in thr caused by moving the slider.
-//
 void
 ErrorDiffusion::changeThr(int thr)
 {
@@ -120,27 +97,13 @@ ErrorDiffusion::changeThr(int thr)
 
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::threshold:
-//
-// Threshold I1 using the 2-level mapping shown below.  Output is in I2.
-// val<thr: 0;	 val >= thr: MaxGray (255)
-//! \brief	Threshold I1 using the 3-level mapping shown below.
-//! \details	Output is in I2. val<t1: g1; t1<=val<t2: g2; t2<=val: g3
-//! \param[in]	I1  - Input image.
-//! \param[in]	thr - Threshold.
-//! \param[out]	I2  - Output image.
-//
 void
 ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
     int h = I1->height();
-    int total = w * h;
     
-    
-    
-    unsigned char *buf;
+    unsigned char *buf, *in1, *in2;
     buf = (unsigned char *) malloc(2 * (w + 2));
     // |0|.....w.....|0||0|.....w.....|0|
     buf[0] = 0;
@@ -149,13 +112,17 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
     buf[2*(w+2)-1] = 0;
     
     unsigned char *arrPointers[2];
+    unsigned char *buffer;
+    buffer = (unsigned char *) malloc(2 * (w + 2));
     
     for(int i=0; i<2; i++) {
         // store pointers in array.
         arrPointers[i] = &buf[i*(w+2)];
     }
-    
-    unsigned char *in1, *in2;
+
+    int i, lut[MXGRAY];
+    for(i=0; i<thr && i<MXGRAY; ++i) lut[i] = 0;
+    for(   ; i <= MaxGray;      ++i) lut[i] = MaxGray;
     
     int type;
     ChannelPtr<uchar> p1, p2, endd;
@@ -168,9 +135,9 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
             
         }
         
-//        for(int i = 0; i < (w+2); i++){
-//            qDebug() << i <<": " << buf[i] ;
-//        }
+        for(int i = 0; i < (w+2); i++){
+            qDebug() << i <<":" << buf[i] <<"," <<p1[i] ;
+        }
         
         for(int y=0; y<h; y++) {
             
@@ -181,18 +148,13 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
                 } else {
                     buf[(w+2)+i+1] = p1[(y+1)*w+i];
                 }
-                //                *(buf(y+1)*(w+2)+i) = *(p1(y+1)*(w+2)+i);
-                //buf[i+1] = p1[i];
-//                *(buf+(y+1)*w+i) = *(p1+(y+1)*w+i);
-                //*(row1+i) = *(p1+(y+1)*w+i);
             }
             
             in1 = arrPointers[  y   % 2] + 1;
             in2 = arrPointers[(y+1) % 2] + 1;
 
-
             for(int x=0; x<w; x++) {
-                *p2 = (*in1 < thr) ? 0 : 255;
+                *p2 = lut[*in1]; //*p2 = (*in1 < thr) ? 0 : 255;
                 short e = *in1 - *p2;
                 in1[1 ] += (e*7/16.0);
                 in2[-1] += (e*3/16.0);
@@ -205,37 +167,26 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
             }
         }
     }
+    
 }
 
 
-//void copyToBuffer(ImagePtr I1, int row, int bufRowsRequired, unsigned char *buffer) {
-//    int height = I1->height();
-//    int width = I1->width();
-//    unsigned char *in, *ptr;
-//    in = I1->image();
-//    
-//    int type;
-//    ChannelPtr<uchar> p1, endd;
-//    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
-//    IP_getChannel(I1, ch, p1, type);
-//    
-//    int bufStartIndex = (row % bufRowsRequired) * width;
-//    
-//    ptr = &buffer[bufStartIndex];
-//    for (int x=0; x<width; x++) {
-//        ptr[0] = in[row*width+x];
-//        ptr++;
-//    }
-//}
+void
+ErrorDiffusion::copyToBuffer(ImagePtr I1, ChannelPtr<uchar> p1, int row, int bufRowsRequired, unsigned char *buffer) {
+    int width = I1->width();
+    unsigned char *ptr;
+    
+    int bufStartIndex = (row % bufRowsRequired) * width;
+    
+    ptr = &buffer[bufStartIndex];
+    for (int x=0; x<width; x++) {
+        ptr[0] = p1[row*width+x];
+        ptr++;
+    }
+}
 
 
 void
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::reset:
-//
-// Reset parameters.
-//
-
 ErrorDiffusion::reset() {
     changeThr(MXGRAY>>1);
 }
