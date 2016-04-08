@@ -103,22 +103,13 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
     int w = I1->width();
     int h = I1->height();
     
-    unsigned char *buf, *in1, *in2;
-    buf = (unsigned char *) malloc(2 * (w + 2));
-    // |0|.....w.....|0||0|.....w.....|0|
-    buf[0] = 0;
-    buf[w+1] = 0;
-    buf[w+2] = 0;
-    buf[2*(w+2)-1] = 0;
+    short* in1;
+    short* in2;
+    short e;
     
-    unsigned char *arrPointers[2];
-    unsigned char *buffer;
-    buffer = (unsigned char *) malloc(2 * (w + 2));
-    
-    for(int i=0; i<2; i++) {
-        // store pointers in array.
-        arrPointers[i] = &buf[i*(w+2)];
-    }
+    int bufSz = w + 2;
+    short* buffer0 = new short[bufSz];
+    short* buffer1 = new short[bufSz];
 
     int i, lut[MXGRAY];
     for(i=0; i<thr && i<MXGRAY; ++i) lut[i] = 0;
@@ -129,33 +120,25 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
     for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
         IP_getChannel(I2, ch, p2, type);
         
-        // copyRowToCircBuffer(0);
-        for(int i = 0; i < w; i++) {
-            buf[i+1] = p1[i];
-            
-        }
+        // copy first row to buffer0
+        copyToBuffer(p1, w, buffer0, bufSz);
         
-        for(int i = 0; i < (w+2); i++){
-            qDebug() << i <<":" << buf[i] <<"," <<p1[i] ;
-        }
-        
-        for(int y=0; y<h; y++) {
+        for(int y=1; y<h; y++) {
             
-            //copyRowToCircBuffer(y+1);
-            for(int i = 0; i < w; i++) {
-                if(y%2==0) {
-                    buf[i+1] = p1[(y+1)*w+i];
-                } else {
-                    buf[(w+2)+i+1] = p1[(y+1)*w+i];
-                }
+            if (y % 2 == 0) {
+                copyToBuffer(p1, w, buffer0, bufSz);
+                in1 = buffer1+1;
+                in2 = buffer0+1;
+
+            } else {
+                copyToBuffer(p1, w, buffer1, bufSz);
+                in1 = buffer0+1;
+                in2 = buffer1+1;
             }
-            
-            in1 = arrPointers[  y   % 2] + 1;
-            in2 = arrPointers[(y+1) % 2] + 1;
 
             for(int x=0; x<w; x++) {
-                *p2 = lut[*in1]; //*p2 = (*in1 < thr) ? 0 : 255;
-                short e = *in1 - *p2;
+                *p2 = (*in1 < thr) ? 0 : 255; //lut[*in1]; -> not working
+                e = *in1 - *p2;
                 in1[1 ] += (e*7/16.0);
                 in2[-1] += (e*3/16.0);
                 in2[0 ] += (e*5/16.0);
@@ -167,24 +150,15 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
             }
         }
     }
-    
 }
 
 
 void
-ErrorDiffusion::copyToBuffer(ImagePtr I1, ChannelPtr<uchar> p1, int row, int bufRowsRequired, unsigned char *buffer) {
-    int width = I1->width();
-    unsigned char *ptr;
-    
-    int bufStartIndex = (row % bufRowsRequired) * width;
-    
-    ptr = &buffer[bufStartIndex];
-    for (int x=0; x<width; x++) {
-        ptr[0] = p1[row*width+x];
-        ptr++;
-    }
+ErrorDiffusion::copyToBuffer(ChannelPtr<uchar> &p1, int width, short* buffer, int bufSz) {
+    buffer[0] = *p1; //0?
+    buffer[bufSz-1] = *(p1+width-1); //0?
+    for (int i = 1; i < bufSz-1; i++) buffer[i] = *p1++;
 }
-
 
 void
 ErrorDiffusion::reset() {
