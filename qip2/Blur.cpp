@@ -49,7 +49,14 @@ Blur::controlPanel()
     QLabel *labelYsz = new QLabel;
     labelYsz->setText(QString("Ysz"));
     QLabel *labelLock = new QLabel;
-    labelLock->setText(QString("Lock"));
+    labelLock->setText(QString("Synchronize Xsz & Ysz"));
+    QLabel *labelEdge = new QLabel;
+    labelEdge->setText(QString("Edge Image"));
+    QLabel *labelShrp = new QLabel;
+    labelShrp->setText(QString("Sharpen"));
+    QLabel *labelFctr = new QLabel;
+    labelFctr->setText(QString("Fctr"));
+    
     
     // create sliders
     m_sliderX = new QSlider(Qt::Horizontal, m_ctrlGrp);
@@ -68,6 +75,14 @@ Blur::controlPanel()
     m_sliderY->setSingleStep(2);
     m_sliderY->setValue  (1);
     
+    m_sliderFctr = new QSlider(Qt::Horizontal, m_ctrlGrp);
+    m_sliderFctr->setTickPosition(QSlider::TicksBelow);
+    m_sliderFctr->setTickInterval(7);
+    m_sliderFctr->setMinimum(1);
+    m_sliderFctr->setMaximum(99);
+    m_sliderFctr->setSingleStep(1);
+    m_sliderFctr->setValue  (1);
+    
     // create spinboxes
     m_spinBoxX = new QSpinBox(m_ctrlGrp);
     m_spinBoxX->setMinimum(1);
@@ -81,27 +96,51 @@ Blur::controlPanel()
     m_spinBoxY->setSingleStep(2);
     m_spinBoxY->setValue  (1);
     
-    m_checkBox = new QCheckBox(m_ctrlGrp);
-    m_checkBox->setChecked(true);
+    m_spinBoxFctr = new QSpinBox(m_ctrlGrp);
+    m_spinBoxFctr->setMinimum(1);
+    m_spinBoxFctr->setMaximum(99);
+    m_spinBoxFctr->setSingleStep(1);
+    m_spinBoxFctr->setValue  (1);
     
-    connect(m_sliderX , SIGNAL(valueChanged(int)), this, SLOT(changeXsz (int)));
-    connect(m_spinBoxX, SIGNAL(valueChanged(int)), this, SLOT(changeXsz (int)));
-    connect(m_sliderY , SIGNAL(valueChanged(int)), this, SLOT(changeYsz (int)));
-    connect(m_spinBoxY, SIGNAL(valueChanged(int)), this, SLOT(changeYsz (int)));
-    connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(changeSync(int)));
+    // create checkboxes
+    m_checkBoxSync = new QCheckBox(m_ctrlGrp);
+    m_checkBoxSync->setChecked(true);
+    
+    m_checkBoxEdge = new QCheckBox(m_ctrlGrp);
+    m_checkBoxEdge->setChecked(false);
+    
+    m_checkBoxShrp = new QCheckBox(m_ctrlGrp);
+    m_checkBoxShrp->setChecked(false);
+    
+    connect(m_sliderX ,     SIGNAL(valueChanged(int)), this, SLOT(changeXsz (int)));
+    connect(m_spinBoxX,     SIGNAL(valueChanged(int)), this, SLOT(changeXsz (int)));
+    connect(m_sliderY ,     SIGNAL(valueChanged(int)), this, SLOT(changeYsz (int)));
+    connect(m_spinBoxY,     SIGNAL(valueChanged(int)), this, SLOT(changeYsz (int)));
+    connect(m_checkBoxSync, SIGNAL(stateChanged(int)), this, SLOT(changeSync(int)));
+    connect(m_checkBoxEdge, SIGNAL(stateChanged(int)), this, SLOT(changeEdge(int)));
+    connect(m_checkBoxShrp, SIGNAL(stateChanged(int)), this, SLOT(changeShrp(int)));
+    connect(m_sliderFctr ,  SIGNAL(valueChanged(int)), this, SLOT(changeFctr(int)));
+    connect(m_spinBoxFctr,  SIGNAL(valueChanged(int)), this, SLOT(changeFctr(int)));
 
     
     // assemble dialog
     QGridLayout *layout = new QGridLayout;
-    layout->addWidget( labelXsz , 0, 0);
-    layout->addWidget(m_sliderX , 0, 1);
-    layout->addWidget(m_spinBoxX, 0, 2);
-    layout->addWidget( labelYsz , 1, 0);
-    layout->addWidget(m_sliderY , 1, 1);
-    layout->addWidget(m_spinBoxY, 1, 2);
-    layout->addWidget(m_checkBox, 2, 0);
-    layout->addWidget(labelLock , 2, 1);
-
+    layout->addWidget( labelXsz     , 0, 0);
+    layout->addWidget(m_sliderX     , 0, 1);
+    layout->addWidget(m_spinBoxX    , 0, 2);
+    layout->addWidget( labelYsz     , 1, 0);
+    layout->addWidget(m_sliderY     , 1, 1);
+    layout->addWidget(m_spinBoxY    , 1, 2);
+    layout->addWidget(m_checkBoxSync, 2, 0);
+    layout->addWidget(labelLock     , 2, 1);
+    layout->addWidget(m_checkBoxEdge, 3, 0);
+    layout->addWidget(labelEdge     , 3, 1);
+    layout->addWidget(m_checkBoxShrp, 4, 0);
+    layout->addWidget(labelShrp     , 4, 1);
+    
+    layout->addWidget( labelFctr     , 5, 0);
+    layout->addWidget(m_sliderFctr    , 5, 1);
+    layout->addWidget(m_spinBoxFctr    , 5, 2);
     
     // assign layout to group box
     m_ctrlGrp->setLayout(layout);
@@ -122,7 +161,7 @@ Blur::changeXsz(int xsz)
     m_spinBoxX->setValue    (xsz );
     m_spinBoxX->blockSignals(false);
     
-    if (m_checkBox->isChecked()) {
+    if (m_checkBoxSync->isChecked()) {
         m_sliderY ->blockSignals(true);
         m_sliderY ->setValue    (xsz );
         m_sliderY ->blockSignals(false);
@@ -150,7 +189,7 @@ Blur::changeYsz(int ysz)
     m_spinBoxY->setValue    (ysz );
     m_spinBoxY->blockSignals(false);
     
-    if (m_checkBox->isChecked()) {
+    if (m_checkBoxSync->isChecked()) {
         m_sliderX ->blockSignals(true);
         m_sliderX ->setValue    (ysz );
         m_sliderX ->blockSignals(false);
@@ -167,16 +206,53 @@ Blur::changeYsz(int ysz)
 }
 
 void
-Blur::changeSync(int checked)
+Blur::changeSync(int)
 {
     int xsz = m_sliderX->value();
     int ysz = m_sliderY->value();
     
-    if (m_checkBox->isChecked()) {
+    if (m_checkBoxSync->isChecked()) {
         if (xsz>ysz) changeYsz(xsz);
         else         changeXsz(ysz);
     }
 }
+
+void
+Blur::changeEdge(int)
+{
+    // check Edge will uncheck Shrp
+    if (m_checkBoxEdge->isChecked() == true) m_checkBoxShrp->setChecked(false);
+}
+
+void
+Blur::changeShrp(int)
+{
+    // everytime changeShrp will set Fctr to 1
+    m_sliderFctr ->blockSignals(true);
+    m_sliderFctr ->setValue    (1);
+    m_sliderFctr ->blockSignals(false);
+    m_spinBoxFctr->blockSignals(true);
+    m_spinBoxFctr->setValue    (1);
+    m_spinBoxFctr->blockSignals(false);
+    
+    // check Shrp will unchekc Edge
+    if (m_checkBoxShrp->isChecked() == true) m_checkBoxEdge->setChecked(false);
+    
+}
+
+void
+Blur::changeFctr(int value) {
+    
+    if (m_checkBoxShrp->isChecked() == false) m_checkBoxShrp->setChecked(true);
+    
+    m_sliderFctr ->blockSignals(true);
+    m_sliderFctr ->setValue    (value);
+    m_sliderFctr ->blockSignals(false);
+    m_spinBoxFctr->blockSignals(true);
+    m_spinBoxFctr->setValue    (value);
+    m_spinBoxFctr->blockSignals(false);
+}
+
 
 void
 Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
@@ -222,8 +298,7 @@ Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
 void
 Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
     int neighborSz = kernel/2;
-    //int bufSz = neighborSz*2; // buf size
-    int newSz = size+kernel-1;
+    int newSz = size+kernel-1; // this is size for padded buffer
     short* buffer = new short[newSz];
     
     // copy to buffer
@@ -253,7 +328,10 @@ Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, Channe
 
 void
 Blur::reset() {
-    changeXsz(1);
-    changeYsz(1);
-    m_checkBox->setChecked(true);
+    changeXsz (1);
+    changeYsz (1);
+    changeFctr(1);
+    m_checkBoxSync->setChecked(true) ;
+    m_checkBoxEdge->setChecked(false);
+    m_checkBoxShrp->setChecked(false);
 }

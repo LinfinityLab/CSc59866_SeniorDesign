@@ -29,13 +29,20 @@ protected:
     void changeXsz (int);
     void changeYsz (int);
     void changeSync(int);
+    void changeEdge(int);
+    void changeShrp(int);
+    void changeFctr(int);
     
 private:
-    QSlider		*m_sliderX ;
-    QSlider		*m_sliderY ;
-    QSpinBox	*m_spinBoxX;
-    QSpinBox	*m_spinBoxY;
-    QCheckBox   *m_checkBox;
+    QSlider		*m_sliderX     ;
+    QSlider		*m_sliderY     ;
+    QSpinBox	*m_spinBoxX    ;
+    QSpinBox	*m_spinBoxY    ;
+    QCheckBox   *m_checkBoxSync;
+    QCheckBox   *m_checkBoxEdge;
+    QCheckBox   *m_checkBoxShrp;
+    QSlider		*m_sliderFctr  ;
+    QSpinBox	*m_spinBoxFctr ;
     
     QLabel		*m_label;
     
