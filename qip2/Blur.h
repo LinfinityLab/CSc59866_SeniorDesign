@@ -23,8 +23,7 @@ public:
     
 protected:
     void blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2);
-    void copyToBuffer(ImagePtr I1, ChannelPtr<uchar> p1, int row, int bufRowsRequired, unsigned char *buffer);
-    void blur1D(ChannelPtr<uchar> &p1, int size, int kernel, int stride, short* buffer);
+    void IP_blur1D(ChannelPtr<uchar> &p1, int size, int kernel, int stride, ChannelPtr<uchar> &p3);
     
     protected slots:
     void changeXsz (int);

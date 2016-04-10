@@ -182,55 +182,72 @@ void
 Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     
+    ImagePtr I3; // intermediate buffer
+    IP_copyImageHeader(I1, I3);
+    
     int w = I1->width();
     int h = I1->height();
     int total = w * h;
-    
-    int newWidth  = w+xsz-1;
-    int newHeight = h+ysz-1;
-    
-    short* rowBuf = new short[newWidth];
-    short* colBuf = new short[newHeight];
-    
-    short sum=0;
 
     int type;
-    ChannelPtr<uchar> p1, p2, endd;
+    ChannelPtr<uchar> p1, p2, p3, endd;
     for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
         IP_getChannel(I2, ch, p2, type);
+        IP_getChannel(I3, ch, p3, type);
         
-        for (int y=0; y<h; y++) {
-            blur1D(p1, w, xsz, 1, rowBuf);
-            for (int i=0; i<w; i++) {
-                p2[w*y+i] = rowBuf[i+xsz/2];
+        if (xsz == 1) for(endd = p1 + total; p1<endd;) *p3++ = *p1++;
+        if (xsz > 1) {
+            // blur rows one by one
+            for (int y=0; y<h; y++) {
+                IP_blur1D(p1, w, xsz, 1, p3);
+                p1+=w;
+                p3+=w;
             }
-            p1++;  // point to next element
         }
+
+        p3=p3-total; // point back to 0
         
-        for (int x=0; x<w; x++) {
-            blur1D(p1, h, ysz, w, colBuf);
-            for (int i=0; i<w; i++) {
-                p2[i*w+x] = colBuf[i+ysz/2];
+        if (ysz == 1) for(endd = p3 + total; p3<endd;) *p2++ = *p3++;
+        if (ysz > 1) {
+            // blur columns one by one
+            for (int x=0; x<w; x++) {
+                IP_blur1D(p3, h, ysz, w, p2);
+                p3+=1;
+                p2+=1;
             }
-            p1=p1-((h-1)*w-1);  // finish one column go to first index of next column
         }
     }
-
 }
 
 void
-Blur::blur1D(ChannelPtr<uchar> &p1, int size, int kernel, int stride, short* buffer) {
-    
+Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
     int neighborSz = kernel/2;
-    int bufSz = neighborSz*2;
-
-    for (int i=0; i<neighborSz+1; i++ ) buffer[i] = *p1;
-    for (int i=neighborSz+1; i < size+neighborSz; i++) {
-        p1=p1+stride;
-        buffer[i] = *p1;
+    //int bufSz = neighborSz*2; // buf size
+    int newSz = size+kernel-1;
+    short* buffer = new short[newSz];
+    
+    // copy to buffer
+    for (int i=0; i<neighborSz; i++) buffer[i] = *src;
+    int index = 0;
+    for (int i=neighborSz; i < size+neighborSz; i++) {
+        buffer[i] = src[index];
+        index+=stride;
     }
-    for (int i=size+neighborSz; i<bufSz; i++) buffer[i] = *p1;
-
+    for (int i=size+neighborSz; i<newSz; i++) buffer[i] = src[index-stride];
+    
+    unsigned short sum = 0;
+    for(int i=0; i<kernel; i++) sum+=buffer[i];
+    
+    for (int i=0; i<size; i++) {
+        dst[i*stride] = sum/kernel;
+        sum+=(buffer[i+kernel] - buffer[i]);
+    }
+    
+    // just for debugging ..
+//    for (int i=0; i<size; i++) {
+//        p3[i] = buffer[i+neighborSz];
+//    }
+    
 }
 
 
