@@ -188,7 +188,10 @@ Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
     
     int newWidth  = w+xsz-1;
     int newHeight = h+ysz-1;
-    unsigned short rowBuffer[newWidth], columnBuffer[newHeight], buffer[total];
+    
+    short* rowBuf = new short[newWidth];
+    short* colBuf = new short[newHeight];
+    
     short sum=0;
 
     int type;
@@ -196,55 +199,38 @@ Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
     for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
         IP_getChannel(I2, ch, p2, type);
         
-      
         for (int y=0; y<h; y++) {
-
-            for (int x=0; x<xsz/2; x++) rowBuffer[x] = p1[0];
-            for (int x=xsz/2; x<w+xsz/2; x++) {
-                rowBuffer[x] = *p1;
-                *p1++;
-            }
-            for (int x=w+xsz/2; x<w+xsz-1; x++) rowBuffer[x] = p1[-1];
-
-            for (int i=0; i<xsz; i++) sum += rowBuffer[i];
+            blur1D(p1, w, xsz, 1, rowBuf);
             for (int i=0; i<w; i++) {
-                buffer[y*w+i] = sum/xsz; //CLIP(sum/xsz, 0, 255)
-                sum += (rowBuffer[i+xsz] - rowBuffer[i]);
+                p2[w*y+i] = rowBuf[i+xsz/2];
             }
+            p1++;  // point to next element
         }
         
-        for (int i=0; i<total; i++) {
-//            qDebug() << i << buffer[i];
-            *p2=buffer[i];
-            *p2++;
+        for (int x=0; x<w; x++) {
+            blur1D(p1, h, ysz, w, colBuf);
+            for (int i=0; i<w; i++) {
+                p2[i*w+x] = colBuf[i+ysz/2];
+            }
+            p1=p1-((h-1)*w-1);  // finish one column go to first index of next column
         }
-        
-        
     }
 
 }
 
 void
-Blur::blur1D(ImagePtr I1, int size, int kernel, int stride, ImagePtr I2) {
-    int type;
-    short sum =0;
-    ChannelPtr<uchar> p1, p2, buffer;
-    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
-        IP_getChannel(I2, ch, p2, type);
-        
-        for (int x=0; x<kernel/2; x++) buffer[x] = p1[0];
-        for (int x=kernel/2; x<size+kernel/2; x++) {
-            buffer[x] = *p1;
-            *p1=*(p1+stride);
-        }
-        for (int x=size+kernel/2; x<size+kernel-1; x++) buffer[x] = p1[-stride];
-        
-        for (int i=0; i<kernel; i++) sum += buffer[i];
-        for (int i=0; i<size; i++) {
-            *p2++ = sum/kernel; //CLIP(sum/xsz, 0, 255)
-            sum += (buffer[i+kernel] - buffer[i]);
-        }
+Blur::blur1D(ChannelPtr<uchar> &p1, int size, int kernel, int stride, short* buffer) {
+    
+    int neighborSz = kernel/2;
+    int bufSz = neighborSz*2;
+
+    for (int i=0; i<neighborSz+1; i++ ) buffer[i] = *p1;
+    for (int i=neighborSz+1; i < size+neighborSz; i++) {
+        p1=p1+stride;
+        buffer[i] = *p1;
     }
+    for (int i=size+neighborSz; i<bufSz; i++) buffer[i] = *p1;
+
 }
 
 
