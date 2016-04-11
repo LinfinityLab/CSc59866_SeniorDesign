@@ -40,7 +40,7 @@ HEADERS +=	MainWindow.h	\
         HistogramStretch.h \
         HistogramMatch.h \
         ErrorDiffusion.h \
-        Blur.h \
+        BlurShrp.h \
 
 		
 SOURCES +=	main.cpp	\ 
@@ -54,5 +54,5 @@ SOURCES +=	main.cpp	\
         HistogramStretch.cpp \
         HistogramMatch.cpp \
         ErrorDiffusion.cpp \
-        Blur.cpp \
+        BlurShrp.cpp \
 

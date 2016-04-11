@@ -15,12 +15,12 @@
 #include "HistogramStretch.h"
 #include "HistogramMatch.h"
 #include "ErrorDiffusion.h"
-#include "Blur.h"
+#include "BlurShrp.h"
 
 
 using namespace IP;
 
-enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION, BLUR};
+enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION, BLURSHRP};
 enum {RGB, R, G, B, GRAY};
 
 QString GroupBoxStyle = "QGroupBox {				\
@@ -101,9 +101,9 @@ MainWindow::createActions()
     m_actionErrorDiffusion->setShortcut(tr("Ctrl+E"));
     m_actionErrorDiffusion->setData(ERRORDIFFUSION);
     
-    m_actionBlur = new QAction("&Blur", this);
-    m_actionBlur->setShortcut(tr("Ctrl+B"));
-    m_actionBlur->setData(BLUR);
+    m_actionBlurShrp = new QAction("&BlurShrp", this);
+    m_actionBlurShrp->setShortcut(tr("Ctrl+B"));
+    m_actionBlurShrp->setData(BLURSHRP);
     
 	// one signal-slot connection for all actions;
 	// execute() will resolve which action was triggered
@@ -133,7 +133,7 @@ MainWindow::createMenus()
     m_menuPtOps->addAction(m_actionHistogramStretch);
     m_menuPtOps->addAction(m_actionHistogramMatch);
     m_menuPtOps->addAction(m_actionErrorDiffusion);
-    m_menuPtOps->addAction(m_actionBlur);
+    m_menuPtOps->addAction(m_actionBlurShrp);
 
     
     
@@ -186,7 +186,7 @@ MainWindow::createGroupPanel()
     m_imageFilterType[HISTOGRAMSTRETCH] = new HistogramStretch;
     m_imageFilterType[HISTOGRAMMATCH] = new HistogramMatch;
     m_imageFilterType[ERRORDIFFUSION] = new ErrorDiffusion;
-    m_imageFilterType[BLUR] = new Blur;
+    m_imageFilterType[BLURSHRP] = new BlurShrp;
 
 	// create a stacked widget to hold multiple control panels
 	m_stackWidgetPanels = new QStackedWidget;
@@ -199,7 +199,7 @@ MainWindow::createGroupPanel()
     m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMSTRETCH]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMMATCH]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[BLUR]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[BLURSHRP]->controlPanel());
     
 
 

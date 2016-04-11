@@ -1,24 +1,24 @@
 //
-//  Blur.cpp
+//  BlurShrp.cpp
 //  qip
 //
 //  Created by Weifan Lin on 4/4/16.
 //
 //
 
-#include "Blur.h"
+#include "BlurShrp.h"
 #include "MainWindow.h"
 
 extern MainWindow *g_mainWindowP;
 
 
-Blur::Blur(QWidget *parent) : ImageFilter(parent)
+BlurShrp::BlurShrp(QWidget *parent) : ImageFilter(parent)
 {}
 
 
 
 bool
-Blur::applyFilter(ImagePtr I1, ImagePtr I2)
+BlurShrp::applyFilter(ImagePtr I1, ImagePtr I2)
 {
     // error checking
     if(I1.isNull()) return 0;
@@ -44,7 +44,7 @@ Blur::applyFilter(ImagePtr I1, ImagePtr I2)
 
 
 QGroupBox*
-Blur::controlPanel()
+BlurShrp::controlPanel()
 {
     // init group box
     m_ctrlGrp = new QGroupBox("Blur");
@@ -157,7 +157,7 @@ Blur::controlPanel()
 
 
 void
-Blur::changeXsz(int xsz)
+BlurShrp::changeXsz(int xsz)
 {
     if (xsz%2==0) xsz=xsz+1; //need this because slider->getSingleStep(2) has no effect on mouse move
     
@@ -185,7 +185,7 @@ Blur::changeXsz(int xsz)
 }
 
 void
-Blur::changeYsz(int ysz)
+BlurShrp::changeYsz(int ysz)
 {
     if (ysz%2==0) ysz=ysz+1;
     
@@ -213,7 +213,7 @@ Blur::changeYsz(int ysz)
 }
 
 void
-Blur::changeSync(int)
+BlurShrp::changeSync(int)
 {
     int xsz = m_sliderX->value();
     int ysz = m_sliderY->value();
@@ -225,7 +225,7 @@ Blur::changeSync(int)
 }
 
 void
-Blur::changeEdge(int)
+BlurShrp::changeEdge(int)
 {
     // check Edge will uncheck Shrp
     if (m_checkBoxEdge->isChecked() == true) m_checkBoxShrp->setChecked(false);
@@ -235,7 +235,7 @@ Blur::changeEdge(int)
 }
 
 void
-Blur::changeShrp(int)
+BlurShrp::changeShrp(int)
 {
     // everytime changeShrp will set Fctr to 1
     m_sliderFctr ->blockSignals(true);
@@ -253,7 +253,7 @@ Blur::changeShrp(int)
 }
 
 void
-Blur::changeFctr(int value) {
+BlurShrp::changeFctr(int value) {
     
     m_sliderFctr ->blockSignals(true );
     m_sliderFctr ->setValue    (value);
@@ -274,7 +274,7 @@ Blur::changeFctr(int value) {
 
 
 void
-Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
+BlurShrp::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     
     ImagePtr I3; // intermediate buffer
@@ -312,13 +312,13 @@ Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
             }
         }
         
-//        p1=p1-total;
+//        p1=p1-total; // needed? point back to 0?
 //        p2=p2-total;
     }
 }
 
 void
-Blur::edge(ImagePtr I1, ImagePtr I2) { // edge: I2 = I1-I2
+BlurShrp::edge(ImagePtr I1, ImagePtr I2) { // edge: I2 = I1-I2
     int w = I1->width();
     int h = I1->height();
     int total = w * h;
@@ -335,7 +335,7 @@ Blur::edge(ImagePtr I1, ImagePtr I2) { // edge: I2 = I1-I2
 }
 
 void
-Blur::shrp(ImagePtr I1, int fctr, ImagePtr I2) { // shrp: I2 = I1+ (I1-I2)*fctr
+BlurShrp::shrp(ImagePtr I1, int fctr, ImagePtr I2) { // shrp: I2 = I1+ (I1-I2)*fctr
     
     int w = I1->width();
     int h = I1->height();
@@ -353,7 +353,7 @@ Blur::shrp(ImagePtr I1, int fctr, ImagePtr I2) { // shrp: I2 = I1+ (I1-I2)*fctr
 }
 
 void
-Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
+BlurShrp::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
     int neighborSz = kernel/2;
     int newSz = size+kernel-1; // this is size for padded buffer
     short* buffer = new short[newSz];
@@ -375,16 +375,12 @@ Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, Channe
         sum+=(buffer[i+kernel] - buffer[i]);
     }
     
-    // just for debugging ..
-//    for (int i=0; i<size; i++) {
-//        p3[i] = buffer[i+neighborSz];
-//    }
-    
+    delete [] buffer; // delete it otherwise memory consuming
 }
 
 
 void
-Blur::reset() {
+BlurShrp::reset() {
     changeXsz (1);
     changeYsz (1);
     changeFctr(1);
