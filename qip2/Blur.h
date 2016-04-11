@@ -23,6 +23,8 @@ public:
     
 protected:
     void blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2);
+    void edge(ImagePtr I1, ImagePtr I2);
+    void shrp(ImagePtr I1, int fctr, ImagePtr I2);
     void IP_blur1D(ChannelPtr<uchar> &p1, int size, int kernel, int stride, ChannelPtr<uchar> &p3);
     
     protected slots:

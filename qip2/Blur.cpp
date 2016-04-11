@@ -32,6 +32,13 @@ Blur::applyFilter(ImagePtr I1, ImagePtr I2)
     // apply filter
     blur(I1, xsz, ysz, I2);
     
+    if (m_checkBoxEdge->isChecked()) edge(I1, I2);
+    
+    if (m_checkBoxShrp->isChecked()) {
+        int fctr = m_sliderFctr->value();
+        shrp(I1, fctr, I2);
+    }
+    
     return 1;
 }
 
@@ -222,6 +229,9 @@ Blur::changeEdge(int)
 {
     // check Edge will uncheck Shrp
     if (m_checkBoxEdge->isChecked() == true) m_checkBoxShrp->setChecked(false);
+
+    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
+    g_mainWindowP->displayOut();
 }
 
 void
@@ -238,19 +248,28 @@ Blur::changeShrp(int)
     // check Shrp will unchekc Edge
     if (m_checkBoxShrp->isChecked() == true) m_checkBoxEdge->setChecked(false);
     
+    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
+    g_mainWindowP->displayOut();
 }
 
 void
 Blur::changeFctr(int value) {
     
-    if (m_checkBoxShrp->isChecked() == false) m_checkBoxShrp->setChecked(true);
-    
-    m_sliderFctr ->blockSignals(true);
+    m_sliderFctr ->blockSignals(true );
     m_sliderFctr ->setValue    (value);
     m_sliderFctr ->blockSignals(false);
-    m_spinBoxFctr->blockSignals(true);
+    m_spinBoxFctr->blockSignals(true );
     m_spinBoxFctr->setValue    (value);
     m_spinBoxFctr->blockSignals(false);
+    
+    // change Fctr will check Shrp if it's unchecked
+    if (m_checkBoxShrp->isChecked() == false) m_checkBoxShrp->setChecked(true);
+    else {
+        // need this bc if Shrp is checked, changeShrp will not be called to set it checked again
+        applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
+        g_mainWindowP->displayOut();
+    }
+    
 }
 
 
@@ -291,6 +310,44 @@ Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
                 p3+=1;
                 p2+=1;
             }
+        }
+        
+//        p1=p1-total;
+//        p2=p2-total;
+    }
+}
+
+void
+Blur::edge(ImagePtr I1, ImagePtr I2) { // edge: I2 = I1-I2
+    int w = I1->width();
+    int h = I1->height();
+    int total = w * h;
+    int type;
+    ChannelPtr<uchar> p1, p2, endd;
+    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
+        IP_getChannel(I2, ch, p2, type);
+        for(endd = p1 + total; p1<endd;) {
+            *p2 = *p1 - *p2;
+            *p1++;
+            *p2++;
+        }
+    }
+}
+
+void
+Blur::shrp(ImagePtr I1, int fctr, ImagePtr I2) { // shrp: I2 = I1+ (I1-I2)*fctr
+    
+    int w = I1->width();
+    int h = I1->height();
+    int total = w * h;
+    int type;
+    ChannelPtr<uchar> p1, p2, endd;
+    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
+        IP_getChannel(I2, ch, p2, type);
+        for(endd = p1 + total; p1<endd;) {
+            *p2 = CLIP(*p1 + (*p1 - *p2) * fctr, 0, 255);
+            *p1++;
+            *p2++;
         }
     }
 }
