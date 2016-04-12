@@ -75,6 +75,7 @@ protected:
 private:
 	QMenu*			m_menuFile;
 	QMenu*			m_menuPtOps;
+    QMenu*			m_menuNbOps;
 	QAction*		m_actionOpen;
 	QAction*		m_actionQuit;
 	QAction*		m_actionThreshold;
@@ -83,7 +84,8 @@ private:
     QAction*        m_actionHistogramStretch;
     QAction*        m_actionHistogramMatch;
     QAction*        m_actionErrorDiffusion;
-    QAction*        m_actionBlurShrp;
+    QAction*        m_actionBlur;
+    QAction*        m_actionSharpen;
     
     //groupbox
     QGroupBox*      m_groupBoxMode;

@@ -206,7 +206,7 @@ HistogramStretch::autoSliderAndSpinBox(QSlider* slider, QSpinBox* spinbox, int v
 }
 
 void
-HistogramStretch::autoMin(int checked)
+HistogramStretch::autoMin(int)
 {
     ImagePtr I1 = g_mainWindowP->imageSrc();
     ImagePtr I2 = g_mainWindowP->imageDst();
@@ -250,7 +250,7 @@ HistogramStretch::autoMin(int checked)
 
 
 void
-HistogramStretch::autoMax(int checked)
+HistogramStretch::autoMax(int)
 {
     ImagePtr I1 = g_mainWindowP->imageSrc();
     ImagePtr I2 = g_mainWindowP->imageDst();

@@ -1,24 +1,24 @@
 //
-//  BlurShrp.cpp
+//  Blur.cpp
 //  qip
 //
 //  Created by Weifan Lin on 4/4/16.
 //
 //
 
-#include "BlurShrp.h"
+#include "Blur.h"
 #include "MainWindow.h"
 
 extern MainWindow *g_mainWindowP;
 
 
-BlurShrp::BlurShrp(QWidget *parent) : ImageFilter(parent)
+Blur::Blur(QWidget *parent) : ImageFilter(parent)
 {}
 
 
 
 bool
-BlurShrp::applyFilter(ImagePtr I1, ImagePtr I2)
+Blur::applyFilter(ImagePtr I1, ImagePtr I2)
 {
     // error checking
     if(I1.isNull()) return 0;
@@ -32,19 +32,12 @@ BlurShrp::applyFilter(ImagePtr I1, ImagePtr I2)
     // apply filter
     blur(I1, xsz, ysz, I2);
     
-    if (m_checkBoxEdge->isChecked()) edge(I1, I2);
-    
-    if (m_checkBoxShrp->isChecked()) {
-        int fctr = m_sliderFctr->value();
-        shrp(I1, fctr, I2);
-    }
-    
     return 1;
 }
 
 
 QGroupBox*
-BlurShrp::controlPanel()
+Blur::controlPanel()
 {
     // init group box
     m_ctrlGrp = new QGroupBox("Blur");
@@ -82,14 +75,6 @@ BlurShrp::controlPanel()
     m_sliderY->setSingleStep(2);
     m_sliderY->setValue  (1);
     
-    m_sliderFctr = new QSlider(Qt::Horizontal, m_ctrlGrp);
-    m_sliderFctr->setTickPosition(QSlider::TicksBelow);
-    m_sliderFctr->setTickInterval(7);
-    m_sliderFctr->setMinimum(1);
-    m_sliderFctr->setMaximum(99);
-    m_sliderFctr->setSingleStep(1);
-    m_sliderFctr->setValue  (1);
-    
     // create spinboxes
     m_spinBoxX = new QSpinBox(m_ctrlGrp);
     m_spinBoxX->setMinimum(1);
@@ -103,31 +88,16 @@ BlurShrp::controlPanel()
     m_spinBoxY->setSingleStep(2);
     m_spinBoxY->setValue  (1);
     
-    m_spinBoxFctr = new QSpinBox(m_ctrlGrp);
-    m_spinBoxFctr->setMinimum(1);
-    m_spinBoxFctr->setMaximum(99);
-    m_spinBoxFctr->setSingleStep(1);
-    m_spinBoxFctr->setValue  (1);
-    
     // create checkboxes
     m_checkBoxSync = new QCheckBox(m_ctrlGrp);
     m_checkBoxSync->setChecked(true);
     
-    m_checkBoxEdge = new QCheckBox(m_ctrlGrp);
-    m_checkBoxEdge->setChecked(false);
-    
-    m_checkBoxShrp = new QCheckBox(m_ctrlGrp);
-    m_checkBoxShrp->setChecked(false);
     
     connect(m_sliderX ,     SIGNAL(valueChanged(int)), this, SLOT(changeXsz (int)));
     connect(m_spinBoxX,     SIGNAL(valueChanged(int)), this, SLOT(changeXsz (int)));
     connect(m_sliderY ,     SIGNAL(valueChanged(int)), this, SLOT(changeYsz (int)));
     connect(m_spinBoxY,     SIGNAL(valueChanged(int)), this, SLOT(changeYsz (int)));
     connect(m_checkBoxSync, SIGNAL(stateChanged(int)), this, SLOT(changeSync(int)));
-    connect(m_checkBoxEdge, SIGNAL(stateChanged(int)), this, SLOT(changeEdge(int)));
-    connect(m_checkBoxShrp, SIGNAL(stateChanged(int)), this, SLOT(changeShrp(int)));
-    connect(m_sliderFctr ,  SIGNAL(valueChanged(int)), this, SLOT(changeFctr(int)));
-    connect(m_spinBoxFctr,  SIGNAL(valueChanged(int)), this, SLOT(changeFctr(int)));
 
     
     // assemble dialog
@@ -140,14 +110,6 @@ BlurShrp::controlPanel()
     layout->addWidget(m_spinBoxY    , 1, 2);
     layout->addWidget(m_checkBoxSync, 2, 0);
     layout->addWidget(labelLock     , 2, 1);
-    layout->addWidget(m_checkBoxEdge, 3, 0);
-    layout->addWidget(labelEdge     , 3, 1);
-    layout->addWidget(m_checkBoxShrp, 4, 0);
-    layout->addWidget(labelShrp     , 4, 1);
-    
-    layout->addWidget( labelFctr     , 5, 0);
-    layout->addWidget(m_sliderFctr    , 5, 1);
-    layout->addWidget(m_spinBoxFctr    , 5, 2);
     
     // assign layout to group box
     m_ctrlGrp->setLayout(layout);
@@ -157,7 +119,7 @@ BlurShrp::controlPanel()
 
 
 void
-BlurShrp::changeXsz(int xsz)
+Blur::changeXsz(int xsz)
 {
     if (xsz%2==0) xsz=xsz+1; //need this because slider->getSingleStep(2) has no effect on mouse move
     
@@ -185,7 +147,7 @@ BlurShrp::changeXsz(int xsz)
 }
 
 void
-BlurShrp::changeYsz(int ysz)
+Blur::changeYsz(int ysz)
 {
     if (ysz%2==0) ysz=ysz+1;
     
@@ -213,7 +175,7 @@ BlurShrp::changeYsz(int ysz)
 }
 
 void
-BlurShrp::changeSync(int)
+Blur::changeSync(int)
 {
     int xsz = m_sliderX->value();
     int ysz = m_sliderY->value();
@@ -224,57 +186,10 @@ BlurShrp::changeSync(int)
     }
 }
 
-void
-BlurShrp::changeEdge(int)
-{
-    // check Edge will uncheck Shrp
-    if (m_checkBoxEdge->isChecked() == true) m_checkBoxShrp->setChecked(false);
-
-    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
-    g_mainWindowP->displayOut();
-}
-
-void
-BlurShrp::changeShrp(int)
-{
-    // everytime changeShrp will set Fctr to 1
-    m_sliderFctr ->blockSignals(true);
-    m_sliderFctr ->setValue    (1);
-    m_sliderFctr ->blockSignals(false);
-    m_spinBoxFctr->blockSignals(true);
-    m_spinBoxFctr->setValue    (1);
-    m_spinBoxFctr->blockSignals(false);
-    
-    // check Shrp will unchekc Edge
-    if (m_checkBoxShrp->isChecked() == true) m_checkBoxEdge->setChecked(false);
-    
-    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
-    g_mainWindowP->displayOut();
-}
-
-void
-BlurShrp::changeFctr(int value) {
-    
-    m_sliderFctr ->blockSignals(true );
-    m_sliderFctr ->setValue    (value);
-    m_sliderFctr ->blockSignals(false);
-    m_spinBoxFctr->blockSignals(true );
-    m_spinBoxFctr->setValue    (value);
-    m_spinBoxFctr->blockSignals(false);
-    
-    // change Fctr will check Shrp if it's unchecked
-    if (m_checkBoxShrp->isChecked() == false) m_checkBoxShrp->setChecked(true);
-    else {
-        // need this bc if Shrp is checked, changeShrp will not be called to set it checked again
-        applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
-        g_mainWindowP->displayOut();
-    }
-    
-}
 
 
 void
-BlurShrp::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
+Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     
     ImagePtr I3; // intermediate buffer
@@ -317,43 +232,9 @@ BlurShrp::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
     }
 }
 
-void
-BlurShrp::edge(ImagePtr I1, ImagePtr I2) { // edge: I2 = I1-I2
-    int w = I1->width();
-    int h = I1->height();
-    int total = w * h;
-    int type;
-    ChannelPtr<uchar> p1, p2, endd;
-    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
-        IP_getChannel(I2, ch, p2, type);
-        for(endd = p1 + total; p1<endd;) {
-            *p2 = *p1 - *p2;
-            *p1++;
-            *p2++;
-        }
-    }
-}
 
 void
-BlurShrp::shrp(ImagePtr I1, int fctr, ImagePtr I2) { // shrp: I2 = I1+ (I1-I2)*fctr
-    
-    int w = I1->width();
-    int h = I1->height();
-    int total = w * h;
-    int type;
-    ChannelPtr<uchar> p1, p2, endd;
-    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
-        IP_getChannel(I2, ch, p2, type);
-        for(endd = p1 + total; p1<endd;) {
-            *p2 = CLIP(*p1 + (*p1 - *p2) * fctr, 0, 255);
-            *p1++;
-            *p2++;
-        }
-    }
-}
-
-void
-BlurShrp::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
+Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
     int neighborSz = kernel/2;
     int newSz = size+kernel-1; // this is size for padded buffer
     short* buffer = new short[newSz];
@@ -380,11 +261,8 @@ BlurShrp::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, Ch
 
 
 void
-BlurShrp::reset() {
+Blur::reset() {
     changeXsz (1);
     changeYsz (1);
-    changeFctr(1);
     m_checkBoxSync->setChecked(true) ;
-    m_checkBoxEdge->setChecked(false);
-    m_checkBoxShrp->setChecked(false);
 }
