@@ -42,6 +42,7 @@ HEADERS +=	MainWindow.h	\
         ErrorDiffusion.h \
         Blur.h \
         Sharpen.h \
+        MedianFilter.h \
 
 		
 SOURCES +=	main.cpp	\ 
@@ -57,4 +58,5 @@ SOURCES +=	main.cpp	\
         ErrorDiffusion.cpp \
         Blur.cpp \
         Sharpen.cpp \
+        MedianFilter.cpp \
 

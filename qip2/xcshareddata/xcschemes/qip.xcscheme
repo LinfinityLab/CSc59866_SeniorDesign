@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D09D72385EEFC1790CBC0B0F"
+               BlueprintIdentifier = "E5607D52647D07CECC180D4B"
                BuildableName = "qip"
                BlueprintName = "qip"
                ReferencedContainer = "container:qip.xcodeproj">
@@ -42,7 +42,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D09D72385EEFC1790CBC0B0F"
+            BlueprintIdentifier = "E5607D52647D07CECC180D4B"
             BuildableName = "qip"
             BlueprintName = "qip"
             ReferencedContainer = "container:qip.xcodeproj">
@@ -67,7 +67,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D09D72385EEFC1790CBC0B0F"
+            BlueprintIdentifier = "E5607D52647D07CECC180D4B"
             BuildableName = "qip"
             BlueprintName = "qip"
             ReferencedContainer = "container:qip.xcodeproj">
@@ -85,7 +85,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D09D72385EEFC1790CBC0B0F"
+            BlueprintIdentifier = "E5607D52647D07CECC180D4B"
             BuildableName = "qip"
             BlueprintName = "qip"
             ReferencedContainer = "container:qip.xcodeproj">

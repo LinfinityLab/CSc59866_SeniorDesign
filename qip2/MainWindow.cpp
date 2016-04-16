@@ -17,11 +17,13 @@
 #include "ErrorDiffusion.h"
 #include "Blur.h"
 #include "Sharpen.h"
+#include "MedianFilter.h"
+
 
 
 using namespace IP;
 
-enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION, BLUR, SHARPEN};
+enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION, BLUR, SHARPEN, MEDIANFILTER};
 enum {RGB, R, G, B, GRAY};
 
 QString GroupBoxStyle = "QGroupBox {				\
@@ -110,6 +112,10 @@ MainWindow::createActions()
     m_actionSharpen->setShortcut(tr("Ctrl+S"));
     m_actionSharpen->setData(SHARPEN);
     
+    m_actionMedianFilter = new QAction("&MedianFilter", this);
+    m_actionMedianFilter->setShortcut(tr("Ctrl+M"));
+    m_actionMedianFilter->setData(MEDIANFILTER);
+    
 	// one signal-slot connection for all actions;
 	// execute() will resolve which action was triggered
 	connect(menuBar(), SIGNAL(triggered(QAction*)), this, SLOT(execute(QAction*)));
@@ -143,6 +149,7 @@ MainWindow::createMenus()
     m_menuNbOps->addAction(m_actionErrorDiffusion);
     m_menuNbOps->addAction(m_actionBlur);
     m_menuNbOps->addAction(m_actionSharpen);
+    m_menuNbOps->addAction(m_actionMedianFilter);
 
 
     m_menuPtOps->setEnabled(false);
@@ -197,7 +204,7 @@ MainWindow::createGroupPanel()
     m_imageFilterType[ERRORDIFFUSION] = new ErrorDiffusion;
     m_imageFilterType[BLUR] = new Blur;
     m_imageFilterType[SHARPEN] = new Sharpen;
-    
+    m_imageFilterType[MEDIANFILTER] = new MedianFilter;
 
 	// create a stacked widget to hold multiple control panels
 	m_stackWidgetPanels = new QStackedWidget;
@@ -212,7 +219,7 @@ MainWindow::createGroupPanel()
     m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[BLUR]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[SHARPEN]->controlPanel());
-    
+    m_stackWidgetPanels->addWidget(m_imageFilterType[MEDIANFILTER]->controlPanel());
 
 
 	// display blank dummmy panel initially

@@ -86,6 +86,7 @@ private:
     QAction*        m_actionErrorDiffusion;
     QAction*        m_actionBlur;
     QAction*        m_actionSharpen;
+    QAction*        m_actionMedianFilter;
     
     //groupbox
     QGroupBox*      m_groupBoxMode;
