@@ -27,12 +27,26 @@ MedianFilter::applyFilter(ImagePtr I1, ImagePtr I2)
     
     int nbrSz = m_sliderN->value();
     int k     = m_sliderK->value();
+    bool isReapply = m_checkBox->isChecked();
     
     // error checking
-    if(k > nbrSz/2) return 0;
+    if(k > nbrSz*nbrSz/2) return 0;
     
     // apply filter
-    medianFilter(I1, nbrSz, k, I2);
+//    if (times == 1) { medianFilter(I1, nbrSz, k, I2);}
+//    else if (times==2) {
+//        ImagePtr I3;
+//        IP_copyImageHeader(I1, I3);
+//        medianFilter(I1, nbrSz, k, I3);
+//        medianFilter(I3, nbrSz, k, I2);
+//    }
+    if (!isReapply) { medianFilter(I1, nbrSz, k, I2); }
+    else {
+        ImagePtr I3;
+        IP_copyImageHeader(I1, I3);
+        medianFilter(I1, nbrSz, k, I3);
+        medianFilter(I3, nbrSz, k, I2);
+    }
     
     return 1;
 }
@@ -47,24 +61,27 @@ MedianFilter::controlPanel()
     // init widgets
     // create label[i]
     QLabel *labelK = new QLabel;
-    labelK->setText(QString("k"));
+    labelK->setText(QString("Avg k"));
     
     QLabel *labelNbrSz = new QLabel;
     labelNbrSz->setText(QString("Nbr Sz"));
     
+    QLabel *labelTimes = new QLabel;
+    labelTimes->setText(QString("times"));
+    
     // create slider for nbr
     m_sliderN = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderN->setTickPosition(QSlider::TicksBelow);
-    m_sliderN->setTickInterval(7);
+    m_sliderN->setTickInterval(1);
     m_sliderN->setMinimum(1);
-    m_sliderN->setMaximum(99);
+    m_sliderN->setMaximum(15);
     m_sliderN->setSingleStep(2);
     m_sliderN->setValue  (1);
     
     // create spinbox for nbr
     m_spinBoxN = new QSpinBox(m_ctrlGrp);
     m_spinBoxN->setMinimum(1);
-    m_spinBoxN->setMaximum(99);
+    m_spinBoxN->setMaximum(15);
     m_spinBoxN->setSingleStep(2);
     m_spinBoxN->setValue  (1);
     
@@ -72,9 +89,9 @@ MedianFilter::controlPanel()
     // create slider for k
     m_sliderK = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderK->setTickPosition(QSlider::TicksBelow);
-    m_sliderK->setTickInterval(7);
+    m_sliderK->setTickInterval(14);
     m_sliderK->setMinimum(0);
-    m_sliderK->setMaximum(99);
+    m_sliderK->setMaximum(112);
     m_sliderK->setSingleStep(1);
     m_sliderK->setValue  (0);
     
@@ -85,12 +102,17 @@ MedianFilter::controlPanel()
     m_spinBoxK->setSingleStep(1);
     m_spinBoxK->setValue  (0);
     
+    // create checkbox for re-apple
+    m_checkBox = new QCheckBox(m_ctrlGrp);
+    m_checkBox->setChecked(false);
     
     // init signal/slot connections for Threshold
     connect(m_sliderN , SIGNAL(valueChanged(int)), this, SLOT(changeNbr (int)));
     connect(m_spinBoxN, SIGNAL(valueChanged(int)), this, SLOT(changeNbr (int)));
     connect(m_sliderK , SIGNAL(valueChanged(int)), this, SLOT(changeK   (int)));
     connect(m_spinBoxK, SIGNAL(valueChanged(int)), this, SLOT(changeK   (int)));
+    connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(changeRe  (int)));
+
     
     // assemble dialog
     QGridLayout *layout = new QGridLayout;
@@ -101,6 +123,9 @@ MedianFilter::controlPanel()
     layout->addWidget(labelK    , 1, 0);
     layout->addWidget(m_sliderK , 1, 1);
     layout->addWidget(m_spinBoxK, 1, 2);
+    
+    layout->addWidget(labelTimes, 2, 0);
+    layout->addWidget(m_checkBox, 2, 1);
     
     // assign layout to group box
     m_ctrlGrp->setLayout(layout);
@@ -139,6 +164,13 @@ MedianFilter::changeK(int k)
     g_mainWindowP->displayOut();
 }
 
+void
+MedianFilter::changeRe(int)
+{
+    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
+    g_mainWindowP->displayOut();
+}
+
 
 void
 MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
@@ -156,10 +188,8 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
         }
     } else if (nbr > 1) {
         int bufSz = nbr+w-1; // size of buffer for each padded row
-        short* buffers[nbr]; //array of nbr pointers
-        for (int i=0; i<nbr; i++) {
-            buffers[i] = new short[bufSz];
-        }
+        short* buffers[nbr]; //array of nbr pointers, nbr refers to # of pointers
+        for (int i=0; i<nbr; i++) { buffers[i] = new short[bufSz]; }
         
         std::vector<int> v(0);
         
@@ -194,7 +224,7 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                 int nextRowIndex = y+nbr-1;
                 int nextBufferIndex = nextRowIndex%nbr;
                 copyOneRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
-                if (p1>endd) p1-=w;
+                if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
             }
         }
     }
@@ -233,13 +263,13 @@ MedianFilter::copyOneRowToBuffer(ChannelPtr<uchar> &p1, short* bufFor1Row, int w
     /* |..nbr/2..|..w..|..nbr/2..|  => bufSz=nbr+w-1 */
     
     int bufSz = nbr+w-1;
-    for (int i=0; i<nbr/2; i++) bufFor1Row[i]=*p1;
+    for (int i=0; i<nbr/2; i++) { bufFor1Row[i]=*p1; }
     for (int i=nbr/2; i<nbr/2+w; i++) {
         bufFor1Row[i] = *p1;
         p1++;
     }
     p1-=1;
-    for (int i=nbr/2+w; i<bufSz; i++) bufFor1Row[i]=*p1;
+    for (int i=nbr/2+w; i<bufSz; i++) { bufFor1Row[i]=*p1; }
     p1+=1;
 }
 
@@ -247,7 +277,7 @@ int
 MedianFilter::getMedianWithK(std::vector<int> v, int k) {
     int vSz = v.size(); // vector size, also equal to kernel size, always odd
     int median;
-    int sum = 0;
+    unsigned short sum = 0;
     
     if (vSz==1) { median = v[0]; }
     else {
@@ -266,5 +296,7 @@ MedianFilter::getMedianWithK(std::vector<int> v, int k) {
 
 void
 MedianFilter::reset() {
-    
+    changeNbr(1);
+    changeK(0);
+    m_checkBox->setChecked(false);
 }

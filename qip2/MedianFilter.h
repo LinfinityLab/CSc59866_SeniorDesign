@@ -33,13 +33,14 @@ protected:
     protected slots:
     void changeNbr(int);
     void changeK(int);
+    void changeRe(int);
     
 private:
-
     QSlider		*m_sliderK ;
     QSpinBox	*m_spinBoxK;
     QSlider     *m_sliderN;
     QSpinBox    *m_spinBoxN;
+    QCheckBox   *m_checkBox;
     
     QLabel		*m_label;
     
