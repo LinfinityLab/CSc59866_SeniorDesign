@@ -7,13 +7,12 @@
 //
 
 #include "Sharpen.h"
-#include "Blur.h"
 #include "MainWindow.h"
 
 extern MainWindow *g_mainWindowP;
 
 
-Sharpen::Sharpen(QWidget *parent) : ImageFilter(parent)
+Sharpen::Sharpen(QWidget *parent) : Blur(parent)
 {}
 
 
@@ -154,74 +153,6 @@ Sharpen::controlPanel()
 
 
 void
-Sharpen::changeXsz(int xsz)
-{
-    if (xsz%2==0) xsz=xsz+1; //need this because slider->getSingleStep(2) has no effect on mouse move
-    
-    m_sliderX ->blockSignals(true);
-    m_sliderX ->setValue    (xsz );
-    m_sliderX ->blockSignals(false);
-    m_spinBoxX->blockSignals(true);
-    m_spinBoxX->setValue    (xsz );
-    m_spinBoxX->blockSignals(false);
-    
-    if (m_checkBoxSync->isChecked()) {
-        m_sliderY ->blockSignals(true);
-        m_sliderY ->setValue    (xsz );
-        m_sliderY ->blockSignals(false);
-        m_spinBoxY->blockSignals(true);
-        m_spinBoxY->setValue    (xsz );
-        m_spinBoxY->blockSignals(false);
-    }
-    
-    // apply filter to source image; save result in destination image
-    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
-    
-    // display output
-    g_mainWindowP->displayOut();
-}
-
-void
-Sharpen::changeYsz(int ysz)
-{
-    if (ysz%2==0) ysz=ysz+1;
-    
-    m_sliderY ->blockSignals(true);
-    m_sliderY ->setValue    (ysz );
-    m_sliderY ->blockSignals(false);
-    m_spinBoxY->blockSignals(true);
-    m_spinBoxY->setValue    (ysz );
-    m_spinBoxY->blockSignals(false);
-    
-    if (m_checkBoxSync->isChecked()) {
-        m_sliderX ->blockSignals(true);
-        m_sliderX ->setValue    (ysz );
-        m_sliderX ->blockSignals(false);
-        m_spinBoxX->blockSignals(true);
-        m_spinBoxX->setValue    (ysz );
-        m_spinBoxX->blockSignals(false);
-    }
-    
-    // apply filter to source image; save result in destination image
-    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
-    
-    // display output
-    g_mainWindowP->displayOut();
-}
-
-void
-Sharpen::changeSync(int)
-{
-    int xsz = m_sliderX->value();
-    int ysz = m_sliderY->value();
-    
-    if (m_checkBoxSync->isChecked()) {
-        if (xsz>ysz) changeYsz(xsz);
-        else         changeXsz(ysz);
-    }
-}
-
-void
 Sharpen::changeEdge()
 {
     if (m_radioButtonEdge->isChecked()) {
@@ -253,50 +184,6 @@ Sharpen::changeFctr(int value) {
     applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
     g_mainWindowP->displayOut();
     
-}
-
-void
-Sharpen::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
-    IP_copyImageHeader(I1, I2);
-    
-    ImagePtr I3; // intermediate buffer
-    IP_copyImageHeader(I1, I3);
-    
-    int w = I1->width();
-    int h = I1->height();
-    int total = w * h;
-    
-    int type;
-    ChannelPtr<uchar> p1, p2, p3, endd;
-    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
-        IP_getChannel(I2, ch, p2, type);
-        IP_getChannel(I3, ch, p3, type);
-        
-        if (xsz == 1) for(endd = p1 + total; p1<endd;) *p3++ = *p1++;
-        if (xsz > 1) {
-            // blur rows one by one
-            for (int y=0; y<h; y++) {
-                IP_blur1D(p1, w, xsz, 1, p3);
-                p1+=w;
-                p3+=w;
-            }
-        }
-        
-        p3=p3-total; // point back to 0
-        
-        if (ysz == 1) for(endd = p3 + total; p3<endd;) *p2++ = *p3++;
-        if (ysz > 1) {
-            // blur columns one by one
-            for (int x=0; x<w; x++) {
-                IP_blur1D(p3, h, ysz, w, p2);
-                p3+=1;
-                p2+=1;
-            }
-        }
-        
-        //        p1=p1-total; // needed? point back to 0?
-        //        p2=p2-total;
-    }
 }
 
 void
@@ -333,34 +220,6 @@ Sharpen::shrp(ImagePtr I1, int fctr, ImagePtr I2) { // shrp: I2 = I1+ (I1-I2)*fc
         }
     }
 }
-
-void
-Sharpen::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
-    int neighborSz = kernel/2;
-    int newSz = size+kernel-1; // this is size for padded buffer
-    short* buffer = new short[newSz];
-    
-    // copy to buffer
-    for (int i=0; i<neighborSz; i++) buffer[i] = *src;
-    int index = 0;
-    for (int i=neighborSz; i < size+neighborSz; i++) {
-        buffer[i] = src[index];
-        index+=stride;
-    }
-    for (int i=size+neighborSz; i<newSz; i++) buffer[i] = src[index-stride];
-    
-    unsigned short sum = 0;
-    for(int i=0; i<kernel; i++) sum+=buffer[i];
-    
-    for (int i=0; i<size; i++) {
-        dst[i*stride] = sum/kernel;
-        sum+=(buffer[i+kernel] - buffer[i]);
-    }
-    
-    delete [] buffer; // delete it otherwise memory consuming
-}
-
-
 
 
 void

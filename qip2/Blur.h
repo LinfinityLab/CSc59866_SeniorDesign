@@ -20,18 +20,13 @@ public:
     QGroupBox*	controlPanel	();		// create control panel
     bool		applyFilter(ImagePtr, ImagePtr);// apply filter to input to init output
     void		reset		();		// reset parameters
-    void blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2);
-    void IP_blur1D(ChannelPtr<uchar> &p1, int size, int kernel, int stride, ChannelPtr<uchar> &p3);
+
 
 protected:
     
-    protected slots:
-    void changeXsz (int);
-    void changeYsz (int);
-    void changeSync(int);
-
+    void blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2);
+    void IP_blur1D(ChannelPtr<uchar> &p1, int size, int kernel, int stride, ChannelPtr<uchar> &p3);
     
-private:
     QSlider		*m_sliderX     ;
     QSlider		*m_sliderY     ;
     QSpinBox	*m_spinBoxX    ;
@@ -42,6 +37,15 @@ private:
     
     // widgets and groupbox
     QGroupBox	*m_ctrlGrp;	// Groupbox for panel
+    
+    protected slots:
+    void changeXsz (int);
+    void changeYsz (int);
+    void changeSync(int);
+
+    
+private:
+
 };
 
 #endif /* Blur */
