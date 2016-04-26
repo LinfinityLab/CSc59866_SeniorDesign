@@ -27,25 +27,18 @@ MedianFilter::applyFilter(ImagePtr I1, ImagePtr I2)
     
     int nbrSz = m_sliderN->value();
     int k     = m_sliderK->value();
-    bool isReapply = m_checkBox->isChecked();
+    int reApply = m_sliderR->value();
     
     // error checking
     if(k > nbrSz*nbrSz/2) return 0;
     
     // apply filter
-//    if (times == 1) { medianFilter(I1, nbrSz, k, I2);}
-//    else if (times==2) {
-//        ImagePtr I3;
-//        IP_copyImageHeader(I1, I3);
-//        medianFilter(I1, nbrSz, k, I3);
-//        medianFilter(I3, nbrSz, k, I2);
-//    }
-    if (!isReapply) { medianFilter(I1, nbrSz, k, I2); }
-    else {
-        ImagePtr I3;
-        IP_copyImageHeader(I1, I3);
-        medianFilter(I1, nbrSz, k, I3);
-        medianFilter(I3, nbrSz, k, I2);
+    medianFilter(I1, nbrSz, k, I2);
+    if (reApply > 0) {
+        for (int i=1; i<=reApply; i++) {
+            ImagePtr temp = I2;
+            medianFilter(temp, nbrSz, k, I2);
+        }
     }
     
     return 1;
@@ -67,12 +60,12 @@ MedianFilter::controlPanel()
     labelNbrSz->setText(QString("Nbr Sz"));
     
     QLabel *labelTimes = new QLabel;
-    labelTimes->setText(QString("times"));
+    labelTimes->setText(QString("Re-apply"));
     
     // create slider for nbr
     m_sliderN = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderN->setTickPosition(QSlider::TicksBelow);
-    m_sliderN->setTickInterval(1);
+    m_sliderN->setTickInterval(2);
     m_sliderN->setMinimum(1);
     m_sliderN->setMaximum(15);
     m_sliderN->setSingleStep(2);
@@ -103,16 +96,29 @@ MedianFilter::controlPanel()
     m_spinBoxK->setValue  (0);
     
     // create checkbox for re-apple
-    m_checkBox = new QCheckBox(m_ctrlGrp);
-    m_checkBox->setChecked(false);
+    // create slider for k
+    m_sliderR = new QSlider(Qt::Horizontal, m_ctrlGrp);
+    m_sliderR->setTickPosition(QSlider::TicksBelow);
+    m_sliderR->setTickInterval(1);
+    m_sliderR->setMinimum(0);
+    m_sliderR->setMaximum(10);
+    m_sliderR->setSingleStep(1);
+    m_sliderR->setValue  (0);
+    
+    // create spinbox for k
+    m_spinBoxR = new QSpinBox(m_ctrlGrp);
+    m_spinBoxR->setMinimum(0);
+    m_spinBoxR->setMaximum(10);
+    m_spinBoxR->setSingleStep(1);
+    m_spinBoxR->setValue  (0);
     
     // init signal/slot connections for Threshold
     connect(m_sliderN , SIGNAL(valueChanged(int)), this, SLOT(changeNbr (int)));
     connect(m_spinBoxN, SIGNAL(valueChanged(int)), this, SLOT(changeNbr (int)));
     connect(m_sliderK , SIGNAL(valueChanged(int)), this, SLOT(changeK   (int)));
     connect(m_spinBoxK, SIGNAL(valueChanged(int)), this, SLOT(changeK   (int)));
-    connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(changeRe  (int)));
-
+    connect(m_sliderR , SIGNAL(valueChanged(int)), this, SLOT(changeRe  (int)));
+    connect(m_spinBoxR, SIGNAL(valueChanged(int)), this, SLOT(changeRe  (int)));
     
     // assemble dialog
     QGridLayout *layout = new QGridLayout;
@@ -125,7 +131,8 @@ MedianFilter::controlPanel()
     layout->addWidget(m_spinBoxK, 1, 2);
     
     layout->addWidget(labelTimes, 2, 0);
-    layout->addWidget(m_checkBox, 2, 1);
+    layout->addWidget(m_sliderR , 2, 1);
+    layout->addWidget(m_spinBoxR, 2, 2);
     
     // assign layout to group box
     m_ctrlGrp->setLayout(layout);
@@ -165,8 +172,14 @@ MedianFilter::changeK(int k)
 }
 
 void
-MedianFilter::changeRe(int)
+MedianFilter::changeRe(int re)
 {
+    m_sliderR ->blockSignals(true);
+    m_sliderR ->setValue    (re  );
+    m_sliderR ->blockSignals(false);
+    m_spinBoxR->blockSignals(true);
+    m_spinBoxR->setValue    (re  );
+    m_spinBoxR->blockSignals(false);
     applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
     g_mainWindowP->displayOut();
 }
@@ -188,10 +201,10 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
         }
     } else if (nbr > 1) {
         int bufSz = nbr+w-1; // size of buffer for each padded row
-        short* buffers[nbr]; //array of nbr pointers, nbr refers to # of pointers
+        short* buffers[nbr]; // array of nbr pointers, nbr refers to # of pointers
         for (int i=0; i<nbr; i++) { buffers[i] = new short[bufSz]; }
         
-        std::vector<int> v(0);
+        std::vector<int> v(0); // vector for storing neighbors
         
         int type;
         ChannelPtr<uchar> p1, p2, endd;
@@ -243,7 +256,7 @@ MedianFilter::IP_padImage(ImagePtr src, int padSz, ImagePtr padded) {  // padSz 
         for (int i=0; i<padSz; i++) {
             for (int x=0; x<srcW; x++) {
                 p2[i*paddedW+x+padSz] = p1[x];
-                p2[(i+paddedH-padSz)*paddedW+x+padSz] =p1[x];
+                p2[(i+paddedH-padSz)*paddedW+x+padSz] = p1[x];
             }
             for (int y=0; y<paddedH; y++) {
                 p2[y*paddedW+i] = p1[y*srcW];
@@ -298,5 +311,5 @@ void
 MedianFilter::reset() {
     changeNbr(1);
     changeK(0);
-    m_checkBox->setChecked(false);
+    changeRe(0);
 }

@@ -40,7 +40,9 @@ private:
     QSpinBox	*m_spinBoxK;
     QSlider     *m_sliderN;
     QSpinBox    *m_spinBoxN;
-    QCheckBox   *m_checkBox;
+    QSlider     *m_sliderR;
+    QSpinBox    *m_spinBoxR;
+
     
     QLabel		*m_label;
     
