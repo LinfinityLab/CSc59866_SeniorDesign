@@ -10,6 +10,7 @@
 #include "MainWindow.h"
 #include <vector>
 #include <algorithm>
+#include <time.h>
 
 extern MainWindow *g_mainWindowP;
 
@@ -62,19 +63,25 @@ MedianFilter::controlPanel()
     QLabel *labelTimes = new QLabel;
     labelTimes->setText(QString("Re-apply"));
     
+    QLabel *labelHistoBased = new QLabel;
+    labelHistoBased->setText(QString("Histogram Based"));
+    
+    QLabel *labelQuickSort = new QLabel;
+    labelQuickSort->setText(QString("Quick Sort Based"));
+    
     // create slider for nbr
     m_sliderN = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderN->setTickPosition(QSlider::TicksBelow);
     m_sliderN->setTickInterval(2);
     m_sliderN->setMinimum(1);
-    m_sliderN->setMaximum(15);
+    m_sliderN->setMaximum(25);
     m_sliderN->setSingleStep(2);
     m_sliderN->setValue  (1);
     
     // create spinbox for nbr
     m_spinBoxN = new QSpinBox(m_ctrlGrp);
     m_spinBoxN->setMinimum(1);
-    m_spinBoxN->setMaximum(15);
+    m_spinBoxN->setMaximum(25);
     m_spinBoxN->setSingleStep(2);
     m_spinBoxN->setValue  (1);
     
@@ -112,6 +119,9 @@ MedianFilter::controlPanel()
     m_spinBoxR->setSingleStep(1);
     m_spinBoxR->setValue  (0);
     
+    m_checkBox = new QCheckBox(m_ctrlGrp);
+    m_checkBox->setChecked(false);
+    
     // init signal/slot connections for Threshold
     connect(m_sliderN , SIGNAL(valueChanged(int)), this, SLOT(changeNbr (int)));
     connect(m_spinBoxN, SIGNAL(valueChanged(int)), this, SLOT(changeNbr (int)));
@@ -133,6 +143,10 @@ MedianFilter::controlPanel()
     layout->addWidget(labelTimes, 2, 0);
     layout->addWidget(m_sliderR , 2, 1);
     layout->addWidget(m_spinBoxR, 2, 2);
+    
+    layout->addWidget(labelHistoBased, 3, 0);
+    layout->addWidget(m_checkBox, 3, 1);
+    
     
     // assign layout to group box
     m_ctrlGrp->setLayout(layout);
@@ -205,7 +219,7 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
         for (int i=0; i<nbr; i++) { buffers[i] = new short[bufSz]; }
         
         std::vector<int> v(0); // vector for storing neighbors
-        
+
         int type;
         ChannelPtr<uchar> p1, p2, endd;
         for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
@@ -223,25 +237,43 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                 copyOneRowToBuffer(p1, buffers[i], w, nbr);
             }
 
+            clock_t t;
+            t = clock();
             for (int y=0; y<h; y++) {
-                for (int x=0; x<w; x++) {
-                    for (int i=0; i<nbr; i++) {
-                        for (int j=0; j<nbr; j++) {
-                            v.push_back(buffers[i][j+x]);
+                if (!m_checkBox->isChecked()) {
+                    for (int x=0; x<w; x++) {
+                        for (int i=0; i<nbr; i++) {
+                            for (int j=0; j<nbr; j++) {
+                                v.push_back(buffers[i][j+x]);
+                            }
                         }
+                        *p2++ = getMedianWithK(v, k);
+                        v.clear();
                     }
-                    int median = getMedianWithK(v, k);
-                    *p2++ = median;
-                    v.clear();
+                } else {
+                    std::vector<int> histo(MXGRAY);
+                    for (int x=0; x<w; x++) {
+                        for (int i=0; i<nbr; i++) {
+                            for (int j=0; j<nbr; j++) {
+                                histo[buffers[i][j+x]]++;
+                            }
+                        }
+                        *p2++ = getMedianHisto(histo, nbr*nbr, k);
+                        std::fill(histo.begin(), histo.end(), 0); // reset histo
+                    }
                 }
+
                 int nextRowIndex = y+nbr-1;
                 int nextBufferIndex = nextRowIndex%nbr;
                 copyOneRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
                 if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
             }
+            t = clock() - t;
+            qDebug() << ((float)t)/CLOCKS_PER_SEC;
         }
     }
 }
+
 
 void
 MedianFilter::IP_padImage(ImagePtr src, int padSz, ImagePtr padded) {  // padSz = nbr/2
@@ -302,6 +334,21 @@ MedianFilter::getMedianWithK(std::vector<int> v, int k) {
             sum+=v[middleIndex];
             for (int i=1; i<=k; i++) { sum+= (v[middleIndex-i]+v[middleIndex+i]); }
             median = sum/(k*2+1);
+        }
+    }
+    return median;
+}
+
+int
+MedianFilter::getMedianHisto(std::vector<int> histo, int total, int k) { // total is total neighbors
+    int mid = total/2+1; // middle location of histo
+    int count = 0;
+    int median = 0;
+    for (int i=0; i<MXGRAY; i++) {
+        count += histo[i];
+        if (count >= mid) {
+            median = i;
+            break;
         }
     }
     return median;

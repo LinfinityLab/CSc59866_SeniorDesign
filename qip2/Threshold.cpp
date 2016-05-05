@@ -150,7 +150,6 @@ Threshold::threshold(ImagePtr I1, int thr, ImagePtr I2) {
 		IP_getChannel(I2, ch, p2, type);
 		for(endd = p1 + total; p1<endd;) *p2++ = lut[*p1++];
 	}
-
 }
 
 

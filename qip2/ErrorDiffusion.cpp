@@ -127,7 +127,7 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
             
             if (y % 2 == 0) {
                 copyToBuffer(p1, w, buffer0, bufSz);
-                in1 = buffer1+1;
+                in1 = buffer1+1; // +1 to skip the pad
                 in2 = buffer0+1;
 
             } else {
@@ -137,7 +137,7 @@ ErrorDiffusion::errorDiffusion(ImagePtr I1, int thr, ImagePtr I2) {
             }
 
             for(int x=0; x<w; x++) {
-                *p2 = (*in1 < thr) ? 0 : 255; //lut[*in1]; -> not working
+                *p2 = (*in1 < thr) ? 0 : 255; //lut[*in1];  not working
                 e = *in1 - *p2;
                 in1[1 ] += (e*7/16.0);
                 in2[-1] += (e*3/16.0);

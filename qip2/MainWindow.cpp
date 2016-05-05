@@ -195,31 +195,31 @@ MainWindow::createGroupPanel()
 	groupBox->setMinimumWidth(400);
 
 	// filter's enum indexes into container of image filters
-	m_imageFilterType[DUMMY	   ] = new Dummy;
-	m_imageFilterType[THRESHOLD] = new Threshold;
-	m_imageFilterType[CONTRAST ] = new Contrast;
-    m_imageFilterType[QUANTIZATION] = new Quantization;
+	m_imageFilterType[DUMMY           ] = new Dummy;
+	m_imageFilterType[THRESHOLD       ] = new Threshold;
+	m_imageFilterType[CONTRAST        ] = new Contrast;
+    m_imageFilterType[QUANTIZATION    ] = new Quantization;
     m_imageFilterType[HISTOGRAMSTRETCH] = new HistogramStretch;
-    m_imageFilterType[HISTOGRAMMATCH] = new HistogramMatch;
-    m_imageFilterType[ERRORDIFFUSION] = new ErrorDiffusion;
-    m_imageFilterType[BLUR] = new Blur;
-    m_imageFilterType[SHARPEN] = new Sharpen;
-    m_imageFilterType[MEDIANFILTER] = new MedianFilter;
+    m_imageFilterType[HISTOGRAMMATCH  ] = new HistogramMatch;
+    m_imageFilterType[ERRORDIFFUSION  ] = new ErrorDiffusion;
+    m_imageFilterType[BLUR            ] = new Blur;
+    m_imageFilterType[SHARPEN         ] = new Sharpen;
+    m_imageFilterType[MEDIANFILTER    ] = new MedianFilter;
 
 	// create a stacked widget to hold multiple control panels
 	m_stackWidgetPanels = new QStackedWidget;
 
 	// add filter control panels to stacked widget
-	m_stackWidgetPanels->addWidget(m_imageFilterType[DUMMY    ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilterType[THRESHOLD]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilterType[CONTRAST ]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[QUANTIZATION]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilterType[DUMMY           ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilterType[THRESHOLD       ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilterType[CONTRAST        ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[QUANTIZATION    ]->controlPanel());
     m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMSTRETCH]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMMATCH]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[BLUR]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[SHARPEN]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[MEDIANFILTER]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMMATCH  ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION  ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[BLUR            ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[SHARPEN         ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[MEDIANFILTER    ]->controlPanel());
 
 
 	// display blank dummmy panel initially

@@ -12,7 +12,7 @@
 extern MainWindow *g_mainWindowP;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::Threshold:
+// Quantization::Quantization:
 //
 // Constructor.
 //
@@ -22,7 +22,7 @@ Quantization::Quantization(QWidget *parent) : ImageFilter(parent)
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::applyFilter:
+// Quantization::applyFilter:
 //
 // Run filter on the image, transforming I1 to I2.
 // Overrides ImageFilter::applyFilter().
@@ -34,16 +34,14 @@ Quantization::applyFilter(ImagePtr I1, ImagePtr I2)
     // error checking
     if(I1.isNull()) return 0;
     
-    // get threshold value
     int qtz = m_slider->value();
+    bool isDither = m_checkBox->isChecked();
     
-    int ditherState = m_checkBox->checkState();
-//    bool isDither = m_checkBox->ischecked();
     // error checking
     if(qtz < 0 || qtz > MXGRAY) return 0;
     
     // apply filter
-    quantization(I1, qtz, ditherState, I2);
+    quantization(I1, qtz, isDither, I2);
     
     return 1;
 }
@@ -51,7 +49,7 @@ Quantization::applyFilter(ImagePtr I1, ImagePtr I2)
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Threshold::controlPanel:
+// Quantization::controlPanel:
 //
 // Create group box for control panel.
 //
@@ -90,8 +88,8 @@ Quantization::controlPanel()
     
     
     // init signal/slot connections for Quantization
-    connect(m_slider , SIGNAL(valueChanged(int)), this, SLOT(changeQtz (int)));
-    connect(m_spinBox, SIGNAL(valueChanged(int)), this, SLOT(changeQtz (int)));
+    connect(m_slider  , SIGNAL(valueChanged(int)), this, SLOT(changeQtz (int)));
+    connect(m_spinBox , SIGNAL(valueChanged(int)), this, SLOT(changeQtz (int)));
     connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(changeDtr (int)));
     
     // assemble dialog
@@ -135,9 +133,9 @@ Quantization::changeQtz(int qtz)
 }
 
 void
-Quantization::changeDtr(int ditherState)
+Quantization::changeDtr(int)
 {
-    qDebug() << "dither " << ditherState;
+    // apply filter to source image; save result in destination image
     applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
     
     // display output
@@ -147,7 +145,7 @@ Quantization::changeDtr(int ditherState)
 
 //
 void
-Quantization::quantization(ImagePtr I1, int qtz, int ditherState, ImagePtr I2) {
+Quantization::quantization(ImagePtr I1, int qtz, bool isDither, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
     int h = I1->height();
@@ -163,16 +161,13 @@ Quantization::quantization(ImagePtr I1, int qtz, int ditherState, ImagePtr I2) {
     
     int type;
     ChannelPtr<uchar> p1, p2, endd;
-    if (ditherState == 0){
+    
+    if (!isDither){ // if dither checkbox is unchecked
         for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
             IP_getChannel(I2, ch, p2, type);
             for(endd = p1 + total; p1<endd;) *p2++ = lut[*p1++];
         }
-    
-    // if dither checkbox is checked
-    } else if (ditherState == 2) {
-        qDebug() << "dither " << ditherState;
-        
+    } else {
         int pixelPoint = 0;
         int k;
         for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
@@ -186,13 +181,12 @@ Quantization::quantization(ImagePtr I1, int qtz, int ditherState, ImagePtr I2) {
             }
         }
     }
-
 }
 
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Quantization::reset:
+// Quantization::reset
 //
 // Reset parameters.
 //

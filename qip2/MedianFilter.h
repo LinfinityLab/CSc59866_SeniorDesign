@@ -25,10 +25,9 @@ public:
 protected:
     void medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2);
     void copyOneRowToBuffer(ChannelPtr<uchar> &p1, short* buffer, int w, int nbr);
-    //int getMedianWithK(int arr[], int arrSz, int k);
     int getMedianWithK(std::vector<int> v, int k);
+    int getMedianHisto(std::vector<int> histo, int total, int k);
     void IP_padImage(ImagePtr src, int padSz, ImagePtr padded);
-//    int storeAllNbrToArr(int arr[], short* buffers[], int index);
     
     protected slots:
     void changeNbr(int);
@@ -42,6 +41,7 @@ private:
     QSpinBox    *m_spinBoxN;
     QSlider     *m_sliderR;
     QSpinBox    *m_spinBoxR;
+    QCheckBox   *m_checkBox;
 
     
     QLabel		*m_label;

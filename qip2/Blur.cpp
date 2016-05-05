@@ -121,7 +121,7 @@ Blur::controlPanel()
 void
 Blur::changeXsz(int xsz)
 {
-    if (xsz%2==0) xsz=xsz+1; //need this because slider->getSingleStep(2) has no effect on mouse move
+    if (xsz%2==0) xsz=xsz+1; //need this because slider->setSingleStep(2) has no effect on mouse move
     
     m_sliderX ->blockSignals(true);
     m_sliderX ->setValue    (xsz );
@@ -226,16 +226,13 @@ Blur::blur(ImagePtr I1, int xsz, int ysz, ImagePtr I2) {
                 p2+=1;
             }
         }
-        
-//        p1=p1-total; // needed? point back to 0?
-//        p2=p2-total;
     }
 }
 
 
 void
 Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
-    int neighborSz = kernel/2;
+    int neighborSz = kernel/2; // how many pixels on the left and right
     int newSz = size+kernel-1; // this is size for padded buffer
     short* buffer = new short[newSz];
     
@@ -256,7 +253,7 @@ Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, Channe
         sum+=(buffer[i+kernel] - buffer[i]);
     }
     
-    delete [] buffer; // delete it otherwise memory consuming
+    delete [] buffer; // delete it otherwise memory leaking
 }
 
 

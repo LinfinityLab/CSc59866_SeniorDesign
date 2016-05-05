@@ -23,7 +23,7 @@ public:
     void		reset		();		// reset parameters
     
 protected:
-    void quantization(ImagePtr I1, int qtz, int if_d, ImagePtr I2);
+    void quantization(ImagePtr I1, int qtz, bool isDither, ImagePtr I2);
     
     protected slots:
     void changeQtz(int);

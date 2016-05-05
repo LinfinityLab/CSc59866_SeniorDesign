@@ -47,9 +47,6 @@ Contrast::applyFilter(ImagePtr I1, ImagePtr I2)
     if(brigt < -256 || brigt > 256 || contr < -100 || contr >100) return 0;
     
     // apply filter
-    //	double b, c;	// brightness, contrast parameters
-    //        contrast(I1, b, c, I2);
-    
     contrast(I1, brigt, contr, refce, I2);
     
     return 1;
@@ -67,10 +64,12 @@ Contrast::controlPanel()
 {
     // init group box
     m_ctrlGrp = new QGroupBox("Contrast");
+    
+    // label for brightness
     QLabel *label_brightness = new QLabel;
     label_brightness->setText(QString("Brightness"));
     
-    //slider for brightness
+    // slider for brightness
     m_sliderB = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderB->setTickPosition(QSlider::TicksBelow);
     m_sliderB->setTickInterval(25);
@@ -78,26 +77,23 @@ Contrast::controlPanel()
     m_sliderB->setMaximum(256);
     m_sliderB->setValue  (0);
     
-    //spinbox for brightness
+    // spinbox for brightness
     m_spinBoxB = new QSpinBox(m_ctrlGrp);
     m_spinBoxB->setMinimum(-256);
     m_spinBoxB->setMaximum(256);
     m_spinBoxB->setValue  (0);
     
+    // label for contrast
     QLabel *label_contrast = new QLabel;
     label_contrast->setText(QString("Contrast"));
     
-    //slider for contrast
+    // slider for contrast
     m_sliderC = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderC->setTickPosition(QSlider::TicksBelow);
     m_sliderC->setTickInterval(25);
     m_sliderC->setMinimum(-100);
     m_sliderC->setMaximum(100);
     m_sliderC->setValue  (0);
-    
-    
-    QLabel *label_reference = new QLabel;
-    label_reference->setText(QString("Reference"));
     
     // doublespinbox for contrast
     m_spinBoxC = new QDoubleSpinBox(m_ctrlGrp);
@@ -106,6 +102,9 @@ Contrast::controlPanel()
     m_spinBoxC->setValue  (0);
     m_spinBoxC->setSingleStep(0.5);
     
+    // label for reference
+    QLabel *label_reference = new QLabel;
+    label_reference->setText(QString("Reference"));
     
     // slider for reference
     m_sliderR = new QSlider(Qt::Horizontal, m_ctrlGrp);
@@ -121,13 +120,13 @@ Contrast::controlPanel()
     m_spinBoxR->setMaximum(256);
     m_spinBoxR->setValue  (128);
     
-    // init signal/slot connections for Threshold
-    connect(m_sliderB , SIGNAL(valueChanged(int)),    this, SLOT(changeBrightness (int)));
-    connect(m_spinBoxB, SIGNAL(valueChanged(int)),    this, SLOT(changeBrightness (int)));
-    connect(m_sliderC,  SIGNAL(valueChanged(int)),    this, SLOT(changeContrast2  (int)));
+    // init signal/slot connections for brightness, contrast and reference
+    connect(m_sliderB , SIGNAL(valueChanged(int   )), this, SLOT(changeBrightness (int   )));
+    connect(m_spinBoxB, SIGNAL(valueChanged(int   )), this, SLOT(changeBrightness (int   )));
+    connect(m_sliderC,  SIGNAL(valueChanged(int   )), this, SLOT(changeContrast2  (int   )));
     connect(m_spinBoxC, SIGNAL(valueChanged(double)), this, SLOT(changeContrast   (double)));
-    connect(m_sliderR,  SIGNAL(valueChanged(int)),    this, SLOT(changeReference  (int)));
-    connect(m_spinBoxR, SIGNAL(valueChanged(int)),    this, SLOT(changeReference  (int)));
+    connect(m_sliderR,  SIGNAL(valueChanged(int   )), this, SLOT(changeReference  (int   )));
+    connect(m_spinBoxR, SIGNAL(valueChanged(int   )), this, SLOT(changeReference  (int   )));
     
     // INSERT YOUR CODE HERE
     
@@ -143,7 +142,6 @@ Contrast::controlPanel()
     layout->addWidget(label_reference,  2, 0);
     layout->addWidget(m_sliderR,        2, 1);
     layout->addWidget(m_spinBoxR,       2, 2);
-    
     
     m_ctrlGrp->setLayout(layout);
     
@@ -236,16 +234,9 @@ Contrast::contrast(ImagePtr I1, double brightness, double contrast, double refer
     double contr;
     
     //set contrast range to 0.25 to 5
-    if (contrast >= 0) {
-        contr = contrast / 25.0 + 1.0;
-    }
-    else {
-        contr = contrast / 133.0 + 1.0;
-    }
+    if (contrast >= 0) { contr = contrast / 25.0 + 1.0; }
+    else               { contr = contrast / 133.0 + 1.0;}
     
-    //qDebug() << "current contrast: " << contr;
-    
-    //int reference = 128;
     int i, lut[MXGRAY];
     for(i=0; i<MXGRAY; ++i)
         lut[i] = (int)CLIP((i - reference)*contr + reference + brightness, 0, 255);
@@ -274,17 +265,4 @@ Contrast::reset() {
     changeBrightness (0);
     changeContrast   (0);
     changeReference  (128);
-    
-    
-//    m_sliderB->setValue  (0);
-//    m_sliderC->setValue  (0);
-//    m_sliderR->setValue  (0);
-//    
-//    double brigt, contr, refce;	// brightness, contrast parameters
-//    brigt = (double) m_sliderB->value();
-//    contr = (double) m_sliderC->value();
-//    refce = (double) m_sliderR->value();
-    
-    //applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
-    //contrast(g_mainWindowP->imageSrc(), brigt, contr, refce, g_mainWindowP->imageDst());
 }
