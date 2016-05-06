@@ -235,37 +235,37 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
 
             // copy first row to first nbr/2 buffers, where are top padded rows
             for (int i=0; i<nbr/2; i++) {
-                copyOneRowToBuffer(p1, buffers[i], w, nbr);
+                copyRowToBuffer(p1, buffers[i], w, nbr);
                 p1=p1-w; // we dont want to go to the next row, continue copying the first row
             }
             
             // continue to rest of buffers, note here we still begin copying from frist row of I1
             for (int i=nbr/2; i<nbr; i++) {
-                copyOneRowToBuffer(p1, buffers[i], w, nbr);
+                copyRowToBuffer(p1, buffers[i], w, nbr);
             }
 
             clock_t t;
-            t = clock();
-            if (!m_checkBox->isChecked()) { // if histogram based checkbox is not checked
-                for (int y=0; y<h; y++) {
-                    for (int x=0; x<w; x++) {
-                        for (int i=0; i<nbr; i++) {
+            t = clock();    // start clock
+            if (!m_checkBox->isChecked()) {     // if histogram based checkbox is not checked
+                for (int y=0; y<h; y++) {       // visit each row
+                    for (int x=0; x<w; x++) {   // visit each pixel in row
+                        for (int i=0; i<nbr; i++) {     // visit each pixel value in neighborhood
                             for (int j=0; j<nbr; j++) {
                                 v.push_back(buffers[i][j+x]);
                             }
                         }
-                        *p2++ = getMedianWithK(v, k);
-                        v.clear();
+                        *p2++ = getMedianWithK(v, k); // use sorting to find median
+                        v.clear(); // clear vector
                     }
                     
                     int nextRowIndex = y+nbr-1;
                     int nextBufferIndex = nextRowIndex%nbr;
-                    copyOneRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
+                    copyRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
                     if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
-                    
                 }
-                t = clock() - t;
+                t = clock() - t;    // clock ends
                 printf("time for %dx%d neighborhood using sorting is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
+                
             } else {
                 std::vector<int> histo(MXGRAY);
                 for (int y=0; y<h; y++) {
@@ -275,13 +275,13 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                                 histo[buffers[i][j+x]]++;
                             }
                         }
-                        *p2++ = getMedianHisto(histo, nbr*nbr, k);
-                        std::fill(histo.begin(), histo.end(), 0); // reset histo
+                        *p2++ = getMedianHisto(histo, nbr*nbr, k);  // use histogram to find median
+                        std::fill(histo.begin(), histo.end(), 0);   // reset histo
                     }
                     
-                    int nextRowIndex = y+nbr-1;
-                    int nextBufferIndex = nextRowIndex%nbr;
-                    copyOneRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
+                    int nextRowIndex = y+nbr-1; // index of next row that is needed to copy to buffer
+                    int nextBufferIndex = nextRowIndex%nbr; // index of buffers that next row needs to copy to
+                    copyRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
                     if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
                 }
                 t = clock() - t;
@@ -290,7 +290,6 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
         }
     }
 }
-
 
 void
 MedianFilter::IP_padImage(ImagePtr src, int padSz, ImagePtr padded) {  // padSz = nbr/2
@@ -321,7 +320,7 @@ MedianFilter::IP_padImage(ImagePtr src, int padSz, ImagePtr padded) {  // padSz 
 }
 
 void
-MedianFilter::copyOneRowToBuffer(ChannelPtr<uchar> &p1, short* bufFor1Row, int w, int nbr) {
+MedianFilter::copyRowToBuffer(ChannelPtr<uchar> &p1, short* bufFor1Row, int w, int nbr) {
     /* |..nbr/2..|..w..|..nbr/2..|  => bufSz=nbr+w-1 */
     
     int bufSz = nbr+w-1;
@@ -358,17 +357,30 @@ MedianFilter::getMedianWithK(std::vector<int> v, int k) {
 
 int
 MedianFilter::getMedianHisto(std::vector<int> histo, int total, int k) { // total is total neighbors
-    int mid = total/2+1; // middle location of histo
-    int count = 0;
-    int median = 0;
-    for (int i=0; i<MXGRAY; i++) {
+    int mid = total/2+1; // middle location of values in histo
+    int count = 0;  // count number of pixels
+    int i;
+    for (i=0; i<MXGRAY; i++) {
         count += histo[i];
-        if (count >= mid) {
-            median = i;
-            break;
+        if (count >= mid) {  // when count reaches to mid or exceeds, median is found
+            break; // for loop breaks, now i is median
         }
     }
-    return median;
+    if (k==0) {return i;}
+    else {
+        int sum = i;
+        int prevCount = count;  //
+        int nextCount = count;
+        for (int j=1; j<=k; j++) {
+            prevCount-=histo[i-j];
+            nextCount+=histo[i+j];
+            if (prevCount <= mid-j) { sum += histo[i-j]; }
+            else                    { sum += histo[i];   }
+            if (nextCount >= mid+j) { sum += histo[i+j]; }
+            else                    { sum += histo[i];   }
+        }
+        return sum/(k*2+1);
+    }
 }
 
 void
@@ -376,4 +388,5 @@ MedianFilter::reset() {
     changeNbr(1);
     changeK(0);
     changeRe(0);
+    m_checkBox->setChecked(false);
 }

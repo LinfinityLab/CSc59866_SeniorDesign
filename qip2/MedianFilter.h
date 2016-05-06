@@ -24,7 +24,7 @@ public:
     
 protected:
     void medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2);
-    void copyOneRowToBuffer(ChannelPtr<uchar> &p1, short* buffer, int w, int nbr);
+    void copyRowToBuffer(ChannelPtr<uchar> &p1, short* buffer, int w, int nbr);
     int getMedianWithK(std::vector<int> v, int k);
     int getMedianHisto(std::vector<int> histo, int total, int k);
     void IP_padImage(ImagePtr src, int padSz, ImagePtr padded);
