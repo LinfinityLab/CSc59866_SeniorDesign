@@ -33,6 +33,7 @@ protected:
     void changeNbr(int);
     void changeK(int);
     void changeRe(int);
+    void changeHis(int);
     
 private:
     QSlider		*m_sliderK ;

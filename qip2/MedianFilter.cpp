@@ -129,6 +129,7 @@ MedianFilter::controlPanel()
     connect(m_spinBoxK, SIGNAL(valueChanged(int)), this, SLOT(changeK   (int)));
     connect(m_sliderR , SIGNAL(valueChanged(int)), this, SLOT(changeRe  (int)));
     connect(m_spinBoxR, SIGNAL(valueChanged(int)), this, SLOT(changeRe  (int)));
+    connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(changeHis (int)));
     
     // assemble dialog
     QGridLayout *layout = new QGridLayout;
@@ -198,6 +199,12 @@ MedianFilter::changeRe(int re)
     g_mainWindowP->displayOut();
 }
 
+void
+MedianFilter::changeHis(int) {
+    applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
+    g_mainWindowP->displayOut();
+}
+
 
 void
 MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
@@ -239,8 +246,8 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
 
             clock_t t;
             t = clock();
-            for (int y=0; y<h; y++) {
-                if (!m_checkBox->isChecked()) {
+            if (!m_checkBox->isChecked()) { // if histogram based checkbox is not checked
+                for (int y=0; y<h; y++) {
                     for (int x=0; x<w; x++) {
                         for (int i=0; i<nbr; i++) {
                             for (int j=0; j<nbr; j++) {
@@ -250,8 +257,18 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                         *p2++ = getMedianWithK(v, k);
                         v.clear();
                     }
-                } else {
-                    std::vector<int> histo(MXGRAY);
+                    
+                    int nextRowIndex = y+nbr-1;
+                    int nextBufferIndex = nextRowIndex%nbr;
+                    copyOneRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
+                    if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
+                    
+                }
+                t = clock() - t;
+                printf("time for %dx%d neighborhood using sorting is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
+            } else {
+                std::vector<int> histo(MXGRAY);
+                for (int y=0; y<h; y++) {
                     for (int x=0; x<w; x++) {
                         for (int i=0; i<nbr; i++) {
                             for (int j=0; j<nbr; j++) {
@@ -261,15 +278,15 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                         *p2++ = getMedianHisto(histo, nbr*nbr, k);
                         std::fill(histo.begin(), histo.end(), 0); // reset histo
                     }
+                    
+                    int nextRowIndex = y+nbr-1;
+                    int nextBufferIndex = nextRowIndex%nbr;
+                    copyOneRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
+                    if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
                 }
-
-                int nextRowIndex = y+nbr-1;
-                int nextBufferIndex = nextRowIndex%nbr;
-                copyOneRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
-                if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
+                t = clock() - t;
+                printf("time for %dx%d neighborhood using histogram based is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
             }
-            t = clock() - t;
-            qDebug() << ((float)t)/CLOCKS_PER_SEC;
         }
     }
 }
