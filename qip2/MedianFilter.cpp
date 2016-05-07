@@ -249,14 +249,26 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
             if (!m_checkBox->isChecked()) {     // if histogram based checkbox is not checked
                 for (int y=0; y<h; y++) {       // visit each row
                     for (int x=0; x<w; x++) {   // visit each pixel in row
-                        for (int i=0; i<nbr; i++) {     // visit each pixel value in neighborhood
-                            for (int j=0; j<nbr; j++) {
-                                v.push_back(buffers[i][j+x]);
+                        if (x==0) {
+                            for (int i=0; i<nbr; i++) {     // visit each pixel value in neighborhood
+                                for (int j=0; j<nbr; j++) {
+                                    v.push_back(buffers[j][i+x]);
+                                }
+                            }
+                        } else {
+                            v.erase(v.begin(), v.begin()+nbr);
+                            for (int i=0; i<nbr; i++) {
+                                v.insert(v.begin(), buffers[i][x+nbr]);
                             }
                         }
+//                        for (int i=0; i<v.size(); i++) {
+//                            qDebug() << v[i];
+//                        }
+//                        qDebug() << "******************";
                         *p2++ = getMedianWithK(v, k); // use sorting to find median
-                        v.clear(); // clear vector
                     }
+
+                    v.clear(); // clear vector
                     
                     int nextRowIndex = y+nbr-1;
                     int nextBufferIndex = nextRowIndex%nbr;
@@ -272,7 +284,7 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                     for (int x=0; x<w; x++) {
                         for (int i=0; i<nbr; i++) {
                             for (int j=0; j<nbr; j++) {
-                                histo[buffers[i][j+x]]++;
+                                histo[buffers[j][i+x]]++;
                             }
                         }
                         *p2++ = getMedianHisto(histo, nbr*nbr, k);  // use histogram to find median
