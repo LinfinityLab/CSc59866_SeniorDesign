@@ -74,14 +74,14 @@ MedianFilter::controlPanel()
     m_sliderN->setTickPosition(QSlider::TicksBelow);
     m_sliderN->setTickInterval(2);
     m_sliderN->setMinimum(1);
-    m_sliderN->setMaximum(25);
+    m_sliderN->setMaximum(50);
     m_sliderN->setSingleStep(2);
     m_sliderN->setValue  (1);
     
     // create spinbox for nbr
     m_spinBoxN = new QSpinBox(m_ctrlGrp);
     m_spinBoxN->setMinimum(1);
-    m_spinBoxN->setMaximum(25);
+    m_spinBoxN->setMaximum(50);
     m_spinBoxN->setSingleStep(2);
     m_spinBoxN->setValue  (1);
     
@@ -91,19 +91,18 @@ MedianFilter::controlPanel()
     m_sliderK->setTickPosition(QSlider::TicksBelow);
     m_sliderK->setTickInterval(14);
     m_sliderK->setMinimum(0);
-    m_sliderK->setMaximum(112);
+    m_sliderK->setMaximum(200);
     m_sliderK->setSingleStep(1);
     m_sliderK->setValue  (0);
     
     // create spinbox for k
     m_spinBoxK = new QSpinBox(m_ctrlGrp);
     m_spinBoxK->setMinimum(0);
-    m_spinBoxK->setMaximum(99);
+    m_spinBoxK->setMaximum(200);
     m_spinBoxK->setSingleStep(1);
     m_spinBoxK->setValue  (0);
     
     // create checkbox for re-apple
-    // create slider for k
     m_sliderR = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderR->setTickPosition(QSlider::TicksBelow);
     m_sliderR->setTickInterval(1);
@@ -175,6 +174,10 @@ MedianFilter::changeNbr(int nbr)
 void
 MedianFilter::changeK(int k)
 {
+    int nbrSz = m_sliderN->value();
+    if (k > nbrSz*nbrSz/2) {
+        k = nbrSz*nbrSz/2;  // max k is nbrSz*nbrSz/2
+    }
     m_sliderK ->blockSignals(true);
     m_sliderK ->setValue    (k   );
     m_sliderK ->blockSignals(false);
@@ -378,19 +381,27 @@ MedianFilter::getMedianHisto(std::vector<int> histo, int total, int k) { // tota
             break; // for loop breaks, now i is median
         }
     }
-    if (k==0) {return i;}
+    if (k==0) { return i; }
     else {
         int sum = i;
-        int prevCount = count;  //
-        int nextCount = count;
+        int left = mid-(count-histo[i])-1;
+        int right = count-mid;
+        int leftIndex=i, rightIndex=i;
         for (int j=1; j<=k; j++) {
-            prevCount-=histo[i-j];
-            nextCount+=histo[i+j];
-            if (prevCount <= mid-j) { sum += histo[i-j]; }
-            else                    { sum += histo[i];   }
-            if (nextCount >= mid+j) { sum += histo[i+j]; }
-            else                    { sum += histo[i];   }
+            while (left == 0) {
+                --leftIndex;
+                left=histo[leftIndex];
+            }
+            sum+=leftIndex;
+            --left;
+            while (right == 0) {
+                ++rightIndex;
+                right = histo[rightIndex];
+            }
+            sum+=rightIndex;
+            --right;
         }
+        
         return sum/(k*2+1);
     }
 }
