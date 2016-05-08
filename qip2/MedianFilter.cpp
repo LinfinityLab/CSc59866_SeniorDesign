@@ -227,8 +227,6 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
         int bufSz = nbr+w-1; // size of buffer for each padded row
         short* buffers[nbr]; // array of nbr pointers, nbr refers to # of pointers
         for (int i=0; i<nbr; i++) { buffers[i] = new short[bufSz]; }
-        
-        std::vector<int> v(0); // vector for storing neighbors
 
         int type;
         ChannelPtr<uchar> p1, p2, endd;
@@ -248,31 +246,29 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
             }
 
             clock_t t;
-            t = clock();    // start clock
             if (!m_checkBox->isChecked()) {     // if histogram based checkbox is not checked
+                t = clock();    // start clock
+                std::vector<int> v(0); // vector for storing neighbors
+                
                 for (int y=0; y<h; y++) {       // visit each row
+                    for (int i=0; i<nbr; i++) {     // visit each pixel value in neighborhood
+                        for (int j=0; j<nbr; j++) {
+                            v.push_back(buffers[j][i]);
+                        }
+                    }
+                    
                     for (int x=0; x<w; x++) {   // visit each pixel in row
-                        if (x==0) {
-                            for (int i=0; i<nbr; i++) {     // visit each pixel value in neighborhood
-                                for (int j=0; j<nbr; j++) {
-                                    v.push_back(buffers[j][i+x]);
-                                }
-                            }
-                        } else {
-                            v.erase(v.begin(), v.begin()+nbr);
+                        *p2++ = getMedianWithK(v, k); // use sorting to find median
+                        
+                        if (x<w-1) {
+                            v.erase(v.begin(), v.begin()+nbr);  // delete outgoing column
                             for (int i=0; i<nbr; i++) {
-                                v.insert(v.begin(), buffers[i][x+nbr]);
+                                v.push_back(buffers[i][x+nbr]); // add incoming column
                             }
                         }
-//                        for (int i=0; i<v.size(); i++) {
-//                            qDebug() << v[i];
-//                        }
-//                        qDebug() << "******************";
-                        *p2++ = getMedianWithK(v, k); // use sorting to find median
                     }
-
                     v.clear(); // clear vector
-                    
+
                     int nextRowIndex = y+nbr-1;
                     int nextBufferIndex = nextRowIndex%nbr;
                     copyRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
@@ -281,19 +277,28 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                 t = clock() - t;    // clock ends
                 printf("time for %dx%d neighborhood using sorting is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
                 
-            } else {
+            } else {    // if histogram based checkbox is checked
+                t = clock();    // start clock
                 std::vector<int> histo(MXGRAY);
+                
                 for (int y=0; y<h; y++) {
-                    for (int x=0; x<w; x++) {
-                        for (int i=0; i<nbr; i++) {
-                            for (int j=0; j<nbr; j++) {
-                                histo[buffers[j][i+x]]++;
-                            }
+                    for (int i=0; i<nbr; i++) {
+                        for (int j=0; j<nbr; j++) {
+                            histo[buffers[j][i]]++;
                         }
-                        *p2++ = getMedianHisto(histo, nbr*nbr, k);  // use histogram to find median
-                        std::fill(histo.begin(), histo.end(), 0);   // reset histo
                     }
                     
+                    for (int x=0; x<w; x++) {   //
+                        *p2++ = getMedianHisto(histo, nbr*nbr, k);  // use histogram to find median
+                        if (x<w-1) {  // if not the last pix of a row
+                            for (int i = 0; i < nbr; i++) {
+                                histo[buffers[i][x]]--;      // delete outgoing column (x)
+                                histo[buffers[i][x+nbr]]++;  // add incoming column (x+nbr)
+                            }
+                        }
+                    }
+                    
+                    std::fill(histo.begin(), histo.end(), 0); // reset histo
                     int nextRowIndex = y+nbr-1; // index of next row that is needed to copy to buffer
                     int nextBufferIndex = nextRowIndex%nbr; // index of buffers that next row needs to copy to
                     copyRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
@@ -352,22 +357,19 @@ MedianFilter::copyRowToBuffer(ChannelPtr<uchar> &p1, short* bufFor1Row, int w, i
 int
 MedianFilter::getMedianWithK(std::vector<int> v, int k) {
     int vSz = v.size(); // vector size, also equal to kernel size, always odd
-    int median;
-    unsigned short sum = 0;
+    unsigned short sum;
     
-    if (vSz==1) { median = v[0]; }
+    if (vSz==1) { return v[0]; }  // no need to sort if there is only 1 ele
     else {
-        std::sort(v.begin(), v.end()); // sort the vector
-        
-        int middleIndex = vSz/2;
-        if (k==0) { median = v[middleIndex]; }
+        std::sort(v.begin(), v.end());  // sort the vector
+        int middleIndex = vSz/2;    // middle index
+        if (k==0) { return v[middleIndex]; }
         else {
-            sum+=v[middleIndex];
+            sum=v[middleIndex];
             for (int i=1; i<=k; i++) { sum+= (v[middleIndex-i]+v[middleIndex+i]); }
-            median = sum/(k*2+1);
+            return sum/(k*2+1);
         }
     }
-    return median;
 }
 
 int
@@ -384,8 +386,8 @@ MedianFilter::getMedianHisto(std::vector<int> histo, int total, int k) { // tota
     if (k==0) { return i; }
     else {
         int sum = i;
-        int left = mid-(count-histo[i])-1;
-        int right = count-mid;
+        int left = mid-(count-histo[i])-1;  // how many on the left can give
+        int right = count-mid;              // how many on the right can give
         int leftIndex=i, rightIndex=i;
         for (int j=1; j<=k; j++) {
             while (left == 0) {
