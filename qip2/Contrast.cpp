@@ -218,15 +218,9 @@ void Contrast::changeReference(int reference)
 }
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// contrast:
-//
-// INSERT YOUR CODE HERE.
-//
 void
 Contrast::contrast(ImagePtr I1, double brightness, double contrast, double reference, ImagePtr I2)
 {
-    
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
     int h = I1->height();
@@ -241,15 +235,12 @@ Contrast::contrast(ImagePtr I1, double brightness, double contrast, double refer
     for(i=0; i<MXGRAY; ++i)
         lut[i] = (int)CLIP((i - reference)*contr + reference + brightness, 0, 255);
     
-    
     int type;
     ChannelPtr<uchar> p1, p2, endd;
     for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
         IP_getChannel(I2, ch, p2, type);
         for(endd = p1 + total; p1<endd;) *p2++ = lut[*p1++];
-        
     }
-    
 }
 
 

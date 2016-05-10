@@ -246,24 +246,24 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
             }
 
             clock_t t;
-            if (!m_checkBox->isChecked()) {     // if histogram based checkbox is not checked
-                t = clock();    // start clock
-                std::vector<int> v(0); // vector for storing neighbors
+            if (!m_checkBox->isChecked()) {  // if histogram based checkbox is not checked
+                t = clock();  // start clock
+                std::vector<int> v(0);  // vector for storing neighbors
                 
-                for (int y=0; y<h; y++) {       // visit each row
-                    for (int i=0; i<nbr; i++) {     // visit each pixel value in neighborhood
+                for (int y=0; y<h; y++) {  // visit each row
+                    for (int i=0; i<nbr; i++) {  // visit each pixel value in neighborhood
                         for (int j=0; j<nbr; j++) {
                             v.push_back(buffers[j][i]);
                         }
                     }
                     
-                    for (int x=0; x<w; x++) {   // visit each pixel in row
-                        *p2++ = getMedianWithK(v, k); // use sorting to find median
+                    for (int x=0; x<w; x++) {  // visit each pixel in row
+                        *p2++ = getMedianWithK(v, k);  // use sorting to find median
                         
                         if (x<w-1) {
                             v.erase(v.begin(), v.begin()+nbr);  // delete outgoing column
                             for (int i=0; i<nbr; i++) {
-                                v.push_back(buffers[i][x+nbr]); // add incoming column
+                                v.push_back(buffers[i][x+nbr]);  // add incoming column
                             }
                         }
                     }
@@ -274,11 +274,11 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                     copyRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
                     if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
                 }
-                t = clock() - t;    // clock ends
+                t = clock() - t;  // clock ends
                 printf("time for %dx%d neighborhood using sorting is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
                 
-            } else {    // if histogram based checkbox is checked
-                t = clock();    // start clock
+            } else {   // if histogram based checkbox is checked
+                t = clock();   // start clock
                 std::vector<int> histo(MXGRAY);
                 
                 for (int y=0; y<h; y++) {

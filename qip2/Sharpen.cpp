@@ -31,7 +31,7 @@ Sharpen::applyFilter(ImagePtr I1, ImagePtr I2)
     if(xsz < 0 || xsz > MXGRAY || ysz < 0 || ysz > MXGRAY) return 0;
     
     // apply filter
-    blur(I1, xsz, ysz, I2);
+    blur(I1, xsz, ysz, I2);  // blur function from Blur.cpp
     
     if (m_radioButtonEdge->isChecked()) edge(I1, fctr, I2);
     
@@ -128,21 +128,20 @@ Sharpen::controlPanel()
     
     // assemble dialog
     QGridLayout *layout = new QGridLayout;
-    layout->addWidget(m_checkBoxSync, 0, 0);
-    layout->addWidget(labelLock     , 0, 1);
-    layout->addWidget( labelXsz     , 1, 0);
-    layout->addWidget(m_sliderX     , 1, 1);
-    layout->addWidget(m_spinBoxX    , 1, 2);
-    layout->addWidget( labelYsz     , 2, 0);
-    layout->addWidget(m_sliderY     , 2, 1);
-    layout->addWidget(m_spinBoxY    , 2, 2);
+    layout->addWidget(m_checkBoxSync   , 0, 0);
+    layout->addWidget(labelLock        , 0, 1);
+    layout->addWidget( labelXsz        , 1, 0);
+    layout->addWidget(m_sliderX        , 1, 1);
+    layout->addWidget(m_spinBoxX       , 1, 2);
+    layout->addWidget( labelYsz        , 2, 0);
+    layout->addWidget(m_sliderY        , 2, 1);
+    layout->addWidget(m_spinBoxY       , 2, 2);
     layout->addWidget(m_radioButtonEdge, 3, 0);
-    layout->addWidget(labelEdge     , 3, 1);
+    layout->addWidget(labelEdge        , 3, 1);
     layout->addWidget(m_radioButtonShrp, 4, 0);
-    layout->addWidget(labelShrp     , 4, 1);
-    
-    layout->addWidget( labelFctr     , 5, 0);
-    layout->addWidget(m_sliderFctr    , 5, 1);
+    layout->addWidget(labelShrp        , 4, 1);
+    layout->addWidget( labelFctr       , 5, 0);
+    layout->addWidget(m_sliderFctr     , 5, 1);
     layout->addWidget(m_spinBoxFctr    , 5, 2);
     
     // assign layout to group box

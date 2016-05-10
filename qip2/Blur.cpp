@@ -234,26 +234,25 @@ void
 Blur::IP_blur1D(ChannelPtr<uchar> &src, int size, int kernel, int stride, ChannelPtr<uchar> &dst) {
     int neighborSz = kernel/2; // how many pixels on the left and right
     int newSz = size+kernel-1; // this is size for padded buffer
-    short* buffer = new short[newSz];
+    short* buffer = new short[newSz]; // buffer to store a padded row or column
     
     // copy to buffer
-    for (int i=0; i<neighborSz; i++) buffer[i] = *src;
+    for (int i=0; i<neighborSz; i++) { buffer[i] = *src; }  // copy first pixel to left padded area
     int index = 0;
-    for (int i=neighborSz; i < size+neighborSz; i++) {
+    for (int i=neighborSz; i < size+neighborSz; i++) {  // continue with pixel replication
         buffer[i] = src[index];
-        index+=stride;
+        index+=stride;  // next index
     }
-    for (int i=size+neighborSz; i<newSz; i++) buffer[i] = src[index-stride];
+    for (int i=size+neighborSz; i<newSz; i++) { buffer[i] = src[index-stride]; } // copy last pixel to right padded area
     
     unsigned short sum = 0;
-    for(int i=0; i<kernel; i++) sum+=buffer[i];
-    
+    for(int i=0; i<kernel; i++) { sum+=buffer[i]; }  // sum of pixel values in the neighborhood
     for (int i=0; i<size; i++) {
-        dst[i*stride] = sum/kernel;
-        sum+=(buffer[i+kernel] - buffer[i]);
+        dst[i*stride] = sum/kernel;  // average
+        sum+=(buffer[i+kernel] - buffer[i]);  // substract outgoing pixel and add incoming pixel
     }
     
-    delete [] buffer; // delete it otherwise memory leaking
+    delete [] buffer; // delete buffer otherwise memory leaking
 }
 
 
