@@ -27,22 +27,30 @@ protected:
     void copyRowToBuffer(ChannelPtr<uchar> &p1, short* buffer, int w, int nbr);
     int getMedianWithK(std::vector<int> v, int k);
     int getMedianHisto(std::vector<int> histo, int total, int k);
-    void IP_padImage(ImagePtr src, int padSz, ImagePtr padded);
+    std::vector<float> sortingMtdTime;
+    std::vector<float> HistoBasedTime;
+    
     
     protected slots:
     void changeNbr(int);
     void changeK(int);
     void changeRe(int);
-    void changeHis(int);
+    void changeMethod();
+    void showGraph(int);
     
 private:
-    QSlider		*m_sliderK ;
-    QSpinBox	*m_spinBoxK;
-    QSlider     *m_sliderN;
-    QSpinBox    *m_spinBoxN;
-    QSlider     *m_sliderR;
-    QSpinBox    *m_spinBoxR;
-    QCheckBox   *m_checkBox;
+    QSlider		 *m_sliderK ;
+    QSpinBox	 *m_spinBoxK;
+    QSlider      *m_sliderN;
+    QSpinBox     *m_spinBoxN;
+    QSlider      *m_sliderR;
+    QSpinBox     *m_spinBoxR;
+    QRadioButton *m_radioButtonSort;
+    QRadioButton *m_radioButtonHist;
+    QRadioButton *m_radioButtonCnst;
+    QCheckBox    *m_checkBox;
+    QWindow *m_window;
+
 
     
     QLabel		*m_label;

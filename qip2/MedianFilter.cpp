@@ -64,24 +64,31 @@ MedianFilter::controlPanel()
     labelTimes->setText(QString("Re-apply"));
     
     QLabel *labelHistoBased = new QLabel;
-    labelHistoBased->setText(QString("Histogram Based"));
+    labelHistoBased->setText(QString("Histogram Based Filtering"));
     
-    QLabel *labelQuickSort = new QLabel;
-    labelQuickSort->setText(QString("Quick Sort Based"));
+    QLabel *labelSortMethod = new QLabel;
+    labelSortMethod->setText(QString("Sorting Method Filtering"));
+    
+    QLabel *labelConstTime = new QLabel;
+    labelConstTime->setText(QString("Constant Time Filtering"));
+    
+    QLabel *labelShow = new QLabel;
+    labelShow->setText(QString("Show Filtering Time Graph"));
+    
     
     // create slider for nbr
     m_sliderN = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_sliderN->setTickPosition(QSlider::TicksBelow);
     m_sliderN->setTickInterval(2);
     m_sliderN->setMinimum(1);
-    m_sliderN->setMaximum(50);
+    m_sliderN->setMaximum(100);
     m_sliderN->setSingleStep(2);
     m_sliderN->setValue  (1);
     
     // create spinbox for nbr
     m_spinBoxN = new QSpinBox(m_ctrlGrp);
     m_spinBoxN->setMinimum(1);
-    m_spinBoxN->setMaximum(50);
+    m_spinBoxN->setMaximum(100);
     m_spinBoxN->setSingleStep(2);
     m_spinBoxN->setValue  (1);
     
@@ -118,6 +125,13 @@ MedianFilter::controlPanel()
     m_spinBoxR->setSingleStep(1);
     m_spinBoxR->setValue  (0);
     
+    // create radio buttons
+    m_radioButtonSort = new QRadioButton(m_ctrlGrp);
+    m_radioButtonHist = new QRadioButton(m_ctrlGrp);
+    m_radioButtonCnst = new QRadioButton(m_ctrlGrp);
+    m_radioButtonSort->setChecked(true);
+    
+    // create check box
     m_checkBox = new QCheckBox(m_ctrlGrp);
     m_checkBox->setChecked(false);
     
@@ -128,7 +142,10 @@ MedianFilter::controlPanel()
     connect(m_spinBoxK, SIGNAL(valueChanged(int)), this, SLOT(changeK   (int)));
     connect(m_sliderR , SIGNAL(valueChanged(int)), this, SLOT(changeRe  (int)));
     connect(m_spinBoxR, SIGNAL(valueChanged(int)), this, SLOT(changeRe  (int)));
-    connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(changeHis (int)));
+    connect(m_radioButtonSort, SIGNAL(clicked() ), this, SLOT(changeMethod ()));
+    connect(m_radioButtonHist, SIGNAL(clicked() ), this, SLOT(changeMethod ()));
+    connect(m_radioButtonCnst, SIGNAL(clicked() ), this, SLOT(changeMethod ()));
+    connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(showGraph (int)));
     
     // assemble dialog
     QGridLayout *layout = new QGridLayout;
@@ -144,9 +161,14 @@ MedianFilter::controlPanel()
     layout->addWidget(m_sliderR , 2, 1);
     layout->addWidget(m_spinBoxR, 2, 2);
     
-    layout->addWidget(labelHistoBased, 3, 0);
-    layout->addWidget(m_checkBox, 3, 1);
-    
+    layout->addWidget(m_radioButtonSort , 3, 0);
+    layout->addWidget(labelSortMethod   , 3, 1);
+    layout->addWidget(m_radioButtonHist , 4, 0);
+    layout->addWidget(labelHistoBased   , 4, 1);
+    layout->addWidget(m_radioButtonCnst , 5, 0);
+    layout->addWidget(labelConstTime    , 5, 1);
+    layout->addWidget(m_checkBox        , 6, 0);
+    layout->addWidget(labelShow         , 6, 1);
     
     // assign layout to group box
     m_ctrlGrp->setLayout(layout);
@@ -203,11 +225,16 @@ MedianFilter::changeRe(int re)
 }
 
 void
-MedianFilter::changeHis(int) {
+MedianFilter::changeMethod() {
     applyFilter(g_mainWindowP->imageSrc(), g_mainWindowP->imageDst());
     g_mainWindowP->displayOut();
 }
 
+void
+MedianFilter::showGraph(int) {
+    m_window = new QWindow();
+    m_window->show();
+}
 
 void
 MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
@@ -246,7 +273,7 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
             }
 
             clock_t t;
-            if (!m_checkBox->isChecked()) {  // if histogram based checkbox is not checked
+            if (m_radioButtonSort->isChecked()) {  // if sorting method is selected
                 t = clock();  // start clock
                 std::vector<int> v(0);  // vector for storing neighbors
                 
@@ -275,9 +302,10 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                     if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
                 }
                 t = clock() - t;  // clock ends
-                printf("time for %dx%d neighborhood using sorting is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
+                sortingMtdTime.push_back(((float)t)/CLOCKS_PER_SEC);
+                printf("Median filter %dx%d using sorting method is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
                 
-            } else {   // if histogram based checkbox is checked
+            } else if (m_radioButtonHist->isChecked()) {   // if histogram based method is selected
                 t = clock();   // start clock
                 std::vector<int> histo(MXGRAY);
                 
@@ -288,52 +316,86 @@ MedianFilter::medianFilter(ImagePtr I1, int nbr, int k, ImagePtr I2) {
                         }
                     }
                     
-                    for (int x=0; x<w; x++) {   //
+                    for (int x=0; x<w-1; x++) {   //
                         *p2++ = getMedianHisto(histo, nbr*nbr, k);  // use histogram to find median
-                        if (x<w-1) {  // if not the last pix of a row
-                            for (int i = 0; i < nbr; i++) {
-                                histo[buffers[i][x]]--;      // delete outgoing column (x)
-                                histo[buffers[i][x+nbr]]++;  // add incoming column (x+nbr)
-                            }
+
+                        for (int i = 0; i < nbr; i++) {
+                            histo[buffers[i][x]]--;      // delete outgoing column (x)
+                            histo[buffers[i][x+nbr]]++;  // add incoming column (x+nbr)
                         }
                     }
+                    *p2++ = getMedianHisto(histo, nbr*nbr, k);  // use histogram to find median
                     
-                    std::fill(histo.begin(), histo.end(), 0); // reset histo
+                    std::fill(histo.begin(), histo.end(), 0); // reset histogram
+                    
+                    // move to the next row
                     int nextRowIndex = y+nbr-1; // index of next row that is needed to copy to buffer
                     int nextBufferIndex = nextRowIndex%nbr; // index of buffers that next row needs to copy to
                     copyRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
                     if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
                 }
                 t = clock() - t;
-                printf("time for %dx%d neighborhood using histogram based is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
-            }
-        }
-    }
-}
-
-void
-MedianFilter::IP_padImage(ImagePtr src, int padSz, ImagePtr padded) {  // padSz = nbr/2
-    int srcW = src->width();
-    int paddedW = padded->width();
-    int paddedH = padded->height();
-
-    int type;
-    ChannelPtr<uchar> p1, p2, endd;
-    for(int ch = 0; IP_getChannel(src, ch, p1, type); ch++) {
-        IP_getChannel(padded, ch, p2, type);
-        for (int i=0; i<padSz; i++) {
-            for (int x=0; x<srcW; x++) {
-                p2[i*paddedW+x+padSz] = p1[x];
-                p2[(i+paddedH-padSz)*paddedW+x+padSz] = p1[x];
-            }
-            for (int y=0; y<paddedH; y++) {
-                p2[y*paddedW+i] = p1[y*srcW];
-                p2[y*paddedW+srcW+padSz+i-1] = p1[(y+1)*srcW-1];
-            }
-        }
-        for (int y=padSz; y<paddedH-padSz; y++) {
-            for (int x=padSz; x<paddedW-padSz; x++) {
-                p2[y*paddedW+x] = p1[(y-padSz)*srcW+x-padSz];
+                HistoBasedTime.push_back(((float)t)/CLOCKS_PER_SEC);
+                printf("Median filter %dx%d using histogram based is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
+                
+            } else if (m_radioButtonCnst->isChecked()) {
+                t = clock();   // start clock
+                std::vector<int> kernelHisto(MXGRAY);  // kernel histogram
+                std::vector< std::vector<int> > columnHistos;  // column histograms; vector of vectors
+                std::vector<int> prevBuffer(bufSz);
+                
+                int nextBufferIndex = 0;
+                
+                for (int i=0; i<bufSz; i++) {
+                    prevBuffer[i] = buffers[nextBufferIndex][i];
+                }
+                
+                // initialize all column histograms
+                std::vector<int> histo(MXGRAY);
+                for (int i=0; i<bufSz; i++) {  // number of column histograms = padded size
+                    columnHistos.push_back(histo);
+                }
+                
+                // first assignment to column histograms
+                for (int j=0; j<bufSz; j++) {
+                    for (int i=0; i<nbr; i++) {
+                        columnHistos[j][buffers[i][j]]++;
+                    }
+                }
+                
+                for (int y=0; y<h; y++) {
+                    for (int i=0; i<nbr; i++) {
+                        for (int j=0; j<nbr; j++) {
+                            kernelHisto[buffers[j][i]]++;
+                        }
+                    }
+                    
+                    for (int x=0; x<w-1; x++) {   //
+                        *p2++ = getMedianHisto(kernelHisto, nbr*nbr, k);  // use histogram to find median
+                        
+                        columnHistos[x+nbr][prevBuffer[x+nbr]]--;
+                        columnHistos[x+nbr][buffers[nextBufferIndex][x+nbr]]++;
+                        
+                        for (int i=0; i<MXGRAY; i++) {
+                            kernelHisto[i]-=columnHistos[x][i];
+                            kernelHisto[i]+=columnHistos[x+nbr][i];
+                        }
+                    }
+                    *p2++ = getMedianHisto(kernelHisto, nbr*nbr, k);
+                    
+                    // move to the next row
+                    int nextRowIndex = y+nbr-1; // index of next row that is needed to copy to buffer
+                    int nextBufferIndex = nextRowIndex%nbr; // index of buffers that next row needs to copy to
+                    for (int i=0; i<bufSz; i++) {
+                        prevBuffer[i] = buffers[nextBufferIndex][i];
+                    }
+                    copyRowToBuffer(p1, buffers[nextBufferIndex], w, nbr);
+                    if (p1>endd) p1-=w; // if have passed last pix, go back to the first pix of last row
+                    
+                    std::fill(kernelHisto.begin(), kernelHisto.end(), 0); // reset kernel histogram
+                }
+                t = clock() - t;
+                printf("Median filter %dx%d using constant time is: %f seconds\n", nbr, nbr, ((float)t)/CLOCKS_PER_SEC);
             }
         }
     }
@@ -373,7 +435,7 @@ MedianFilter::getMedianWithK(std::vector<int> v, int k) {
 }
 
 int
-MedianFilter::getMedianHisto(std::vector<int> histo, int total, int k) { // total is total neighbors
+MedianFilter::getMedianHisto(std::vector<int> histo, int total, int k) { // total is total # of neighbors
     int mid = total/2+1; // middle location of values in histo
     int count = 0;  // count number of pixels
     int i;
@@ -390,12 +452,12 @@ MedianFilter::getMedianHisto(std::vector<int> histo, int total, int k) { // tota
         int right = count-mid;              // how many on the right can give
         int leftIndex=i, rightIndex=i;
         for (int j=1; j<=k; j++) {
-            while (left == 0) {
-                --leftIndex;
-                left=histo[leftIndex];
+            while (left == 0) {  // while left has none to give
+                --leftIndex;    // move to one index to the left
+                left=histo[leftIndex];  // left now has histo[leftIndex] to give
             }
-            sum+=leftIndex;
-            --left;
+            sum+=leftIndex; // give one to the sum
+            --left; // left has one less to give
             while (right == 0) {
                 ++rightIndex;
                 right = histo[rightIndex];
@@ -413,5 +475,5 @@ MedianFilter::reset() {
     changeNbr(1);
     changeK(0);
     changeRe(0);
-    m_checkBox->setChecked(false);
+    m_radioButtonSort->setChecked(true);
 }
