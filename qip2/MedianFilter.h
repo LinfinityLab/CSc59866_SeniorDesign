@@ -27,16 +27,12 @@ protected:
     void copyRowToBuffer(ChannelPtr<uchar> &p1, short* buffer, int w, int nbr);
     int getMedianWithK(std::vector<int> v, int k);
     int getMedianHisto(std::vector<int> histo, int total, int k);
-    std::vector<float> sortingMtdTime;
-    std::vector<float> HistoBasedTime;
-    
     
     protected slots:
     void changeNbr(int);
     void changeK(int);
     void changeRe(int);
     void changeMethod();
-    void showGraph(int);
     
 private:
     QSlider		 *m_sliderK ;
@@ -47,8 +43,6 @@ private:
     QSpinBox     *m_spinBoxR;
     QRadioButton *m_radioButtonSort;
     QRadioButton *m_radioButtonHist;
-    QRadioButton *m_radioButtonCnst;
-    QCheckBox    *m_checkBox;
     QWindow *m_window;
 
 
