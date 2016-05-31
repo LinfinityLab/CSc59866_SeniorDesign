@@ -22,7 +22,7 @@ public:
     void		reset		();		// reset parameters
     
 protected:
-    void histogramMatch(ImagePtr I1, int expon, ImagePtr I2);
+    void match(ImagePtr I1, int exp, ImagePtr I2);
     
     protected slots:
     void changeExp(int);

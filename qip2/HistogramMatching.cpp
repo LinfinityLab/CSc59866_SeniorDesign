@@ -28,13 +28,10 @@ HistogramMatch::applyFilter(ImagePtr I1, ImagePtr I2)
     if(I1.isNull()) return 0;
     
     // get expon
-    int expon = m_slider->value();
-    
-    // error checking
-    if(expon < 0 || expon > MXGRAY) return 0;
+    int exp = m_slider->value();
     
     // apply filter
-    histogramMatch(I1, expon, I2);
+    match(I1, exp, I2);
     
     return 1;
 }
@@ -59,21 +56,21 @@ HistogramMatch::controlPanel()
     
     m_slider = new QSlider(Qt::Horizontal, m_ctrlGrp);
     m_slider->setTickPosition(QSlider::TicksBelow);
-    m_slider->setTickInterval(5);
-    m_slider->setMinimum(-100);
-    m_slider->setMaximum(100);
-    m_slider->setValue  (0);
+    m_slider->setTickInterval(40  );
+    m_slider->setMinimum     (-100);
+    m_slider->setMaximum     (100 );
+    m_slider->setValue       (0   );
     
     m_spinBox = new QSpinBox(m_ctrlGrp);
     m_spinBox->setMinimum   (-100);
-    m_spinBox->setMaximum   (100);
-    m_spinBox->setValue     (0);
-    m_spinBox->setSingleStep(1);
+    m_spinBox->setMaximum   (100 );
+    m_spinBox->setValue     (0   );
+    m_spinBox->setSingleStep(1   );
     
     
     // init signal/slot connections for Intensity
-    connect(m_slider , SIGNAL(valueChanged(int)), this, SLOT(changeExp  (int)));
-    connect(m_spinBox, SIGNAL(valueChanged(int)), this, SLOT(changeExp  (int)));
+    connect(m_slider , SIGNAL(valueChanged(int)), this, SLOT(changeExp(int)));
+    connect(m_spinBox, SIGNAL(valueChanged(int)), this, SLOT(changeExp(int)));
     
     // assemble dialog
     QGridLayout *layout = new QGridLayout;
@@ -107,7 +104,8 @@ HistogramMatch::changeExp(int exp)
 }
 
 
-void HistogramMatch::histogramMatch(ImagePtr I1, int value, ImagePtr I2) {
+void
+HistogramMatch::match(ImagePtr I1, int exp, ImagePtr I2) {
     
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
@@ -135,10 +133,10 @@ void HistogramMatch::histogramMatch(ImagePtr I1, int value, ImagePtr I2) {
     for (i = 0; i < MXGRAY; i++) {
         
         //check slider is positive or negative
-        if (value >= 0) {
-            Histogram_ref[i] = pow(i/(double)MaxGray, value);
+        if (exp >= 0) {
+            Histogram_ref[i] = pow(i/(double)MaxGray, exp);
         } else {
-            Histogram_ref[i] = 1 - pow(i/(double)MaxGray, value*(-1));
+            Histogram_ref[i] = 1 - pow(i/(double)MaxGray, exp*(-1));
         }
         Havg += Histogram_ref[i];
     }

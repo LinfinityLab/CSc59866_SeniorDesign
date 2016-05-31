@@ -237,7 +237,6 @@ HistogramStretch::autoMin(int)
             if (!histo[i]) continue;
             
             min = i;
-            qDebug() << min;
             autoSliderAndSpinBox(m_sliderMin, m_spinBoxMin, min);
             break;
         }
@@ -281,7 +280,6 @@ HistogramStretch::autoMax(int)
             if (!histo[j]) continue;
             
             max = j;
-            qDebug() << max;
             autoSliderAndSpinBox(m_sliderMax, m_spinBoxMax, max);
             break;
         }
