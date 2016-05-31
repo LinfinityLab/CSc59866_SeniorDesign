@@ -30,15 +30,15 @@ check: first
 
 compilers: moc/moc_MainWindow.cpp moc/moc_qcustomplot.cpp moc/moc_Dummy.cpp\
 	 moc/moc_Threshold.cpp moc/moc_Contrast.cpp moc/moc_Quantization.cpp\
-	 moc/moc_HistogramStretch.cpp moc/moc_HistogramMatch.cpp moc/moc_ErrorDiffusion.cpp\
+	 moc/moc_HistogramStretching.cpp moc/moc_HistogramMatching.cpp moc/moc_ErrorDiffusion.cpp\
 	 moc/moc_Blur.cpp moc/moc_Sharpen.cpp moc/moc_MedianFilter.cpp
 compiler_objective_c_make_all:
 compiler_objective_c_clean:
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc/moc_MainWindow.cpp moc/moc_qcustomplot.cpp moc/moc_Dummy.cpp moc/moc_Threshold.cpp moc/moc_Contrast.cpp moc/moc_Quantization.cpp moc/moc_HistogramStretch.cpp moc/moc_HistogramMatch.cpp moc/moc_ErrorDiffusion.cpp moc/moc_Blur.cpp moc/moc_Sharpen.cpp moc/moc_MedianFilter.cpp
+compiler_moc_header_make_all: moc/moc_MainWindow.cpp moc/moc_qcustomplot.cpp moc/moc_Dummy.cpp moc/moc_Threshold.cpp moc/moc_Contrast.cpp moc/moc_Quantization.cpp moc/moc_HistogramStretching.cpp moc/moc_HistogramMatching.cpp moc/moc_ErrorDiffusion.cpp moc/moc_Blur.cpp moc/moc_Sharpen.cpp moc/moc_MedianFilter.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc/moc_MainWindow.cpp moc/moc_qcustomplot.cpp moc/moc_Dummy.cpp moc/moc_Threshold.cpp moc/moc_Contrast.cpp moc/moc_Quantization.cpp moc/moc_HistogramStretch.cpp moc/moc_HistogramMatch.cpp moc/moc_ErrorDiffusion.cpp moc/moc_Blur.cpp moc/moc_Sharpen.cpp moc/moc_MedianFilter.cpp
+	-$(DEL_FILE) moc/moc_MainWindow.cpp moc/moc_qcustomplot.cpp moc/moc_Dummy.cpp moc/moc_Threshold.cpp moc/moc_Contrast.cpp moc/moc_Quantization.cpp moc/moc_HistogramStretching.cpp moc/moc_HistogramMatching.cpp moc/moc_ErrorDiffusion.cpp moc/moc_Blur.cpp moc/moc_Sharpen.cpp moc/moc_MedianFilter.cpp
 moc/moc_MainWindow.cpp: /Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		IP/mac/header/IPtoUI.h \
@@ -68,7 +68,7 @@ moc/moc_MainWindow.cpp: /Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.fram
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers/QtNumeric \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers/QtPrintSupport \
 		MainWindow.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib MainWindow.h -o moc/moc_MainWindow.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib MainWindow.h -o moc/moc_MainWindow.cpp
 
 moc/moc_qcustomplot.cpp: /Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers/QObject \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers/QPointer \
@@ -94,67 +94,68 @@ moc/moc_qcustomplot.cpp: /Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framew
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers/QtNumeric \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers/QtPrintSupport \
 		qcustomplot.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib qcustomplot.h -o moc/moc_qcustomplot.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib qcustomplot.h -o moc/moc_qcustomplot.cpp
 
 moc/moc_Dummy.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		Dummy.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Dummy.h -o moc/moc_Dummy.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Dummy.h -o moc/moc_Dummy.cpp
 
 moc/moc_Threshold.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		Threshold.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Threshold.h -o moc/moc_Threshold.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Threshold.h -o moc/moc_Threshold.cpp
 
 moc/moc_Contrast.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		Contrast.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Contrast.h -o moc/moc_Contrast.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Contrast.h -o moc/moc_Contrast.cpp
 
 moc/moc_Quantization.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		Quantization.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Quantization.h -o moc/moc_Quantization.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Quantization.h -o moc/moc_Quantization.cpp
 
-moc/moc_HistogramStretch.cpp: ImageFilter.h \
+moc/moc_HistogramStretching.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
-		HistogramStretch.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib HistogramStretch.h -o moc/moc_HistogramStretch.cpp
+		HistogramStretching.h
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib HistogramStretching.h -o moc/moc_HistogramStretching.cpp
 
-moc/moc_HistogramMatch.cpp: ImageFilter.h \
+moc/moc_HistogramMatching.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
-		HistogramMatch.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib HistogramMatch.h -o moc/moc_HistogramMatch.cpp
+		HistogramMatching.h
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib HistogramMatching.h -o moc/moc_HistogramMatching.cpp
 
 moc/moc_ErrorDiffusion.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		ErrorDiffusion.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib ErrorDiffusion.h -o moc/moc_ErrorDiffusion.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib ErrorDiffusion.h -o moc/moc_ErrorDiffusion.cpp
 
 moc/moc_Blur.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		Blur.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Blur.h -o moc/moc_Blur.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Blur.h -o moc/moc_Blur.cpp
 
 moc/moc_Sharpen.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
+		Blur.h \
 		Sharpen.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Sharpen.h -o moc/moc_Sharpen.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Sharpen.h -o moc/moc_Sharpen.cpp
 
 moc/moc_MedianFilter.cpp: ImageFilter.h \
 		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		MedianFilter.h
-	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/CSc59866_SeniorDesign/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib MedianFilter.h -o moc/moc_MedianFilter.cpp
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2 -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib MedianFilter.h -o moc/moc_MedianFilter.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:

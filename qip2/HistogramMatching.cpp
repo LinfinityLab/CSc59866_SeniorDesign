@@ -1,5 +1,5 @@
 //
-//  HistogramMatch.cpp
+//  HistogramMatching.cpp
 //  qip
 //
 //  Created by Weifan Lin on 3/29/16.
@@ -7,22 +7,22 @@
 //
 
 #include "MainWindow.h"
-#include "HistogramMatch.h"
+#include "HistogramMatching.h"
 
 extern MainWindow *g_mainWindowP;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// HistogramStretch:HistogramStretch
+// HistogramMatching:HistogramMatching
 //
 // Constructor.
 //
-HistogramMatch::HistogramMatch(QWidget *parent) : ImageFilter(parent)
+HistogramMatching::HistogramMatching(QWidget *parent) : ImageFilter(parent)
 {}
 
 
 
 bool
-HistogramMatch::applyFilter(ImagePtr I1, ImagePtr I2)
+HistogramMatching::applyFilter(ImagePtr I1, ImagePtr I2)
 {
     // error checking
     if(I1.isNull()) return 0;
@@ -31,19 +31,19 @@ HistogramMatch::applyFilter(ImagePtr I1, ImagePtr I2)
     int exp = m_slider->value();
     
     // apply filter
-    match(I1, exp, I2);
+    histogramMatching(I1, exp, I2);
     
     return 1;
 }
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// HistogramStretch::controlPanel:
+// HistogramStretching::controlPanel:
 //
 // Create group box for control panel.
 //
 QGroupBox*
-HistogramMatch::controlPanel()
+HistogramMatching::controlPanel()
 {
     // init group box
     m_ctrlGrp = new QGroupBox("Histogram Matching");
@@ -87,7 +87,7 @@ HistogramMatch::controlPanel()
 
 
 void
-HistogramMatch::changeExp(int exp)
+HistogramMatching::changeExp(int exp)
 {
     m_slider ->blockSignals(true);
     m_slider ->setValue    (exp );
@@ -105,7 +105,7 @@ HistogramMatch::changeExp(int exp)
 
 
 void
-HistogramMatch::match(ImagePtr I1, int exp, ImagePtr I2) {
+HistogramMatching::histogramMatching(ImagePtr I1, int exp, ImagePtr I2) {
     
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
@@ -113,84 +113,77 @@ HistogramMatch::match(ImagePtr I1, int exp, ImagePtr I2) {
     int total = w * h;
     
     int left[MXGRAY], right[MXGRAY], histo[MXGRAY], reserved[MXGRAY];
-    double Histogram_ref[MXGRAY];
+    double HistoRef[MXGRAY];
     double Havg = 0, scale;
     int i, p, R = 0, Hsum = 0;
     
     int type;
     ChannelPtr<uchar> p1, p2, endd;
     
+    // initializing histograms
     for(i=0; i<MXGRAY; i++) {
-        histo[i] = 0; /* clear histogram */
+        histo[i] = 0;
         reserved[i] = 0;
     }
     
     
-    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++)
-        for(endd = p1 + total; p1<endd; p1++)
-            histo[*p1] += 1;
+    for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
+        for(endd = p1 + total; p1<endd; p1++) { histo[*p1] += 1; } // assign input pixels to histogram
+    }
+
     
     for (i = 0; i < MXGRAY; i++) {
         
-        //check slider is positive or negative
-        if (exp >= 0) {
-            Histogram_ref[i] = pow(i/(double)MaxGray, exp);
-        } else {
-            Histogram_ref[i] = 1 - pow(i/(double)MaxGray, exp*(-1));
-        }
-        Havg += Histogram_ref[i];
+        // check exponent is positive or negative
+        if (exp >= 0) { HistoRef[i] = pow(i/(double)MaxGray, exp); }
+        else { HistoRef[i] = 1 - pow(i/(double)MaxGray, exp*(-1)); }
+        Havg += HistoRef[i];
     }
     
-    /* normalize h2 to conform with dimensions of I1 */
+    // normalize h2 to conform with dimensions of I1
     scale = (double) total / Havg;
-    if(scale != 1)
-        for(i=0; i<MXGRAY; i++)
-            Histogram_ref[i] *= scale;
+    if(scale != 1) {
+        for(i=0; i<MXGRAY; i++) { HistoRef[i] *= scale; }
+    }
     
     for(i=0; i<MXGRAY; i++) {
-        left[i] = R; /* left end of interval */
+        left[i] = R; // left end of interval
         Hsum += histo[i];
         
-        while(Hsum > Histogram_ref[R] && R < MXGRAY - 1) {
-            Hsum -= Histogram_ref[R];
+        while(Hsum > HistoRef[R] && R < MXGRAY - 1) {
+            Hsum -= HistoRef[R];
             R++;
         }
         
-        if(left[i] != R) {
-            reserved[R] = Hsum;
-        }
+        if(left[i] != R) { reserved[R] = Hsum; }
         right[i] = R;
     }
     
     for(i=0; i<MXGRAY; i++) histo[i] = 0;
     
-    /* visit all input pixels */
+    // visit all input pixels
     for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
         IP_getChannel(I2, ch, p2, type);
         for(endd = p1 + total; p1<endd; p1++, p2++) {
             p = left[*p1];
+            
             if(left[*p1] != right[*p1]) {
-                if(histo[p] < Histogram_ref[p] - reserved[p])
-                    *p2 = p;
-                else
-                    *p2 = p = left[*p1] = MIN(p+1, right[*p1]);
+                if(histo[p] < HistoRef[p] - reserved[p]) { *p2 = p; }
+                else { *p2 = p = left[*p1] = MIN(p+1, right[*p1]); }
                 histo[p]++;
+                
             } else {
-                if(histo[p] < Histogram_ref[p])
-                    *p2 = p;
-                else
-                    *p2 = p = left[*p1] = MIN(p+1, right[*p1]);
+                
+                if(histo[p] < HistoRef[p]) { *p2 = p; }
+                else { *p2 = p = left[*p1] = MIN(p+1, right[*p1]); }
                 histo[p]++;
             }
         }
     }
-    
 }
 
 
-
-
 void
-HistogramMatch::reset() {
+HistogramMatching::reset() {
     changeExp(0);
 }

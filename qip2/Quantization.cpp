@@ -145,7 +145,7 @@ Quantization::changeDtr(int)
 
 //
 void
-Quantization::quantization(ImagePtr I1, int qtz, bool isDither, ImagePtr I2) {
+Quantization::quantization(ImagePtr I1, int levels, bool isDither, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
     int h = I1->height();
@@ -153,7 +153,6 @@ Quantization::quantization(ImagePtr I1, int qtz, bool isDither, ImagePtr I2) {
     
     // compute lut[]
     int i, lut[MXGRAY];
-    int levels = qtz;
     int scale = MXGRAY / levels;
     double bias = scale/2.0;
 
@@ -173,10 +172,11 @@ Quantization::quantization(ImagePtr I1, int qtz, bool isDither, ImagePtr I2) {
         for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
             IP_getChannel(I2, ch, p2, type);
             for(endd = p1 + total; p1<endd; p1++, pixelPoint++) {
+                int r = rand()%(scale+scale+1)-scale; // generate a random number between scale and -scale
                 if (pixelPoint % 2 == 0)
-                    k = CLIP(*p1 + (rand() % (int) bias), 0, 255);
+                    k = CLIP(*p1 + r, 0, 255);
                 else
-                    k = CLIP(*p1 - (rand() % (int) bias), 0, 255);
+                    k = CLIP(*p1 - r, 0, 255);
                 *p2++ = lut[k];
             }
         }

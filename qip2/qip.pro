@@ -37,8 +37,8 @@ HEADERS +=	MainWindow.h	\
 		Threshold.h	\
 		Contrast.h	\
         Quantization.h \
-        HistogramStretch.h \
-        HistogramMatch.h \
+        HistogramStretching.h \
+        HistogramMatching.h \
         ErrorDiffusion.h \
         Blur.h \
         Sharpen.h \
@@ -53,8 +53,8 @@ SOURCES +=	main.cpp	\
 		Threshold.cpp	\
 		Contrast.cpp	\
         Quantization.cpp \
-        HistogramStretch.cpp \
-        HistogramMatch.cpp \
+        HistogramStretching.cpp \
+        HistogramMatching.cpp \
         ErrorDiffusion.cpp \
         Blur.cpp \
         Sharpen.cpp \

@@ -1,29 +1,29 @@
 //
-//  HistogramStretch.h
+//  HistogramStretching.h
 //  qip
 //
 //  Created by Weifan Lin on 3/17/16.
 //
 //
 
-#ifndef HistogramStretch_h
-#define HistogramStretch_h
+#ifndef HistogramStretching_h
+#define HistogramStretching_h
 
 #include "ImageFilter.h"
 
 #define DEFAULTMAX	255
 #define DEFAULTMIN	0
-class HistogramStretch : public ImageFilter {
+class HistogramStretching : public ImageFilter {
     Q_OBJECT
     
 public:
-    HistogramStretch   (QWidget *parent = 0);		// constructor
+    HistogramStretching   (QWidget *parent = 0);		// constructor
     QGroupBox*	controlPanel	();		// create control panel
     bool		applyFilter(ImagePtr, ImagePtr);// apply filter to input to init output
     void		reset		();		// reset parameters
     
 protected:
-    void stretch(ImagePtr I1, int min, int max, ImagePtr I2);
+    void histogramStretching(ImagePtr I1, int min, int max, ImagePtr I2);
     
     protected slots:
     void changeMin (int);
@@ -51,4 +51,4 @@ private:
 
 
 
-#endif /* HistogramStretch_h */
+#endif /* HistogramStretching_h */

@@ -12,8 +12,8 @@
 #include "Threshold.h"
 #include "Contrast.h"
 #include "Quantization.h"
-#include "HistogramStretch.h"
-#include "HistogramMatch.h"
+#include "HistogramStretching.h"
+#include "HistogramMatching.h"
 #include "ErrorDiffusion.h"
 #include "Blur.h"
 #include "Sharpen.h"
@@ -23,13 +23,14 @@
 
 using namespace IP;
 
-enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCH, HISTOGRAMMATCH, ERRORDIFFUSION, BLUR, SHARPEN, MEDIANFILTER};
+enum {DUMMY, THRESHOLD, CONTRAST, QUANTIZATION, HISTOGRAMSTRETCHING, HISTOGRAMMATCHING, ERRORDIFFUSION, BLUR, SHARPEN, MEDIANFILTER};
 enum {RGB, R, G, B, GRAY};
 
 QString GroupBoxStyle = "QGroupBox {				\
 			border: 2px solid gray;			\
 			border-radius: 9px;			\
 			margin-top: 0.5em;}";
+
 
 MainWindow *g_mainWindowP = NULL;
 
@@ -92,13 +93,13 @@ MainWindow::createActions()
     m_actionQuantization->setShortcut(tr("Ctrl+U"));
     m_actionQuantization->setData(QUANTIZATION);
     
-    m_actionHistogramStretch = new QAction("&HistogramStretch", this);
+    m_actionHistogramStretch = new QAction("&HistogramStretching", this);
     m_actionHistogramStretch->setShortcut(tr("Ctrl+I"));
-    m_actionHistogramStretch->setData(HISTOGRAMSTRETCH);
+    m_actionHistogramStretch->setData(HISTOGRAMSTRETCHING);
     
-    m_actionHistogramMatch = new QAction("&HistogramMatch", this);
-    m_actionHistogramMatch->setShortcut(tr("Ctrl+M"));
-    m_actionHistogramMatch->setData(HISTOGRAMMATCH);
+    m_actionHistogramMatch = new QAction("&HistogramMatching", this);
+    m_actionHistogramMatch->setShortcut(tr("Ctrl+J"));
+    m_actionHistogramMatch->setData(HISTOGRAMMATCHING);
     
     m_actionErrorDiffusion = new QAction("&ErrorDiffusion", this);
     m_actionErrorDiffusion->setShortcut(tr("Ctrl+E"));
@@ -193,33 +194,33 @@ MainWindow::createGroupPanel()
 	// init group box
 	QGroupBox *groupBox = new QGroupBox;
 	groupBox->setMinimumWidth(400);
-
+    
 	// filter's enum indexes into container of image filters
-	m_imageFilterType[DUMMY           ] = new Dummy;
-	m_imageFilterType[THRESHOLD       ] = new Threshold;
-	m_imageFilterType[CONTRAST        ] = new Contrast;
-    m_imageFilterType[QUANTIZATION    ] = new Quantization;
-    m_imageFilterType[HISTOGRAMSTRETCH] = new HistogramStretch;
-    m_imageFilterType[HISTOGRAMMATCH  ] = new HistogramMatch;
-    m_imageFilterType[ERRORDIFFUSION  ] = new ErrorDiffusion;
-    m_imageFilterType[BLUR            ] = new Blur;
-    m_imageFilterType[SHARPEN         ] = new Sharpen;
-    m_imageFilterType[MEDIANFILTER    ] = new MedianFilter;
+	m_imageFilterType[DUMMY              ] = new Dummy;
+	m_imageFilterType[THRESHOLD          ] = new Threshold;
+	m_imageFilterType[CONTRAST           ] = new Contrast;
+    m_imageFilterType[QUANTIZATION       ] = new Quantization;
+    m_imageFilterType[HISTOGRAMSTRETCHING] = new HistogramStretching;
+    m_imageFilterType[HISTOGRAMMATCHING  ] = new HistogramMatching;
+    m_imageFilterType[ERRORDIFFUSION     ] = new ErrorDiffusion;
+    m_imageFilterType[BLUR               ] = new Blur;
+    m_imageFilterType[SHARPEN            ] = new Sharpen;
+    m_imageFilterType[MEDIANFILTER       ] = new MedianFilter;
 
 	// create a stacked widget to hold multiple control panels
 	m_stackWidgetPanels = new QStackedWidget;
 
 	// add filter control panels to stacked widget
-	m_stackWidgetPanels->addWidget(m_imageFilterType[DUMMY           ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilterType[THRESHOLD       ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilterType[CONTRAST        ]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[QUANTIZATION    ]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMSTRETCH]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMMATCH  ]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION  ]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[BLUR            ]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[SHARPEN         ]->controlPanel());
-    m_stackWidgetPanels->addWidget(m_imageFilterType[MEDIANFILTER    ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilterType[DUMMY              ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilterType[THRESHOLD          ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilterType[CONTRAST           ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[QUANTIZATION       ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMSTRETCHING]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[HISTOGRAMMATCHING  ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[ERRORDIFFUSION     ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[BLUR               ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[SHARPEN            ]->controlPanel());
+    m_stackWidgetPanels->addWidget(m_imageFilterType[MEDIANFILTER       ]->controlPanel());
 
 
 	// display blank dummmy panel initially

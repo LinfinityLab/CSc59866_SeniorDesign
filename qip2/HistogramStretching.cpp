@@ -1,5 +1,5 @@
 //
-//  HistogramStretch.cpp
+//  HistogramStretching.cpp
 //  qip
 //
 //  Created by Weifan Lin on 3/17/16.
@@ -7,7 +7,7 @@
 //
 
 #include "MainWindow.h"
-#include "HistogramStretch.h"
+#include "HistogramStretching.h"
 
 extern MainWindow *g_mainWindowP;
 
@@ -16,7 +16,7 @@ extern MainWindow *g_mainWindowP;
 //
 // Constructor.
 //
-HistogramStretch::HistogramStretch(QWidget *parent) : ImageFilter(parent)
+HistogramStretching::HistogramStretching(QWidget *parent) : ImageFilter(parent)
 {}
 
 
@@ -29,7 +29,7 @@ HistogramStretch::HistogramStretch(QWidget *parent) : ImageFilter(parent)
 // Return 1 for success, 0 for failure.
 //
 bool
-HistogramStretch::applyFilter(ImagePtr I1, ImagePtr I2)
+HistogramStretching::applyFilter(ImagePtr I1, ImagePtr I2)
 {
     // error checking
     if(I1.isNull()) return 0;
@@ -42,7 +42,7 @@ HistogramStretch::applyFilter(ImagePtr I1, ImagePtr I2)
     if(min < 0 || min > MXGRAY || max < 0 || max > MXGRAY) return 0;
     
     // apply filter
-    stretch(I1, min, max, I2);
+    histogramStretching(I1, min, max, I2);
     
     return 1;
 }
@@ -55,7 +55,7 @@ HistogramStretch::applyFilter(ImagePtr I1, ImagePtr I2)
 // Create group box for control panel.
 //
 QGroupBox*
-HistogramStretch::controlPanel()
+HistogramStretching::controlPanel()
 {
     // init group box
     m_ctrlGrp = new QGroupBox("Histogram Stretching");
@@ -147,7 +147,7 @@ HistogramStretch::controlPanel()
 // Slot to process change in min caused by moving the slider.
 //
 void
-HistogramStretch::changeMin(int min)
+HistogramStretching::changeMin(int min)
 {
     m_checkBoxMin->blockSignals(true);
     m_checkBoxMin->setCheckState(Qt::Unchecked);
@@ -174,7 +174,7 @@ HistogramStretch::changeMin(int min)
 // Slot to process change in max caused by moving the slider.
 //
 void
-HistogramStretch::changeMax(int max)
+HistogramStretching::changeMax(int max)
 {
     m_checkBoxMax->blockSignals(true);
     m_checkBoxMax->setCheckState(Qt::Unchecked);
@@ -195,7 +195,7 @@ HistogramStretch::changeMax(int max)
 }
 
 void
-HistogramStretch::autoSliderAndSpinBox(QSlider* slider, QSpinBox* spinbox, int value) {
+HistogramStretching::autoSliderAndSpinBox(QSlider* slider, QSpinBox* spinbox, int value) {
     slider->blockSignals(true );
     slider->setValue    (value);
     slider->blockSignals(false);
@@ -206,7 +206,7 @@ HistogramStretch::autoSliderAndSpinBox(QSlider* slider, QSpinBox* spinbox, int v
 }
 
 void
-HistogramStretch::autoMin(int)
+HistogramStretching::autoMin(int)
 {
     ImagePtr I1 = g_mainWindowP->imageSrc();
     ImagePtr I2 = g_mainWindowP->imageDst();
@@ -249,7 +249,7 @@ HistogramStretch::autoMin(int)
 
 
 void
-HistogramStretch::autoMax(int)
+HistogramStretching::autoMax(int)
 {
     ImagePtr I1 = g_mainWindowP->imageSrc();
     ImagePtr I2 = g_mainWindowP->imageDst();
@@ -293,7 +293,7 @@ HistogramStretch::autoMax(int)
 
 //
 void
-HistogramStretch::stretch(ImagePtr I1, int min, int max, ImagePtr I2) {
+HistogramStretching::histogramStretching(ImagePtr I1, int min, int max, ImagePtr I2) {
     IP_copyImageHeader(I1, I2);
     int w = I1->width();
     int h = I1->height();
@@ -326,7 +326,7 @@ HistogramStretch::stretch(ImagePtr I1, int min, int max, ImagePtr I2) {
 // Reset parameters.
 //
 void
-HistogramStretch::reset() {
+HistogramStretching::reset() {
     changeMin(DEFAULTMIN);
     changeMax(DEFAULTMAX);
 }
