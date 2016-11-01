@@ -1,0 +1,24 @@
+<RCC>
+	<qresource prefix="/">
+		<file>fshader_passthrough.glsl</file>
+		<file>vshader_passthrough.glsl</file>
+		<file>hw1/fshader_threshold.glsl</file>
+		<file>hw1/vshader_threshold.glsl</file>
+		<file>hw1/fshader_gamma.glsl</file>
+		<file>hw1/vshader_gamma.glsl</file>
+		<file>hw1/fshader_clip.glsl</file>
+		<file>hw1/vshader_clip.glsl</file>
+		<file>hw1/fshader_contrast.glsl</file>
+		<file>hw1/vshader_contrast.glsl</file>
+		<file>hw1/fshader_histoStretch.glsl</file>
+		<file>hw1/vshader_histoStretch.glsl</file>
+		<file>hw1/fshader_quantize.glsl</file>
+		<file>hw1/vshader_quantize.glsl</file>
+		<file>hw2/fshader_blur1.glsl</file>
+		<file>hw2/vshader_blur1.glsl</file>
+		<file>hw2/fshader_blur2.glsl</file>
+		<file>hw2/vshader_blur2.glsl</file>
+		<file>hw2/fshader_sharpen.glsl</file>
+		<file>hw2/vshader_sharpen.glsl</file>
+	</qresource>
+</RCC>
