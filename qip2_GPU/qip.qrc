@@ -18,6 +18,8 @@
 		<file>hw2/vshader_blur1.glsl</file>
 		<file>hw2/fshader_blur2.glsl</file>
 		<file>hw2/vshader_blur2.glsl</file>
+        <file>hw2/fshader_myblur.glsl</file>
+		<file>hw2/vshader_myblur.glsl</file>
 		<file>hw2/fshader_sharpen.glsl</file>
 		<file>hw2/vshader_sharpen.glsl</file>
 	</qresource>

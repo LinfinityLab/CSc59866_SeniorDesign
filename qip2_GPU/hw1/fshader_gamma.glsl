@@ -1,5 +1,6 @@
+#version 120
 
-in	vec2	  v_TexCoord;	// varying variable for passing texture coordinate from vertex shader
+varying	vec2	  v_TexCoord;	// varying variable for passing texture coordinate from vertex shader
 uniform	sampler2D u_Sampler;	// uniform variable for the texture image
 uniform float     u_gamma;	// threshold value
 

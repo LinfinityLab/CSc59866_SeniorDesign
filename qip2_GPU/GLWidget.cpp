@@ -500,6 +500,6 @@ GLWidget::flip(ImagePtr I)
 			memcpy(row2, buf,  w);
 		}
 	}
-	delete buf;
+	delete[] buf;
 
 }

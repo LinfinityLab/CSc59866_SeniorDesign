@@ -40,14 +40,11 @@ win32-msvc2015 {
 	QMAKE_CXXFLAGS  += /MP /Zi
 }
 
-
-
 macx{
-    QMAKE_MAC_SDK = macosx10.11
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
-    INCLUDEPATH += ./IP/mac/header
-    LIBS        += -L./IP/mac/lib
-    LIBS        += -lIP_d
+	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+	INCLUDEPATH += ./IP/mac/header
+	LIBS        += -L./IP/mac/lib
+	LIBS        += -lIP_d
 }
 
 unix:!macx {

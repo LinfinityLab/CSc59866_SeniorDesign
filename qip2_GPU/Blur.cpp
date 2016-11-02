@@ -12,7 +12,7 @@
 //#include "hw2/HW_blur.cpp"
 
 extern MainWindow *g_mainWindowP;
-enum { WSIZE, HSIZE, STEP, SAMPLER };
+enum { WSIZE, HSIZE, WSTEP, HSTEP, SAMPLER };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Blur::Blur:
@@ -236,36 +236,47 @@ Blur::reset()
 void
 Blur::initShader() 
 {
-	m_nPasses = 2;
+    // m_nPasses = 2;
+    m_nPasses = 1;
+    
 	// initialize GL function resolution for current context
 	initializeGLFunctions();
 
 	UniformMap uniforms;
 
 	// init uniform hash table based on uniform variable names and location IDs
-	uniforms["u_Wsize"  ] = WSIZE;
-	uniforms["u_Step"   ] = STEP;
+	uniforms["u_Wsize"] = WSIZE;
+    uniforms["u_Hsize"] = HSIZE;
+	uniforms["u_WStep"] = WSTEP;
+    uniforms["u_HStep"] = HSTEP;
 	uniforms["u_Sampler"] = SAMPLER;
 
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-	g_mainWindowP->glw()->initShader(m_program[PASS1],
-					 QString(":/hw2/vshader_blur1.glsl"),
-					 QString(":/hw2/fshader_blur1.glsl"),
-					 uniforms,
-					 m_uniform[PASS1]);
-	uniforms.clear();
+    
+    g_mainWindowP->glw()->initShader(m_program[PASS1],
+                     QString(":/hw2/vshader_myblur.glsl"),
+                     QString(":/hw2/fshader_myblur.glsl"),
+                     uniforms,
+                     m_uniform[PASS1]);
+    
+//	g_mainWindowP->glw()->initShader(m_program[PASS1],
+//					 QString(":/hw2/vshader_blur1.glsl"),
+//					 QString(":/hw2/fshader_blur1.glsl"),
+//					 uniforms,
+//					 m_uniform[PASS1]);
+//	uniforms.clear();
 
 
-	uniforms["u_Hsize"  ] = HSIZE;
-	uniforms["u_Step"   ] = STEP;
-	uniforms["u_Sampler"] = SAMPLER;
+    // uniforms["u_Hsize"  ] = HSIZE;
+    // uniforms["u_Step"   ] = STEP;
+    // uniforms["u_Sampler"] = SAMPLER;
 
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-	g_mainWindowP->glw()->initShader(m_program[PASS2],
-					 QString(":/hw2/vshader_blur2.glsl"),
-					 QString(":/hw2/fshader_blur2.glsl"),
-					 uniforms,
-					 m_uniform[PASS2]);
+    //g_mainWindowP->glw()->initShader(m_program[PASS2],
+    //				 QString(":/hw2/vshader_blur2.glsl"),
+    //				 QString(":/hw2/fshader_blur2.glsl"),
+    //				 uniforms,
+    //				 m_uniform[PASS2]);
 
 	m_shaderFlag = true;
 }
@@ -283,18 +294,21 @@ Blur::gpuProgram(int pass)
 	int h_size = m_slider[1]->value();
 	if(w_size % 2 == 0) ++w_size;
 	if(h_size % 2 == 0) ++h_size;
-	switch(pass) {
-		case PASS1:
-			glUseProgram(m_program[PASS1].programId());
-			glUniform1i (m_uniform[PASS1][WSIZE], w_size);
-			glUniform1f (m_uniform[PASS1][STEP],  (GLfloat) 1.0f / m_width);
-			glUniform1i (m_uniform[PASS1][SAMPLER], 0);
-			break;
-		case PASS2:
-			glUseProgram(m_program[PASS2].programId());
-			glUniform1i (m_uniform[PASS2][HSIZE], h_size);
-			glUniform1f (m_uniform[PASS2][STEP],  (GLfloat) 1.0f / m_height);
-			glUniform1i (m_uniform[PASS2][SAMPLER], 0);
-			break;
-	}
+    glUseProgram(m_program[PASS1].programId());
+    glUniform1i (m_uniform[PASS1][WSIZE], w_size);
+    glUniform1i (m_uniform[PASS1][HSIZE], h_size);
+    glUniform1f (m_uniform[PASS1][WSTEP], (GLfloat) 1.0f / m_width);
+    glUniform1f (m_uniform[PASS1][HSTEP], (GLfloat) 1.0f / m_height);
+    glUniform1i (m_uniform[PASS1][SAMPLER], 0);
+    
+//	switch(pass) {
+//		case PASS1:
+//			break;
+//		case PASS2:
+//			glUseProgram(m_program[PASS2].programId());
+//			glUniform1i (m_uniform[PASS2][HSIZE], h_size);
+//			glUniform1f (m_uniform[PASS2][STEP],  (GLfloat) 1.0f / m_height);
+//			glUniform1i (m_uniform[PASS2][SAMPLER], 0);
+//			break;
+//	}
 }
