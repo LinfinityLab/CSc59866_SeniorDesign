@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Convolve.h"
-//#include "hw2/HW_convolve.cpp"
+#include "hw2/HW_convolve.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, HSIZE, STEPX, STEPY, KERNEL, SAMPLER };
@@ -93,7 +93,7 @@ Convolve::applyFilter(ImagePtr I1, bool gpuFlag, ImagePtr I2)
 void
 Convolve::convolve(ImagePtr I1, ImagePtr kernel, ImagePtr I2)
 {
-//	HW_convolve(I1, kernel, I2);
+	HW_convolve(I1, kernel, I2);
 }
 
 
@@ -168,10 +168,39 @@ Convolve::load()
 // init shader program and parameters.
 //
 void
-Convolve::initShader() 
+Convolve::initShader()
 {
+    m_nPasses = 1;
 
-	m_shaderFlag = false;
+    // initialize GL function resolution for current context
+    initializeGLFunctions();
+
+    UniformMap uniforms;
+
+    // init uniform hash table based on uniform variable names and location IDs
+    uniforms["u_SizeW"  ] = WSIZE;
+    uniforms["u_SizeH"  ] = HSIZE;
+    uniforms["u_StepX"  ] = STEPX;
+    uniforms["u_StepY"  ] = STEPY;
+    uniforms["u_Kernel" ] = KERNEL;
+    uniforms["u_Sampler"] = SAMPLER;
+
+    QString v_name = ":/vshader_passthrough";
+    QString f_name = ":/hw2/fshader_convolve";
+
+#ifdef __APPLE__
+    v_name += "_Mac";
+    f_name += "_Mac";
+#endif
+
+    // compile shader, bind attribute vars, link shader, and initialize uniform var table
+    g_mainWindowP->glw()->initShader(m_program[PASS1],
+                                     v_name + ".glsl",
+                                     f_name + ".glsl",
+                                     uniforms,
+                                     m_uniform[PASS1]);
+
+    m_shaderFlag = true;
 }
 
 
@@ -181,7 +210,26 @@ Convolve::initShader()
 // Active gpu program
 //
 void
-Convolve::gpuProgram(int pass) 
+Convolve::gpuProgram(int pass)
 {
+	int w = m_kernel->width();
+	int h = m_kernel->height();
+	int kernelSize = w*h;
 
+	int type;
+	float* kernel = new float[kernelSize];
+	ChannelPtr<float> kernelPtr;
+	IP_getChannel(m_kernel, 0, kernelPtr, type);
+
+	for(int i = 0; i < kernelSize; i++) {
+			kernel[i] = *kernelPtr++;
+	}
+
+	glUseProgram(m_program[pass].programId());
+	glUniform1i (m_uniform[pass][WSIZE],  w);
+	glUniform1i (m_uniform[pass][HSIZE],  h);
+	glUniform1f (m_uniform[pass][STEPX], (GLfloat) 1.0f / m_width);
+	glUniform1f (m_uniform[pass][STEPY], (GLfloat) 1.0f / m_height);
+	glUniform1fv(m_uniform[pass][KERNEL], kernelSize, kernel);
+	glUniform1i (m_uniform[pass][SAMPLER], 0);
 }

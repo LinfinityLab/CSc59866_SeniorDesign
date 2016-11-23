@@ -57,7 +57,9 @@ qrc_qip.cpp: qip.qrc \
 		hw1/fshader_gamma.glsl \
 		hw2/fshader_myblur.glsl \
 		hw2/fshader_blur2.glsl \
+		hw2/fshader_convolve_Mac.glsl \
 		hw2/fshader_sharpen.glsl \
+		hw2/fshader_convolve.glsl \
 		hw2/fshader_blur1.glsl \
 		hw2/fshader_blur1_Mac.glsl \
 		hw2/fshader_myblur_Mac.glsl \
