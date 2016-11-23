@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Sharpen.h"
-//#include "hw2/HW_sharpen.cpp"
+#include "hw2/HW_sharpen.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, FACTOR, STEPX, STEPY, SAMPLER };
@@ -127,7 +127,7 @@ Sharpen::applyFilter(ImagePtr I1, bool gpuFlag, ImagePtr I2)
 void
 Sharpen::sharpen(ImagePtr I1, int size, double factor, ImagePtr I2)
 {
-//	HW_sharpen(I1, size, factor, I2);
+	HW_sharpen(I1, size, factor, I2);
 }
 
 
@@ -196,7 +196,7 @@ Sharpen::reset()
 // init shader program and parameters.
 //
 void
-Sharpen::initShader() 
+Sharpen::initShader()
 {
 	m_nPasses = 1;
 	// initialize GL function resolution for current context
@@ -213,15 +213,15 @@ Sharpen::initShader()
 
         QString v_name = ":/vshader_passthrough";
         QString f_name = ":/hw2/fshader_sharpen";
-        
+
 #ifdef __APPLE__
         v_name += "_Mac";
-        f_name += "_Mac"; 
-#endif    
+        f_name += "_Mac";
+#endif
 
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-	g_mainWindowP->glw()->initShader(m_program[PASS1], 
-	                                 v_name + ".glsl", 
+	g_mainWindowP->glw()->initShader(m_program[PASS1],
+	                                 v_name + ".glsl",
 	                                 f_name + ".glsl",
 					 uniforms,
 					 m_uniform[PASS1]);
@@ -236,7 +236,7 @@ Sharpen::initShader()
 // Active gpu program
 //
 void
-Sharpen::gpuProgram(int pass) 
+Sharpen::gpuProgram(int pass)
 {
 	int size   = m_slider[0]->value();
 	int factor = m_slider[1]->value();

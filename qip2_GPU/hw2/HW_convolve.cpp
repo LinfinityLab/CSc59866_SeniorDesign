@@ -5,7 +5,8 @@
 //
 // Written by: Weifan Lin, 2016
 //
-void copyRowToBuffer(ChannelPtr<uchar>, short*, int, int);
+
+extern void copyRowToBuffer(ChannelPtr<uchar>, short*, int, int); // see implementation in HW_errDiffusion.cpp
 
 void
 HW_convolve(ImagePtr I1, ImagePtr Ikernel, ImagePtr I2)
@@ -74,12 +75,4 @@ HW_convolve(ImagePtr I1, ImagePtr Ikernel, ImagePtr I2)
             }
         }
     }
-}
-
-void
-copyRowToBuffer(ChannelPtr<uchar> p1, short* buffer, int w, int sz) {
-  int bufSz = sz+w-1;
-  for (int i = 0       ; i < sz/2    ; i++) buffer[i] = *p1  ;
-  for (int i = sz/2    ; i < sz/2+w-1; i++) buffer[i] = *p1++;
-  for (int i = sz/2+w-1; i < bufSz   ; i++) buffer[i] = *p1  ;
 }

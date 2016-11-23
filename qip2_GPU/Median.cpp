@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Median.h"
-//#include "hw2/HW_median.cpp"
+// #include "hw2/HW_median.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, STEPX, STEPY, SAMPLER };
@@ -141,7 +141,7 @@ Median::applyFilter(ImagePtr I1, bool gpuFlag, ImagePtr I2)
 void
 Median::median(ImagePtr I1, int sz, ImagePtr I2)
 {
-//	HW_median(I1, sz, I2);
+	// HW_median(I1, sz, I2);
 }
 
 
@@ -210,7 +210,7 @@ Median::reset()
 // init shader program and parameters.
 //
 void
-Median::initShader() 
+Median::initShader()
 {
 
 	m_shaderFlag = false;
@@ -223,7 +223,7 @@ Median::initShader()
 // Active gpu program
 //
 void
-Median::gpuProgram(int pass) 
+Median::gpuProgram(int pass)
 {
 
 }

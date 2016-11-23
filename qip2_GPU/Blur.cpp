@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Blur.h"
-//#include "hw2/HW_blur.cpp"
+#include "hw2/HW_blur.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, HSIZE, STEPX, STEPY, SAMPLER };
@@ -134,7 +134,7 @@ Blur::applyFilter(ImagePtr I1, bool gpuFlag, ImagePtr I2)
 void
 Blur::blur(ImagePtr I1, int w, int h, ImagePtr I2)
 {
-//	HW_blur(I1, w, h, I2);
+	HW_blur(I1, w, h, I2);
 }
 
 

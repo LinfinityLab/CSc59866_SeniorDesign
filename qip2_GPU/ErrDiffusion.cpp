@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "ErrDiffusion.h"
-//#include "hw2/HW_errDiffusion.cpp"
+#include "hw2/HW_errDiffusion.cpp"
 
 extern MainWindow *g_mainWindowP;
 
@@ -137,7 +137,7 @@ ErrDiffusion::applyFilter(ImagePtr I1, bool /*gpuFlag*/, ImagePtr I2)
 void
 ErrDiffusion::errDiffusion(ImagePtr I1, int method, bool serpentine, double gamma, ImagePtr I2)
 {
-//	HW_errDiffusion(I1, method, serpentine, gamma, I2);
+	HW_errDiffusion(I1, method, serpentine, gamma, I2);
 }
 
 
