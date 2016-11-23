@@ -1,15 +1,15 @@
 // ======================================================================
 // IMPROC: Image Processing Software Package
-// Copyright (C) 2015 by George Wolberg
+// Copyright (C) 2016 by George Wolberg
 //
 // Channel.h - Channel class.
 //
-// Written by: George Wolberg, 2015
+// Written by: George Wolberg, 2016
 // ======================================================================
 
 //! \file	Channel.h
 //! \brief	Channel class.
-//! \author	George Wolberg, 2015
+//! \author	George Wolberg, 2016
 
 #ifndef CHANNEL_H
 #define CHANNEL_H

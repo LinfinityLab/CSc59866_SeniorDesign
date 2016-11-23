@@ -216,10 +216,18 @@ Clip::initShader()
 	uniforms["u_Thr2"   ] = THR2;
 	uniforms["u_Sampler"] = SAMPLER;
 
+        QString v_name = ":/vshader_passthrough";
+        QString f_name = ":/hw1/fshader_clip";
+        
+#ifdef __APPLE__
+        v_name += "_Mac";
+        f_name += "_Mac"; 
+#endif    
+
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-	g_mainWindowP->glw()->initShader(m_program[PASS1],
-					 QString(":/hw1/vshader_clip.glsl"),
-					 QString(":/hw1/fshader_clip.glsl"),
+	g_mainWindowP->glw()->initShader(m_program[PASS1], 
+	                                 v_name + ".glsl", 
+	                                 f_name + ".glsl",
 					 uniforms,
 					 m_uniform[PASS1]);
 	m_shaderFlag = true;

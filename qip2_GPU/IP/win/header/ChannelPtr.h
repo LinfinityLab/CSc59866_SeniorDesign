@@ -1,15 +1,15 @@
 // ======================================================================
 // IMPROC: Image Processing Software Package
-// Copyright (C) 2015 by George Wolberg
+// Copyright (C) 2016 by George Wolberg
 //
 // ChannelPtr.h - Channel pointer class.
 //
-// Written by: George Wolberg, 2015
+// Written by: George Wolberg, 2016
 // ======================================================================
 
 //! \file	ChannelPtr.h
 //! \brief	ChannelPtr class.
-//! \author	George Wolberg, 2015
+//! \author	George Wolberg, 2016
 
 #ifndef CHANNELPTR_H
 #define CHANNELPTR_H

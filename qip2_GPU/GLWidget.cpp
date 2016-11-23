@@ -25,8 +25,8 @@ enum { SAMPLER };
 // 
 //
 GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent), 
-				      m_imageFlag(false),
-				      m_gpuFlag(false)
+				      m_imageFlag(false)
+
 
 {}
 
@@ -69,6 +69,12 @@ GLWidget::initializeGL()
 
 	glClearColor(1.0, 1.0, 1.0, 1.0);	// set background color
 
+//	GLint value;
+//	glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &value);
+//	qDebug() << value;
+//	glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &value);
+//	qDebug() << value;
+
 }
 
 
@@ -89,7 +95,7 @@ GLWidget::initVertices() {
 
 
 	// init texture coordinate
-	for(int i=0; i<m_points.size(); ++i) {
+	for(int i=0; i<(int)m_points.size(); ++i) {
 		m_texCoord.push_back((m_points[i]+vec2(1.0f, 1.0f))/2.0f);
 	}
 }
@@ -281,11 +287,16 @@ GLWidget::initShaders()
 
 	// init uniform hash table based on uniform variable names and location IDs
 	uniforms["u_Sampler"] = SAMPLER;
-
+	
+        QString v_name = ":/vshader_passthrough";
+        QString f_name = ":/fshader_passthrough";
+        
+#ifdef __APPLE__
+        v_name += "_Mac";
+        f_name += "_Mac"; 
+#endif    
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-	initShader(m_program , QString(":/vshader_passthrough.glsl"), 
-		               QString(":/fshader_passthrough.glsl"), 
-			       uniforms, m_uniform);
+	initShader(m_program , v_name + ".glsl",  f_name + ".glsl",  uniforms, m_uniform);
 
 	g_mainWindowP->imageFilter(THRESHOLD)->initShader();
 	g_mainWindowP->imageFilter(CLIP)->initShader();
@@ -347,6 +358,10 @@ GLWidget::resizeGL(int w, int h) {
 	m_winW = w;
 	m_winH = h;
 	glViewport(0, 0, w, h);
+	int imgW = g_mainWindowP->imageIn()->width();
+	int imgH = g_mainWindowP->imageIn()->height();
+	setViewport(imgW, imgH, g_mainWindowP->glFrameW(), g_mainWindowP->glFrameH());
+
 
 }
 
@@ -475,31 +490,8 @@ GLWidget::setDstImage(int pass)
 	// uninterleave image
 	ImagePtr ipImage = IP_allocImage(m_imageW, m_imageH, RGB_TYPE);
 	IP_uninterleave(I, ipImage);
-	flip(ipImage); // flip upside down image read from GPU
 	g_mainWindowP->setImageDst(ipImage);
+	glViewport(0, 0, m_winW, m_winH);
 
-}
-
-
-
-// flip upside down image read from GPU 
-void
-GLWidget::flip(ImagePtr I) 
-{
-	int type;
-	ChannelPtr<uchar> p;
-	int w = I->width();
-	int h = I->height();
-	uchar *buf = new uchar[w];
-	for(int ch = 0; IP_getChannel(I, ch, p, type); ch++) {
-		for(int y=0; y<h/2; ++y) {
-			uchar *row1 = p.buf() + y*w;
-			uchar *row2 = p.buf() + (h-y-1)*w;
-			memcpy(buf,  row1, w);
-			memcpy(row1, row2, w);
-			memcpy(row2, buf,  w);
-		}
-	}
-	delete[] buf;
 
 }

@@ -1,15 +1,15 @@
 // ======================================================================
 // IMPROC: Image Processing Software Package
-// Copyright (C) 2015 by George Wolberg
+// Copyright (C) 2016 by George Wolberg
 //
 // IPmmch.tpp - Template functions for memory management.
 //
-// Written by: George Wolberg, 2015
+// Written by: George Wolberg, 2016
 // ======================================================================
 
 //! \file	IPmmch.tpp
 //! \brief	Template functions for memory management.
-//! \author	George Wolberg, 2015
+//! \author	George Wolberg, 2016
 
 using namespace IP;
 

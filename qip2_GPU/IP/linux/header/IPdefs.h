@@ -1,15 +1,15 @@
 // ======================================================================
 // IMPROC: Image Processing Software Package
-// Copyright (C) 2015 by George Wolberg
+// Copyright (C) 2016 by George Wolberg
 //
 // IPdefs.h - Header for IP symbolic constants (#defines) and globals.
 //
-// Written by: George Wolberg, 2015
+// Written by: George Wolberg, 2016
 // ======================================================================
 
 //! \file	IPdefs.h
 //! \brief	Header for IP symbolic constants (#defines) and globals.
-//! \author	George Wolberg, 2015
+//! \author	George Wolberg, 2016
 
 #ifndef IPDEFS_H
 #define IPDEFS_H

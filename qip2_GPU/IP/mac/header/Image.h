@@ -1,15 +1,15 @@
 // ======================================================================
 // IMPROC: Image Processing Software Package
-// Copyright (C) 2015 by George Wolberg
+// Copyright (C) 2016 by George Wolberg
 //
 // Image.h - Image class.
 //
-// Written by: George Wolberg, 2015
+// Written by: George Wolberg, 2016
 // ======================================================================
 
 //! \file	Image.h
 //! \brief	Image class.
-//! \author	George Wolberg, 2015
+//! \author	George Wolberg, 2016
 
 #ifndef IMAGE_H
 #define IMAGE_H

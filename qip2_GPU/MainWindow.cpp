@@ -58,6 +58,17 @@ MainWindow::MainWindow(QWidget *parent)
 	createActions();	// insert your actions here
 	createMenus  ();	// insert your menus here
 	createWidgets();
+	
+#ifdef __APPLE__
+	m_currentDir = qApp->applicationDirPath();
+        QDir dir(m_currentDir); 
+        dir.cdUp();
+        dir.cdUp();
+        dir.cdUp();
+        m_currentDir = dir.path();
+        qDebug() << m_currentDir;
+#endif       
+	
 }
 
 
@@ -224,6 +235,7 @@ MainWindow::createWidgets()
 QGroupBox*
 MainWindow::createGroupPanel()
 {
+
 	// init group box
 	m_groupBoxPanels = new QGroupBox;
 	m_groupBoxPanels->setMinimumWidth(400);
@@ -291,7 +303,11 @@ MainWindow::createGroupPanel()
         // set axes ranges, so we see all the data
         m_histogram->xAxis->setRange(0, MXGRAY);
         m_histogram->yAxis->setRange(0, MXGRAY);
-	m_histogram->setMinimumHeight(400);
+	QRect desktopGeometry = QApplication::desktop()->availableGeometry();
+	int h = desktopGeometry.height();
+	int min_h =  (h/1080.0f)*400;
+	min_h = CLIP(min_h, 300, 400);
+	m_histogram->setMinimumHeight(min_h);
 	m_histogram->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 	m_histogram->axisRect()->setupFullAxesBox();
 
@@ -597,7 +613,9 @@ MainWindow::open() {
 	int h = m_imageIn->height();
 
 	QRect rect = m_glwFrame->contentsRect();
-	m_glw->setViewport(w, h, rect.width(), rect.height());
+	m_glwFrameW = rect.width();
+	m_glwFrameH = rect.height();
+	m_glw->setViewport(w, h, m_glwFrameW, m_glwFrameH);
 	m_glw->allocateTextureFBO(w, h);
 	QImage q;
 	IP_IPtoQImage(m_imageIn, q);
@@ -967,4 +985,15 @@ MainWindow::execute(QAction* action)
 	// use code to index into stack widget and array of filters
 	m_stackWidgetPanels->setCurrentIndex(m_code);
 	preview();
+}
+
+
+
+
+void MainWindow::resizeEvent(QResizeEvent* event) {
+	QMainWindow::resizeEvent(event);
+	QRect rect = m_glwFrame->contentsRect();
+	m_glwFrameW = rect.width();
+	m_glwFrameH = rect.height();
+	m_glw->setViewport(m_imageIn->width(), m_imageIn->height(), m_glwFrameW, m_glwFrameH);
 }

@@ -47,6 +47,7 @@ public:
 	MainWindow	(QWidget *parent = 0);
 	ImagePtr	imageSrc	() const;
 	ImagePtr	imageDst	() const;
+	ImagePtr	imageIn		() const;
 	void		setImageDst	(ImagePtr I) {
 		if(m_radioMode[1]->isChecked())
 			IP_castImage(I, BW_IMAGE, I);
@@ -69,6 +70,8 @@ public:
 		{ return m_imageFilter[i]; }
 	bool		isInput		()	
 		{ return m_radioDisplay[0]->isChecked();}
+	int	glFrameW() { return m_glwFrameW; }
+	int	glFrameH() { return m_glwFrameH; }
 
 public slots:
 	void		open		();
@@ -87,6 +90,8 @@ protected slots:
 	void		setHisto	(int);
 	void		setTime		(int);
 	void		setGPU		(int);
+	void		resizeEvent	(QResizeEvent*);
+	
 
 protected:
 	void		createActions	();
@@ -163,6 +168,8 @@ private:
 	double			m_histoYmin[4];		// ymin for all histogram channels
 	double			m_histoYmax[4];		// ymax for all histogram channels
 	GLWidget	       *m_glw;
+	int			m_glwFrameW;
+	int			m_glwFrameH;
 };
 
 
@@ -189,6 +196,19 @@ inline ImagePtr
 MainWindow::imageDst() const
 {
 	return m_imageDst;
+}
+
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// MainWindow::imageIn:
+//
+// Input image.
+//
+inline ImagePtr
+MainWindow::imageIn() const
+{
+	return m_imageIn;
 }
 
 #endif // MAINWINDOW_H

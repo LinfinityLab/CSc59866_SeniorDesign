@@ -1,6 +1,6 @@
-#version 120
+#version 130
 
-varying	vec2	  v_TexCoord;	// varying variable for passing texture coordinate from vertex shader
+in	vec2	  v_TexCoord;	// varying variable for passing texture coordinate from vertex shader
 
 uniform int       u_Hsize;	// blur height value
 uniform float	  u_Step;
@@ -8,7 +8,7 @@ uniform	sampler2D u_Sampler;	// uniform variable for the texture image
 
 
 void main() {
-
+	
 	vec3 avg = vec3(0.0);
 	vec2 tc  = v_TexCoord;
 	int  h2  = u_Hsize / 2;

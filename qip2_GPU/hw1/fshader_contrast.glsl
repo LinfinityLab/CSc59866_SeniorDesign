@@ -1,6 +1,6 @@
-#version 120
+#version 130
 
-varying	vec2	  v_TexCoord;	// varying variable for passing texture coordinate from vertex shader
+in	vec2	  v_TexCoord;	// varying variable for passing texture coordinate from vertex shader
 
 uniform float     u_Brightness;	// threshold value
 uniform float     u_Contrast;	// threshold value

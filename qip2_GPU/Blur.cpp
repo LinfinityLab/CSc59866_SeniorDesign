@@ -12,7 +12,7 @@
 //#include "hw2/HW_blur.cpp"
 
 extern MainWindow *g_mainWindowP;
-enum { WSIZE, HSIZE, WSTEP, HSTEP, SAMPLER };
+enum { WSIZE, HSIZE, STEPX, STEPY, SAMPLER };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Blur::Blur:
@@ -20,7 +20,9 @@ enum { WSIZE, HSIZE, WSTEP, HSTEP, SAMPLER };
 // Constructor.
 //
 Blur::Blur(QWidget *parent) : ImageFilter(parent)
-{}
+{
+	m_nPasses = 2;
+}
 
 
 
@@ -71,9 +73,12 @@ Blur::controlPanel()
 	// create checkbox
 	m_checkBox = new QCheckBox("Lock filter dimensions");
 	m_checkBox->setCheckState(Qt::Checked);
+	m_checkBox_myBlur = new QCheckBox("My Blur");
+	m_checkBox_myBlur->setCheckState(Qt::Unchecked);
 
 	// add checkbox to layout
 	layout->addWidget(m_checkBox, 2, 1, Qt::AlignHCenter);
+	layout->addWidget(m_checkBox_myBlur, 2, 2);
 
 	// init signal/slot connections
 	connect(m_slider [0], SIGNAL(valueChanged(int)), this, SLOT(changeFilterW(int)));
@@ -81,6 +86,7 @@ Blur::controlPanel()
 	connect(m_slider [1], SIGNAL(valueChanged(int)), this, SLOT(changeFilterH(int)));
 	connect(m_spinBox[1], SIGNAL(valueChanged(int)), this, SLOT(changeFilterH(int)));
 	connect(m_checkBox  , SIGNAL(stateChanged(int)), this, SLOT(setLock(int)));
+	connect(m_checkBox_myBlur, SIGNAL(stateChanged(int)), this, SLOT(setMyBlur(int)));
 
 	// assign layout to group box
 	m_ctrlGrp->setLayout(layout);
@@ -209,7 +215,15 @@ Blur::setLock(int state)
 	g_mainWindowP->preview();
 }
 
+void
+Blur::setMyBlur(int state)
+{
+    if(state == Qt::Checked) m_nPasses = 1;
+    else m_nPasses = 2;
 
+    // apply filter to source image and display result
+    g_mainWindowP->preview();
+}
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Blur::reset:
@@ -234,49 +248,76 @@ Blur::reset()
 // init shader program and parameters.
 //
 void
-Blur::initShader() 
+Blur::initShader()
 {
-    // m_nPasses = 2;
-    m_nPasses = 1;
-    
 	// initialize GL function resolution for current context
 	initializeGLFunctions();
 
 	UniformMap uniforms;
 
+	QString v_name = ":/vshader_passthrough";
+	QString f_name = ":/hw2/fshader_myblur";
+
 	// init uniform hash table based on uniform variable names and location IDs
-	uniforms["u_Wsize"] = WSIZE;
-    uniforms["u_Hsize"] = HSIZE;
-	uniforms["u_WStep"] = WSTEP;
-    uniforms["u_HStep"] = HSTEP;
+	uniforms["u_Wsize"  ] = WSIZE;
+	uniforms["u_Hsize"  ] = HSIZE;
+	uniforms["u_StepX"  ] = STEPX;
+	uniforms["u_StepY"  ] = STEPY;
 	uniforms["u_Sampler"] = SAMPLER;
 
-	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-    
-    g_mainWindowP->glw()->initShader(m_program[PASS1],
-                     QString(":/hw2/vshader_myblur.glsl"),
-                     QString(":/hw2/fshader_myblur.glsl"),
-                     uniforms,
-                     m_uniform[PASS1]);
-    
-//	g_mainWindowP->glw()->initShader(m_program[PASS1],
-//					 QString(":/hw2/vshader_blur1.glsl"),
-//					 QString(":/hw2/fshader_blur1.glsl"),
-//					 uniforms,
-//					 m_uniform[PASS1]);
-//	uniforms.clear();
 
-
-    // uniforms["u_Hsize"  ] = HSIZE;
-    // uniforms["u_Step"   ] = STEP;
-    // uniforms["u_Sampler"] = SAMPLER;
+#ifdef __APPLE__
+        v_name += "_Mac";
+        f_name += "_Mac";
+#endif
 
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-    //g_mainWindowP->glw()->initShader(m_program[PASS2],
-    //				 QString(":/hw2/vshader_blur2.glsl"),
-    //				 QString(":/hw2/fshader_blur2.glsl"),
-    //				 uniforms,
-    //				 m_uniform[PASS2]);
+	g_mainWindowP->glw()->initShader(m_program[ONEPASS],
+	                                 v_name + ".glsl",
+	                                 f_name + ".glsl",
+					 											 	 uniforms,
+					 											 	 m_uniform[ONEPASS]);
+	uniforms.clear();
+
+	v_name = ":/vshader_passthrough";
+	f_name = ":/hw2/fshader_blur1";
+
+	// init uniform hash table based on uniform variable names and location IDs
+	uniforms["u_Wsize"  ] = WSIZE;
+	uniforms["u_Step"   ] = STEPX;
+	uniforms["u_Sampler"] = SAMPLER;
+
+	#ifdef __APPLE__
+	    v_name += "_Mac";
+	    f_name += "_Mac";
+	#endif
+
+	    // compile shader, bind attribute vars, link shader, and initialize uniform var table
+	    g_mainWindowP->glw()->initShader(m_program[PASS1],
+	                                     v_name + ".glsl",
+	                                     f_name + ".glsl",
+	                                     uniforms,
+	                                     m_uniform[PASS1]);
+	    uniforms.clear();
+
+	uniforms["u_Hsize"  ] = HSIZE;
+	uniforms["u_Step"   ] = STEPX;
+	uniforms["u_Sampler"] = SAMPLER;
+
+  v_name = ":/vshader_passthrough";
+	f_name = ":/hw2/fshader_blur2";
+
+#ifdef __APPLE__
+        v_name += "_Mac";
+        f_name += "_Mac";
+#endif
+
+	// compile shader, bind attribute vars, link shader, and initialize uniform var table
+	g_mainWindowP->glw()->initShader(m_program[PASS2],
+	                                 v_name + ".glsl",
+	                                 f_name + ".glsl",
+																	 uniforms,
+																	 m_uniform[PASS2]);
 
 	m_shaderFlag = true;
 }
@@ -288,27 +329,34 @@ Blur::initShader()
 // Active Blur gpu program
 //
 void
-Blur::gpuProgram(int pass) 
+Blur::gpuProgram(int pass)
 {
 	int w_size = m_slider[0]->value();
 	int h_size = m_slider[1]->value();
 	if(w_size % 2 == 0) ++w_size;
 	if(h_size % 2 == 0) ++h_size;
-    glUseProgram(m_program[PASS1].programId());
-    glUniform1i (m_uniform[PASS1][WSIZE], w_size);
-    glUniform1i (m_uniform[PASS1][HSIZE], h_size);
-    glUniform1f (m_uniform[PASS1][WSTEP], (GLfloat) 1.0f / m_width);
-    glUniform1f (m_uniform[PASS1][HSTEP], (GLfloat) 1.0f / m_height);
-    glUniform1i (m_uniform[PASS1][SAMPLER], 0);
-    
-//	switch(pass) {
-//		case PASS1:
-//			break;
-//		case PASS2:
-//			glUseProgram(m_program[PASS2].programId());
-//			glUniform1i (m_uniform[PASS2][HSIZE], h_size);
-//			glUniform1f (m_uniform[PASS2][STEP],  (GLfloat) 1.0f / m_height);
-//			glUniform1i (m_uniform[PASS2][SAMPLER], 0);
-//			break;
-//	}
+
+	if(m_nPasses == 1) {
+		glUseProgram(m_program[ONEPASS].programId());
+		glUniform1i (m_uniform[ONEPASS][WSIZE], w_size);
+		glUniform1i (m_uniform[ONEPASS][HSIZE], h_size);
+		glUniform1f (m_uniform[ONEPASS][STEPX], (GLfloat) 1.0f / m_width);
+		glUniform1f (m_uniform[ONEPASS][STEPY], (GLfloat) 1.0f / m_height);
+		glUniform1i (m_uniform[ONEPASS][SAMPLER], 0);
+	} else {
+		switch(pass) {
+			case PASS1:
+				glUseProgram(m_program[PASS1].programId());
+				glUniform1i (m_uniform[PASS1][WSIZE], w_size);
+				glUniform1f (m_uniform[PASS1][STEPX],  (GLfloat) 1.0f / m_width);
+				glUniform1i (m_uniform[PASS1][SAMPLER], 0);
+				break;
+			case PASS2:
+				glUseProgram(m_program[PASS2].programId());
+				glUniform1i (m_uniform[PASS2][HSIZE], h_size);
+				glUniform1f (m_uniform[PASS2][STEPX],  (GLfloat) 1.0f / m_height);
+				glUniform1i (m_uniform[PASS2][SAMPLER], 0);
+				break;
+		}
+	}
 }

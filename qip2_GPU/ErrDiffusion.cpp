@@ -119,7 +119,7 @@ ErrDiffusion::applyFilter(ImagePtr I1, bool /*gpuFlag*/, ImagePtr I2)
 		serpentine = 1;
 
 	// apply filter
-//	errDiffusion(I1, mtd, serpentine, gamma, I2);
+	errDiffusion(I1, mtd, serpentine, gamma, I2);
 
 	return 1;
 }

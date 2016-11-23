@@ -171,8 +171,6 @@ void
 Convolve::initShader() 
 {
 
-
-
 	m_shaderFlag = false;
 }
 

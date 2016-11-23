@@ -15,7 +15,7 @@
 #include "IP.h"
 using namespace IP;
 
-enum { PASS1, PASS2 };
+enum { PASS1, PASS2, ONEPASS };
 // ----------------------------------------------------------------------
 // standard include files
 //

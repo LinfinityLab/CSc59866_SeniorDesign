@@ -176,12 +176,20 @@ Threshold::initShader()
 	// init uniform hash table based on uniform variable names and location IDs
 	uniforms["u_thr"    ] = THR;
 	uniforms["u_Sampler"] = SAMPLER;
+	
+        QString v_name = ":/vshader_passthrough";
+        QString f_name = ":/hw1/fshader_threshold";
+        
+#ifdef __APPLE__
+        v_name += "_Mac";
+        f_name += "_Mac"; 
+#endif    
 
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
-	g_mainWindowP->glw()->initShader(m_program[PASS1],
-					 QString(":/hw1/vshader_threshold.glsl"), 
-					 QString(":/hw1/fshader_threshold.glsl"), 
-					 uniforms, 
+	g_mainWindowP->glw()->initShader(m_program[PASS1], 
+	                                 v_name + ".glsl", 
+	                                 f_name + ".glsl",
+					 uniforms,
 					 m_uniform[PASS1]);
 	m_shaderFlag = true;
 

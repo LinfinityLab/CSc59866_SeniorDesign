@@ -1,23 +1,23 @@
 // ======================================================================
 // IMPROC: Image Processing Software Package
-// Copyright (C) 2015 by George Wolberg
+// Copyright (C) 2016 by George Wolberg
 //
 // IP.h - Header for IP*.cpp files
 //
-// Written by: George Wolberg, 2015
+// Written by: George Wolberg, 2016
 // ======================================================================
 
 //! \mainpage	Image Processing Package
 //! \author	George Wolberg
-//! \date	2015
+//! \date	2016
 //! \par	References:
 //!		This code is part of the
 //!		IMPROC Image Processing Software Package\n
-//!		Copyright &copy; 2015 by George Wolberg
+//!		Copyright &copy; 2016 by George Wolberg
 
 //! \file	IP.h
 //! \brief	Image Processing Package main header file.
-//! \author	George Wolberg and Gene Yu, 2015
+//! \author	George Wolberg and Gene Yu, 2016
 
 #ifndef IP_H
 #define IP_H

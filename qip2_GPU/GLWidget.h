@@ -18,8 +18,7 @@
 #include <QGLFunctions>
 #include <QGLShaderProgram>
 #include <QtOpenGL>
-#include "IP.h"
-using namespace IP;
+
 typedef QVector2D vec2;
 typedef QVector3D vec3;
 
@@ -44,7 +43,6 @@ public:
 	void	initShader(QGLShaderProgram &, QString, QString, UniformMap &, int *);
 	void	applyFilterGPU(int);
 	void	setDstImage(int);
-	void	flip(ImagePtr I);
 
 protected:
 
@@ -74,7 +72,6 @@ private:
 
 	bool			m_imageFlag;				// true if an image is uploaded to GPU
 	QMatrix4x4	        m_projection;				// 4x4 projection matrix
-	bool			m_gpuFlag;				// true if we use GPU program for a filter
 
 };
 
