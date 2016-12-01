@@ -26,5 +26,7 @@
 		<file>hw2/fshader_sharpen_Mac.glsl</file>
 		<file>hw2/fshader_convolve.glsl</file>
 		<file>hw2/fshader_convolve_Mac.glsl</file>
+		<file>hw2/fshader_correlation.glsl</file>
+		<file>hw2/fshader_correlation_Mac.glsl</file>
 	</qresource>
 </RCC>

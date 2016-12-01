@@ -286,6 +286,21 @@
 					);
 			};
 		};
+		1EB83739DBC12571429B5AA8 = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/Correlation.cpp";
+			name = "Correlation.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		486E8CC59E685012CBC32BEA = {
+			fileRef = "1EB83739DBC12571429B5AA8";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		DE03028EF39F576D20C2D602 = {
 			isa = PBXFileReference;
 			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/qrc_qip.cpp";
@@ -526,6 +541,21 @@
 					);
 			};
 		};
+		EB4C4A535AAD6C743BB9324B = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/moc_Correlation.cpp";
+			name = "moc_Correlation.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		9AD1356458F382E1C47CE394 = {
+			fileRef = "EB4C4A535AAD6C743BB9324B";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		D199A74C294737331840EE5A = {
 			isa = PBXFileReference;
 			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/MainWindow.h";
@@ -645,6 +675,13 @@
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
+		9251030EE7638F96A7E41B5A = {
+			isa = PBXFileReference;
+			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/Correlation.h";
+			name = "Correlation.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
 		93B4A0AAAEAB0FC49E82D6D0 = {
 			isa = PBXFileReference;
 			path = "/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/qip.pro";
@@ -698,7 +735,8 @@
 				"91611A0AC6F637C8BA913410",
 				"863D51F484629DC6E39B9E2B",
 				"5899C6CBB6C442E0CAD3E379",
-				"65BB6BC0F8E1AB94B068F06C");
+				"65BB6BC0F8E1AB94B068F06C",
+				"EB4C4A535AAD6C743BB9324B");
 			name = "Generated Sources";
 			sourceTree = "<Group>";
 		};
@@ -730,6 +768,7 @@
 				"9C1282E83FF3E198EF7B0EEA",
 				"9D0C6DBA0F3EC9C1738C8599",
 				"3816F2E1154C9C0E19CE73C0",
+				"1EB83739DBC12571429B5AA8",
 				"D199A74C294737331840EE5A",
 				"BC983207FDD2718B14EE6D37",
 				"A79ECE5286F0D58C7E307A43",
@@ -746,7 +785,8 @@
 				"EE78251AE75D5102442D1449",
 				"1ECB0A60581C1D5568ACAA32",
 				"959392CBE099EB8F1460641F",
-				"A4A3FCE5D45E8A392EDE7F82");
+				"A4A3FCE5D45E8A392EDE7F82",
+				"9251030EE7638F96A7E41B5A");
 			name = "Sources";
 			sourceTree = "<Group>";
 		};
@@ -791,6 +831,7 @@
 				"43B6E2B905AA781245D935BB",
 				"AAD22FB4760E02654425AFAD",
 				"0F70E737FDE5080E7241AE2E",
+				"486E8CC59E685012CBC32BEA",
 				"91F7B06F806D06377CC1F8D9",
 				"57BF6DC5BA4B390BF00019AA",
 				"60BD755EB5292F538A45ED73",
@@ -806,7 +847,8 @@
 				"7A720FC3EA725D487FAE0B3B",
 				"A0339D1922BFBF291F092514",
 				"B04C746912AEA5B883D80E2D",
-				"2087279E1F7E7AB3935FF22A");
+				"2087279E1F7E7AB3935FF22A",
+				"9AD1356458F382E1C47CE394");
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 			name = "Compile Sources";

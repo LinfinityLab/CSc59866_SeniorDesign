@@ -1,5 +1,5 @@
 // ======================================================================
-// 
+//
 // Copyright (C) 2015 by George Wolberg
 //
 // GLWidget.h - Header file for openGL display.
@@ -40,6 +40,8 @@ public:
 	void	setInTexture(QImage &);
 	void	setOutTexture(QImage &);
 	void	allocateTextureFBO(int w, int h);
+	void  setTemplateTexture(QImage &);
+	void  setCorrOutTexture(QImage &image);
 	void	initShader(QGLShaderProgram &, QString, QString, UniformMap &, int *);
 	void	applyFilterGPU(int);
 	void	setDstImage(int);
@@ -65,6 +67,7 @@ private:
 	GLuint			m_texCoordBuffer;			// handle to texture coordinate buffer
 	GLuint			m_inTexture;				// texture unit for dispalying input
 	GLuint			m_outTexture;				// texture unit for dispalying output
+	GLuint      m_TemplateTexture;
 	GLuint			m_fbo[2];				// handle to frame buffer object
 	GLuint			m_texture_fbo[2];			// texture unit for render to texture
 	QGLShaderProgram	m_program;				// GLSL programs

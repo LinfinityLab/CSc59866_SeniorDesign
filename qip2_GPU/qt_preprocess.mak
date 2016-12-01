@@ -32,7 +32,8 @@ compilers: qrc_qip.cpp moc_MainWindow.cpp moc_qcustomplot.cpp moc_Dummy.cpp\
 	 moc_Threshold.cpp moc_Clip.cpp moc_Quantize.cpp\
 	 moc_Gamma.cpp moc_Contrast.cpp moc_HistoStretch.cpp\
 	 moc_HistoMatch.cpp moc_ErrDiffusion.cpp moc_Blur.cpp\
-	 moc_Sharpen.cpp moc_Median.cpp moc_Convolve.cpp
+	 moc_Sharpen.cpp moc_Median.cpp moc_Convolve.cpp\
+	 moc_Correlation.cpp
 compiler_objective_c_make_all:
 compiler_objective_c_clean:
 compiler_rcc_make_all: qrc_qip.cpp
@@ -57,8 +58,10 @@ qrc_qip.cpp: qip.qrc \
 		hw1/fshader_gamma.glsl \
 		hw2/fshader_myblur.glsl \
 		hw2/fshader_blur2.glsl \
+		hw2/fshader_correlation_Mac.glsl \
 		hw2/fshader_convolve_Mac.glsl \
 		hw2/fshader_sharpen.glsl \
+		hw2/fshader_correlation.glsl \
 		hw2/fshader_convolve.glsl \
 		hw2/fshader_blur1.glsl \
 		hw2/fshader_blur1_Mac.glsl \
@@ -67,9 +70,9 @@ qrc_qip.cpp: qip.qrc \
 		hw2/fshader_blur2_Mac.glsl
 	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/rcc -name qip qip.qrc -o qrc_qip.cpp
 
-compiler_moc_header_make_all: moc_MainWindow.cpp moc_qcustomplot.cpp moc_Dummy.cpp moc_Threshold.cpp moc_Clip.cpp moc_Quantize.cpp moc_Gamma.cpp moc_Contrast.cpp moc_HistoStretch.cpp moc_HistoMatch.cpp moc_ErrDiffusion.cpp moc_Blur.cpp moc_Sharpen.cpp moc_Median.cpp moc_Convolve.cpp
+compiler_moc_header_make_all: moc_MainWindow.cpp moc_qcustomplot.cpp moc_Dummy.cpp moc_Threshold.cpp moc_Clip.cpp moc_Quantize.cpp moc_Gamma.cpp moc_Contrast.cpp moc_HistoStretch.cpp moc_HistoMatch.cpp moc_ErrDiffusion.cpp moc_Blur.cpp moc_Sharpen.cpp moc_Median.cpp moc_Convolve.cpp moc_Correlation.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_MainWindow.cpp moc_qcustomplot.cpp moc_Dummy.cpp moc_Threshold.cpp moc_Clip.cpp moc_Quantize.cpp moc_Gamma.cpp moc_Contrast.cpp moc_HistoStretch.cpp moc_HistoMatch.cpp moc_ErrDiffusion.cpp moc_Blur.cpp moc_Sharpen.cpp moc_Median.cpp moc_Convolve.cpp
+	-$(DEL_FILE) moc_MainWindow.cpp moc_qcustomplot.cpp moc_Dummy.cpp moc_Threshold.cpp moc_Clip.cpp moc_Quantize.cpp moc_Gamma.cpp moc_Contrast.cpp moc_HistoStretch.cpp moc_HistoMatch.cpp moc_ErrDiffusion.cpp moc_Blur.cpp moc_Sharpen.cpp moc_Median.cpp moc_Convolve.cpp moc_Correlation.cpp
 moc_MainWindow.cpp: /Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		IP/mac/header/IP.h \
 		IP/mac/header/IPtoUI.h \
@@ -274,6 +277,17 @@ moc_Convolve.cpp: ImageFilter.h \
 		IP/mac/header/IP.h \
 		Convolve.h
 	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtOpenGL.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Convolve.h -o moc_Convolve.cpp
+
+moc_Correlation.cpp: ImageFilter.h \
+		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
+		GLWidget.h \
+		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtOpenGL.framework/Headers/QGLWidget \
+		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtOpenGL.framework/Headers/QGLFunctions \
+		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtOpenGL.framework/Headers/QtOpenGL \
+		IP/mac/header/IP.h \
+		Correlation.h
+	/Users/Linfinity/Qt5.5.1/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/mkspecs/macx-clang -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU -I/Users/Linfinity/Documents/Spring2016/CSc59866_SeniorDesign/project/qip2_GPU/IP/mac/header -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtPrintSupport.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtOpenGL.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Linfinity/Qt5.5.1/5.5/clang_64/lib Correlation.h -o moc_Correlation.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:

@@ -17,9 +17,9 @@ void main() {
 
   for(int i=-h2; i<=h2; ++i) {
     for(int j=-w2; j<=w2; ++j) {
-      avg += texture2D(u_Sampler, vec2(tc.x + j*u_StepX, tc.y + i*u_StepY));
+      avg += texture2D(u_Sampler, vec2(tc.x + j*u_StepX, tc.y + i*u_StepY)).rgb;
     }
   }
 	avg = avg / (u_Wsize * u_Hsize);
-	gl_FragColor = vec4(avg.rgb, 1.0);
+	gl_FragColor = vec4(avg, 1.0);
 }

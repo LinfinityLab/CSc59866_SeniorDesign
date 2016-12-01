@@ -19,7 +19,7 @@ win32-msvc2015 {
 	CONFIG(release, debug|release) {
 		LIBS += -lIP
 	} else {
-		LIBS += -lIP_d 
+		LIBS += -lIP_d
 	}
 	LIBS 		+= -lopengl32
 	QMAKE_CXXFLAGS  += /MP /Zi
@@ -32,7 +32,7 @@ macx{
 	CONFIG(release, debug|release) {
 		LIBS += -lIP
 	} else {
-		LIBS += -lIP_d 
+		LIBS += -lIP_d
 	}
 }
 
@@ -62,10 +62,11 @@ HEADERS +=	MainWindow.h	\
 		Sharpen.h	\
 		Median.h	\
 		GLWidget.h	\
-		Convolve.h	
+		Convolve.h	\
+		Correlation.h
 
-		
-SOURCES +=	main.cpp	\ 
+
+SOURCES +=	main.cpp	\
 		MainWindow.cpp 	\
 		ImageFilter.cpp	\
 		qcustomplot.cpp	\
@@ -82,4 +83,5 @@ SOURCES +=	main.cpp	\
 		Sharpen.cpp	\
 		Median.cpp	\
 		GLWidget.cpp	\
-		Convolve.cpp	
+		Convolve.cpp	\
+		Correlation.cpp

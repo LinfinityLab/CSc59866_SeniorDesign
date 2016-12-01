@@ -22,9 +22,9 @@ enum { SAMPLER };
 // GLWidget::GLWidget:
 //
 // GLWidget constructor.
-// 
 //
-GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent), 
+//
+GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent),
 				      m_imageFlag(false)
 
 
@@ -44,7 +44,7 @@ void
 GLWidget::initializeGL()
 {
 	// initialize GL function resolution for current context
-	initializeGLFunctions(); 
+	initializeGLFunctions();
 
 	// init vertex and fragment shaders
 	initShaders();
@@ -55,11 +55,13 @@ GLWidget::initializeGL()
 	// initialize vertex buffer and write positions to vertex shader
 	initBuffers();
 
-	// generate input texture name 
+	// generate input texture name
 	glGenTextures(1, &m_inTexture);
 
-	// generate output texture name 
+	// generate output texture name
 	glGenTextures(1, &m_outTexture);
+
+    glGenTextures(1, &m_TemplateTexture);
 
 	// generate frame buffer
 	glGenFramebuffers(1, &m_fbo[PASS1]);
@@ -86,7 +88,7 @@ GLWidget::initializeGL()
 void
 GLWidget::initVertices() {
 
-	// init geometry data 
+	// init geometry data
 	// two triangles that form a quad
 	m_points.push_back(vec2(-1.0f, -1.0f));
 	m_points.push_back(vec2(-1.0f,  1.0f));
@@ -143,7 +145,7 @@ GLWidget::setInTexture(QImage &image)
 	m_imageH = qImage.height();
 
 	// bind texture
-	glActiveTexture(0);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_inTexture);
 
 	// set the texture parameters
@@ -153,7 +155,6 @@ GLWidget::setInTexture(QImage &image)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// upload to GPU
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_imageW, m_imageH, 0, GL_RGBA, GL_UNSIGNED_BYTE, qImage.bits());
-	glBindTexture(GL_TEXTURE_2D, 0);
 	m_imageFlag = true;
 }
 
@@ -173,7 +174,7 @@ GLWidget::setOutTexture(QImage &image) {
 	m_imageH = qImage.height();
 
 	// bind texture
-	glActiveTexture(1);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_outTexture);
 
 	// set the texture parameters
@@ -183,15 +184,16 @@ GLWidget::setOutTexture(QImage &image) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// upload to GPU
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_imageW, m_imageH, 0, GL_RGBA, GL_UNSIGNED_BYTE, qImage.bits());
-	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void
-GLWidget::allocateTextureFBO(int w, int h) 
+GLWidget::allocateTextureFBO(int w, int h)
 {
 
 	// bind texture
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo[PASS1]);
+
+  glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, m_texture_fbo[PASS1]);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -204,6 +206,7 @@ GLWidget::allocateTextureFBO(int w, int h)
 
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo[PASS2]);
+    glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, m_texture_fbo[PASS2]);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -213,13 +216,44 @@ GLWidget::allocateTextureFBO(int w, int h)
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 			       GL_TEXTURE_2D, m_texture_fbo[PASS2], 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
+void
+GLWidget::setTemplateTexture(QImage &image)
+{
+    // convert jpg to GL formatted image
+    QImage qImage = QGLWidget::convertToGLFormat(image);
 
+    // init vars
+    int w = qImage.width ();
+    int h = qImage.height();
 
+    // bind texture
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, m_TemplateTexture);
+
+    // set the texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // upload to GPU
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, qImage.bits());
+		// glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void GLWidget::setCorrOutTexture(QImage &image) {
+    QImage qImage = QGLWidget::convertToGLFormat(image);
+
+    // init vars
+    int w = qImage.width();
+    int h = qImage.height();
+
+    glActiveTexture(GL_TEXTURE3);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, qImage.bits());
+}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // GLWidget::initShader:
 //
@@ -265,13 +299,12 @@ GLWidget::initShader(QGLShaderProgram &program, QString vshaderName, QString fsh
 		// get storage location
 		uniforms[uniformID]=glGetUniformLocation(program.programId(),
 			  uniformName.toStdString().c_str());
-		if(uniforms[uniformID] < 0) {
+		if((int)uniforms[uniformID] < 0) {
 			qDebug() << "Failed to get the storage location of " + uniformName;
+            exit(-1);
 		}
 	}
 }
-
-
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -287,14 +320,14 @@ GLWidget::initShaders()
 
 	// init uniform hash table based on uniform variable names and location IDs
 	uniforms["u_Sampler"] = SAMPLER;
-	
+
         QString v_name = ":/vshader_passthrough";
         QString f_name = ":/fshader_passthrough";
-        
+
 #ifdef __APPLE__
         v_name += "_Mac";
-        f_name += "_Mac"; 
-#endif    
+        f_name += "_Mac";
+#endif
 	// compile shader, bind attribute vars, link shader, and initialize uniform var table
 	initShader(m_program , v_name + ".glsl",  f_name + ".glsl",  uniforms, m_uniform);
 
@@ -310,13 +343,14 @@ GLWidget::initShaders()
 	g_mainWindowP->imageFilter(SHARPEN)->initShader();
 	g_mainWindowP->imageFilter(MEDIAN)->initShader();
 	g_mainWindowP->imageFilter(CONVOLVE)->initShader();
+  g_mainWindowP->imageFilter(CORRELATION)->initShader();
 
 
 }
 
 
 void
-GLWidget::setViewport(int w, int h, int ww, int hh) 
+GLWidget::setViewport(int w, int h, int ww, int hh)
 {
 
 	// compute orthographic projection from viewing coordinates
@@ -373,7 +407,7 @@ GLWidget::resizeGL(int w, int h) {
 // Update GL scene.
 //
 void
-GLWidget::paintGL() 
+GLWidget::paintGL()
 {
 
 	// clear canvas with background color
@@ -397,29 +431,22 @@ GLWidget::paintGL()
 	int selection = g_mainWindowP->gpuFlag()*2+g_mainWindowP->isInput();
 	switch(selection) {
 		case 0: // display out image generated by CPU
-			glBindTexture(GL_TEXTURE_2D, m_outTexture);
-			glUniform1i(m_uniform[SAMPLER], 0); 
+			glUniform1i(m_uniform[SAMPLER], 1);
 			break;
 		case 1:
-		case 3: // display input image 
-			glBindTexture(GL_TEXTURE_2D, m_inTexture);
+		case 3: // display input image
 			glUniform1i(m_uniform[SAMPLER], 0);
 			break;
 		case 2: // display rendered texture by GPU filter
-			int n = g_mainWindowP->gpuPasses();
-			glBindTexture(GL_TEXTURE_2D, m_texture_fbo[n-1]);
-			glUniform1i(m_uniform[SAMPLER], 0); 
+            int n = g_mainWindowP->gpuPasses();
+            if(n == 1) glUniform1i(m_uniform[SAMPLER], 3);
+            else glUniform1i(m_uniform[SAMPLER], 4);
+
 			break;
 	}
-	 
+
 	// draw triangles
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei) m_numPoints);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
-	glDisableVertexAttribArray(ATTRIB_TEXCOORD);
-	glDisableVertexAttribArray(ATTRIB_VERTEX);
-
-
 }
 
 
@@ -432,7 +459,7 @@ GLWidget::paintGL()
 //  Apply selected filter to input image by render to the texture in GPU.
 //
 void
-GLWidget::applyFilterGPU(int nPasses) 
+GLWidget::applyFilterGPU(int nPasses)
 {
 
 	for(int pass=0; pass<nPasses; ++pass) {
@@ -450,48 +477,54 @@ GLWidget::applyFilterGPU(int nPasses)
 		glBindBuffer(GL_ARRAY_BUFFER, m_texCoordBuffer);
 		glEnableVertexAttribArray(ATTRIB_TEXCOORD);
 		glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, false, 0, NULL);
-		if(pass == 0)
-			glBindTexture(GL_TEXTURE_2D, m_inTexture);
-		else
-			glBindTexture(GL_TEXTURE_2D, m_texture_fbo[pass-1]);
-
 
 		g_mainWindowP->gpuProgram(pass);
-
-		// draw triangles
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei) m_numPoints);
 
 	}
+		glUseProgram(0);
 
-	glUseProgram(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+		if(!g_mainWindowP->timeFlag())
+				setDstImage(nPasses-1);
 
-	if(!g_mainWindowP->timeFlag()) 
-		setDstImage(nPasses-1);
-	
-	glDisableVertexAttribArray(ATTRIB_TEXCOORD);
-	glDisableVertexAttribArray(ATTRIB_VERTEX);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+		glDisableVertexAttribArray(ATTRIB_TEXCOORD);
+		glDisableVertexAttribArray(ATTRIB_VERTEX);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
 
 void
-GLWidget::setDstImage(int pass) 
+GLWidget::setDstImage(int pass)
 {
-
 	glViewport(0, 0, m_imageW, m_imageH);
 	ImagePtr I = IP_allocImage(3*m_imageW, m_imageH, BW_TYPE);
 	ChannelPtr<uchar> p = I[0];
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo[pass]);
 	glReadPixels(0, 0, m_imageW, m_imageH, GL_RGB, GL_UNSIGNED_BYTE, &p[0]);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	// uninterleave image
 	ImagePtr ipImage = IP_allocImage(m_imageW, m_imageH, RGB_TYPE);
 	IP_uninterleave(I, ipImage);
-	g_mainWindowP->setImageDst(ipImage);
+
+  // flip over the the image
+  ImagePtr temp;
+  IP_copyImageHeader(ipImage, temp);
+  int type;
+  int total = ipImage->height() * ipImage->width();
+  ChannelPtr<uchar> p1, p2, endd;
+  for(int ch = 0; IP_getChannel(ipImage, ch, p1, type); ch++) {
+      for(int i = 1; i <= ipImage->height(); i++) {
+          IP_getChannel(temp, ch, p2, type);
+          p2 = p2 + total;
+          p2 = p2 - i*ipImage->width();
+          for(int j = 0; j < ipImage->width(); j++) {
+              *p2++ = *p1++;
+          }
+      }
+  }
+
+	g_mainWindowP->setImageDst(temp);
 	glViewport(0, 0, m_winW, m_winH);
-
-
 }

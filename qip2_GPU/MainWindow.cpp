@@ -21,6 +21,7 @@
 #include "Sharpen.h"
 #include "Median.h"
 #include "Convolve.h"
+#include "Correlation.h"
 
 
 using namespace IP;
@@ -58,17 +59,17 @@ MainWindow::MainWindow(QWidget *parent)
 	createActions();	// insert your actions here
 	createMenus  ();	// insert your menus here
 	createWidgets();
-	
+
 #ifdef __APPLE__
 	m_currentDir = qApp->applicationDirPath();
-        QDir dir(m_currentDir); 
+        QDir dir(m_currentDir);
         dir.cdUp();
         dir.cdUp();
         dir.cdUp();
         m_currentDir = dir.path();
         qDebug() << m_currentDir;
-#endif       
-	
+#endif
+
 }
 
 
@@ -154,6 +155,9 @@ MainWindow::createActions()
 	m_actionConvolve->setShortcut(tr("Ctrl+V"));
 	m_actionConvolve->setData(CONVOLVE);
 
+	m_actionCorrelation = new QAction("Correlation", this);
+	m_actionCorrelation->setShortcut(tr("Ctrl+R"));
+	m_actionCorrelation->setData(CORRELATION);
 
 	// one signal-slot connection for all actions;
 	// execute() will resolve which action was triggered
@@ -179,9 +183,9 @@ MainWindow::createMenus()
 	// Point Ops menu
 	m_menuPtOps = menuBar()->addMenu("&Point Ops");
 	m_menuPtOps->addAction(m_actionThreshold   );
-	m_menuPtOps->addAction(m_actionClip	   );
+	m_menuPtOps->addAction(m_actionClip	   		 );
 	m_menuPtOps->addAction(m_actionQuantize    );
-	m_menuPtOps->addAction(m_actionGamma	   );
+	m_menuPtOps->addAction(m_actionGamma	     );
 	m_menuPtOps->addAction(m_actionContrast    );
 	m_menuPtOps->addAction(m_actionHistoStretch);
 	m_menuPtOps->addAction(m_actionHistoMatch  );
@@ -189,11 +193,11 @@ MainWindow::createMenus()
 	// Neighborhood Ops menu
 	m_menuNbrOps = menuBar()->addMenu("&Neighborhood Ops");
 	m_menuNbrOps->addAction(m_actionErrDiffusion);
-	m_menuNbrOps->addAction(m_actionBlur	   );
-	m_menuNbrOps->addAction(m_actionSharpen	   );
-	m_menuNbrOps->addAction(m_actionMedian	   );
-	m_menuNbrOps->addAction(m_actionConvolve   );
-
+	m_menuNbrOps->addAction(m_actionBlur	   		);
+	m_menuNbrOps->addAction(m_actionSharpen	    );
+	m_menuNbrOps->addAction(m_actionMedian	    );
+	m_menuNbrOps->addAction(m_actionConvolve    );
+	m_menuNbrOps->addAction(m_actionCorrelation );
 
 	// disable the following menus until input image is read
 	m_menuPtOps ->setEnabled(false);
@@ -241,39 +245,39 @@ MainWindow::createGroupPanel()
 	m_groupBoxPanels->setMinimumWidth(400);
 
 	// filter's enum indexes into container of image filters
-	m_imageFilter[DUMMY	] = new Dummy;
-	m_imageFilter[THRESHOLD	] = new Threshold;
-	m_imageFilter[CLIP	] = new Clip;
-	m_imageFilter[QUANTIZE	] = new Quantize;
-	m_imageFilter[GAMMA	] = new Gamma;
-	m_imageFilter[CONTRAST	] = new Contrast;
-	m_imageFilter[HISTOSTRETCH]=new HistoStretch;
-	m_imageFilter[HISTOMATCH] = new HistoMatch;
-	m_imageFilter[ERRDIFFUSION]=new ErrDiffusion;
-	m_imageFilter[BLUR	] = new Blur;
-	m_imageFilter[SHARPEN	] = new Sharpen;
-	m_imageFilter[MEDIAN	] = new Median;
-	m_imageFilter[CONVOLVE	] = new Convolve;
-
+	m_imageFilter[DUMMY				] = new Dummy;
+	m_imageFilter[THRESHOLD		] = new Threshold;
+	m_imageFilter[CLIP				] = new Clip;
+	m_imageFilter[QUANTIZE		] = new Quantize;
+	m_imageFilter[GAMMA				] = new Gamma;
+	m_imageFilter[CONTRAST	  ] = new Contrast;
+	m_imageFilter[HISTOSTRETCH] = new HistoStretch;
+	m_imageFilter[HISTOMATCH  ] = new HistoMatch;
+	m_imageFilter[ERRDIFFUSION] = new ErrDiffusion;
+	m_imageFilter[BLUR		 	  ] = new Blur;
+	m_imageFilter[SHARPEN		  ] = new Sharpen;
+	m_imageFilter[MEDIAN		  ] = new Median;
+	m_imageFilter[CONVOLVE	  ] = new Convolve;
+	m_imageFilter[CORRELATION ] = new Correlation;
 
 	// create a stacked widget to hold multiple control panels
 	m_stackWidgetPanels = new QStackedWidget;
 
 	// add filter control panels to stacked widget
-	m_stackWidgetPanels->addWidget(m_imageFilter[DUMMY	 ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[DUMMY	     ]->controlPanel());
 	m_stackWidgetPanels->addWidget(m_imageFilter[THRESHOLD	 ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[CLIP	 ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[QUANTIZE	 ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[GAMMA	 ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[CONTRAST	 ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[CLIP	 			 ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[QUANTIZE	   ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[GAMMA	 		 ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[CONTRAST	   ]->controlPanel());
 	m_stackWidgetPanels->addWidget(m_imageFilter[HISTOSTRETCH]->controlPanel());
 	m_stackWidgetPanels->addWidget(m_imageFilter[HISTOMATCH	 ]->controlPanel());
 	m_stackWidgetPanels->addWidget(m_imageFilter[ERRDIFFUSION]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[BLUR	 ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[SHARPEN	 ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[MEDIAN	 ]->controlPanel());
-	m_stackWidgetPanels->addWidget(m_imageFilter[CONVOLVE	 ]->controlPanel());
-
+	m_stackWidgetPanels->addWidget(m_imageFilter[BLUR	 			 ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[SHARPEN	   ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[MEDIAN	     ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[CONVOLVE	 	 ]->controlPanel());
+	m_stackWidgetPanels->addWidget(m_imageFilter[CORRELATION ]->controlPanel());
 
 	// display blank dummmy panel initially
 	m_stackWidgetPanels->setCurrentIndex(DUMMY);
@@ -708,7 +712,7 @@ void MainWindow::display(int flag)
 	IP_IPtoQImage(I, q);
 	if(flag == 0)
 		m_glw->setInTexture(q);
-	else 
+	else
 		m_glw->setOutTexture(q);
 
 	m_glw->update();
@@ -858,9 +862,9 @@ MainWindow::setHisto(int flag)
 // Slot to use GPU image filter checkbox.
 //
 void
-MainWindow::setGPU(int flag) 
+MainWindow::setGPU(int flag)
 {
-	
+
 	m_checkboxGPU->blockSignals(true);
 	// error checking (no filter selected).
 	if(m_code < 0) {
