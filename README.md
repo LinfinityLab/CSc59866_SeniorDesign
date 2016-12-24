@@ -2,8 +2,8 @@
 *Basic image processing application written in C++ and OpenGL with Qt*
 
 ## Interface
-The application interface is implemented with Qt. 
-Qt is a cross-platform application framework for developing application software. 
+The application interface is implemented with Qt.
+Qt is a cross-platform application framework for developing application software.
 Qt libraries are used in this application to create windows, layouts, menus, buttons, widgets and etc.
 
 ![interface](/screenshots/interface.png)
@@ -48,3 +48,8 @@ generates an executable file called 'qip', then run qip.
 
 ![median input](/screenshots/median_in.png)
 ![median output](/screenshots/median_out.png)
+
+- Correlation
+
+![correlation input](/screenshots/correlation_in.png)
+![correlation output](/screenshots/correlation_out.png)
