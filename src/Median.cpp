@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Median.h"
-// #include "ops_neighborhood/HW_median.cpp"
+#include "ops_neighborhood/HW_median.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, STEPX, STEPY, SAMPLER };
@@ -141,7 +141,7 @@ Median::applyFilter(ImagePtr I1, bool gpuFlag, ImagePtr I2)
 void
 Median::median(ImagePtr I1, int sz, ImagePtr I2)
 {
-	// HW_median(I1, sz, I2);
+	HW_median(I1, sz, I2);
 }
 
 

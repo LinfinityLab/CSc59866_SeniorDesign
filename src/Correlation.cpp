@@ -96,7 +96,6 @@ void Correlation::match() {
 
     int type, x, y, max = 0;
     ChannelPtr<uchar> src_ptr, dst_ptr, temp_ptr, endd;
-    int total = out->width() * out->height();
     IP_getChannel(out, 0, src_ptr, type);
 
     // get max correlation value and find x and y coordinate

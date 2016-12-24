@@ -2,10 +2,7 @@ float correlation(ImagePtr I1, ImagePtr I2, int &xx, int &yy) {
     // init vars to suppress compiler warnings
 	int	  dx = 0;
 	int	  dy = 0;
-	int   lowres = 0;
-	float	mag  = 0;
-	float	corr = 0;
-	double	xsz, ysz;
+	float corr = 0;
 
 	// image dimensions
 	int w = I1->width ();
@@ -51,10 +48,10 @@ float correlation(ImagePtr I1, ImagePtr I2, int &xx, int &yy) {
 
 	// declarations
 	int		  total;
-	float		  sum1, sum2, avg, tmpl_pow;
+	float		  sum1, sum2, tmpl_pow;
 	ChannelPtr<float> image, templ;
 	ImagePtr	  Iblur, Ifft1, Ifft2;
-
+    
 	// multiresolution correlation: use results of lower-res correlation
 	// (at the top of the pyramid) to narrow the search in the higher-res
 	// correlation (towards the base of the pyramid).
@@ -68,7 +65,6 @@ float correlation(ImagePtr I1, ImagePtr I2, int &xx, int &yy) {
 	    ChannelPtr<float> p2 = pyramid2[n][0];	// template ptr
 
 	    // init min and max
-	    float min = 10000000.;
 	    float max = 0.;
 
 		for(int y=y1; y<=y2; y++) {		// visit rows
