@@ -566,13 +566,13 @@ MainWindow::time()
 	clock_t t = clock();
 
 	// run filter one hundred times
-	for(int i = 0; i < 100; ++i)
-		m_imageFilter[m_code]->applyFilter(m_imageSrc, (m_checkboxGPU->checkState() ==  Qt::Checked), m_imageDst);
+	//for(int i = 0; i < 100; ++i)
+	m_imageFilter[m_code]->applyFilter(m_imageSrc, (m_checkboxGPU->checkState() ==  Qt::Checked), m_imageDst);
 	if(m_checkboxGPU->checkState() ==  Qt::Checked)
-		// get the image from the last frame buffer pass
-		m_glw->setDstImage(m_imageFilter[m_code]->gpuPasses()-1);
+	// get the image from the last frame buffer pass
+	m_glw->setDstImage(m_imageFilter[m_code]->gpuPasses()-1);
 	// compute average execution time: divide elapsed time by number of iterations
-	double dt  = (clock() - t) / 100.;
+	double dt  = (clock() - t) / 1.;
 
 	// convert to milliseconds: multiply microseconds by 1000
 	dt *= (1000. / CLOCKS_PER_SEC);
@@ -773,7 +773,7 @@ void MainWindow::displayHistogram(ImagePtr I)
 		}
 
 		// add new graph for histogram channel
-        	m_histogram->addGraph();
+    m_histogram->addGraph();
 
 		// if single channel was selected, it is in channel 0 and should
 		// be drawn in corresponding color (based on m_histoColor).
