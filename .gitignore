@@ -2,10 +2,18 @@ Debug
 Info.plist
 moc*.cpp
 *.build
+*.Debug
+*.Release
+release
 *.pro.user
 *.xcodeproj
 .DS_Store
 *.stash
+xcshareddata/
+project.pbxproj
+project.xcworkspace/
+qt_makeqmake.mak
+qt_preprocess.mak
 
 
 # C++ objects and libs
