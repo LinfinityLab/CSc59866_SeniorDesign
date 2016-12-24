@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Gamma.h"
-#include "hw1/HW_gamma.cpp"
+#include "ops_point/HW_gamma.cpp"
 
 extern MainWindow *g_mainWindowP;
 // uniform ID
@@ -191,7 +191,7 @@ Gamma::initShader()
 	uniforms["u_Sampler"] = SAMPLER;
 
         QString v_name = ":/vshader_passthrough";
-        QString f_name = ":/hw1/fshader_gamma";
+        QString f_name = ":/ops_point/fshader_gamma";
         
 #ifdef __APPLE__
         v_name += "_Mac";

@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Threshold.h"
-#include "hw1/HW_threshold.cpp"
+#include "ops_point/HW_threshold.cpp"
 
 extern MainWindow *g_mainWindowP;
 
@@ -178,7 +178,7 @@ Threshold::initShader()
 	uniforms["u_Sampler"] = SAMPLER;
 	
         QString v_name = ":/vshader_passthrough";
-        QString f_name = ":/hw1/fshader_threshold";
+        QString f_name = ":/ops_point/fshader_threshold";
         
 #ifdef __APPLE__
         v_name += "_Mac";

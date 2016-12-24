@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "ErrDiffusion.h"
-#include "hw2/HW_errDiffusion.cpp"
+#include "ops_neighborhood/HW_errDiffusion.cpp"
 
 extern MainWindow *g_mainWindowP;
 

@@ -4,29 +4,29 @@
 		<file>vshader_passthrough.glsl</file>
 		<file>fshader_passthrough_Mac.glsl</file>
 		<file>vshader_passthrough_Mac.glsl</file>
-		<file>hw1/fshader_threshold.glsl</file>
-		<file>hw1/fshader_threshold_Mac.glsl</file>
-		<file>hw1/fshader_gamma.glsl</file>
-		<file>hw1/fshader_gamma_Mac.glsl</file>
-		<file>hw1/fshader_clip.glsl</file>
-		<file>hw1/fshader_clip_Mac.glsl</file>
-		<file>hw1/fshader_contrast.glsl</file>
-		<file>hw1/fshader_contrast_Mac.glsl</file>
-		<file>hw1/fshader_histoStretch.glsl</file>
-		<file>hw1/fshader_histoStretch_Mac.glsl</file>
-		<file>hw1/fshader_quantize.glsl</file>
-		<file>hw1/fshader_quantize_Mac.glsl</file>
-		<file>hw2/fshader_blur1.glsl</file>
-		<file>hw2/fshader_blur1_Mac.glsl</file>
-		<file>hw2/fshader_blur2.glsl</file>
-		<file>hw2/fshader_blur2_Mac.glsl</file>
-		<file>hw2/fshader_myblur.glsl</file>
-		<file>hw2/fshader_myblur_Mac.glsl</file>
-		<file>hw2/fshader_sharpen.glsl</file>
-		<file>hw2/fshader_sharpen_Mac.glsl</file>
-		<file>hw2/fshader_convolve.glsl</file>
-		<file>hw2/fshader_convolve_Mac.glsl</file>
-		<file>hw2/fshader_correlation.glsl</file>
-		<file>hw2/fshader_correlation_Mac.glsl</file>
+		<file>ops_point/fshader_threshold.glsl</file>
+		<file>ops_point/fshader_threshold_Mac.glsl</file>
+		<file>ops_point/fshader_gamma.glsl</file>
+		<file>ops_point/fshader_gamma_Mac.glsl</file>
+		<file>ops_point/fshader_clip.glsl</file>
+		<file>ops_point/fshader_clip_Mac.glsl</file>
+		<file>ops_point/fshader_contrast.glsl</file>
+		<file>ops_point/fshader_contrast_Mac.glsl</file>
+		<file>ops_point/fshader_histoStretch.glsl</file>
+		<file>ops_point/fshader_histoStretch_Mac.glsl</file>
+		<file>ops_point/fshader_quantize.glsl</file>
+		<file>ops_point/fshader_quantize_Mac.glsl</file>
+		<file>ops_neighborhood/fshader_blur1.glsl</file>
+		<file>ops_neighborhood/fshader_blur1_Mac.glsl</file>
+		<file>ops_neighborhood/fshader_blur2.glsl</file>
+		<file>ops_neighborhood/fshader_blur2_Mac.glsl</file>
+		<file>ops_neighborhood/fshader_myblur.glsl</file>
+		<file>ops_neighborhood/fshader_myblur_Mac.glsl</file>
+		<file>ops_neighborhood/fshader_sharpen.glsl</file>
+		<file>ops_neighborhood/fshader_sharpen_Mac.glsl</file>
+		<file>ops_neighborhood/fshader_convolve.glsl</file>
+		<file>ops_neighborhood/fshader_convolve_Mac.glsl</file>
+		<file>ops_neighborhood/fshader_correlation.glsl</file>
+		<file>ops_neighborhood/fshader_correlation_Mac.glsl</file>
 	</qresource>
 </RCC>

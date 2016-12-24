@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Blur.h"
-#include "hw2/HW_blur.cpp"
+#include "ops_neighborhood/HW_blur.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, HSIZE, STEPX, STEPY, SAMPLER };
@@ -256,7 +256,7 @@ Blur::initShader()
 	UniformMap uniforms;
 
 	QString v_name = ":/vshader_passthrough";
-	QString f_name = ":/hw2/fshader_myblur";
+	QString f_name = ":/ops_neighborhood/fshader_myblur";
 
 	// init uniform hash table based on uniform variable names and location IDs
 	uniforms["u_Wsize"  ] = WSIZE;
@@ -280,7 +280,7 @@ Blur::initShader()
 	uniforms.clear();
 
 	v_name = ":/vshader_passthrough";
-	f_name = ":/hw2/fshader_blur1";
+	f_name = ":/ops_neighborhood/fshader_blur1";
 
 	// init uniform hash table based on uniform variable names and location IDs
 	uniforms["u_Wsize"  ] = WSIZE;
@@ -305,7 +305,7 @@ Blur::initShader()
 	uniforms["u_Sampler"] = SAMPLER;
 
   v_name = ":/vshader_passthrough";
-	f_name = ":/hw2/fshader_blur2";
+	f_name = ":/ops_neighborhood/fshader_blur2";
 
 #ifdef __APPLE__
         v_name += "_Mac";

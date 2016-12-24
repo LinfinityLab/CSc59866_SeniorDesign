@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Sharpen.h"
-#include "hw2/HW_sharpen.cpp"
+#include "ops_neighborhood/HW_sharpen.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, FACTOR, STEPX, STEPY, SAMPLER };
@@ -212,7 +212,7 @@ Sharpen::initShader()
 	uniforms["u_Sampler"] = SAMPLER;
 
         QString v_name = ":/vshader_passthrough";
-        QString f_name = ":/hw2/fshader_sharpen";
+        QString f_name = ":/ops_neighborhood/fshader_sharpen";
 
 #ifdef __APPLE__
         v_name += "_Mac";

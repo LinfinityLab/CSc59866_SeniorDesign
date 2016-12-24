@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "HistoStretch.h"
-#include "hw1/HW_histoStretch.cpp"
+#include "ops_point/HW_histoStretch.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { THR1, THR2, SAMPLER };
@@ -335,7 +335,7 @@ HistoStretch::initShader()
 	uniforms["u_Sampler"] = SAMPLER;
 
         QString v_name = ":/vshader_passthrough";
-        QString f_name = ":/hw1/fshader_histoStretch";
+        QString f_name = ":/ops_point/fshader_histoStretch";
         
 #ifdef __APPLE__
         v_name += "_Mac";

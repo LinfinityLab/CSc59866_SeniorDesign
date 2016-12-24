@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 #include "Correlation.h"
-#include "hw2/HW_correlation.cpp"
+#include "ops_neighborhood/HW_correlation.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE_T, HSIZE_T, STEPX, STEPY, SAMPLER, STEPX_T, STEPY_T, SAMPLER_T };
@@ -226,7 +226,7 @@ Correlation::initShader()
     uniforms["u_Sampler_Temp"] = SAMPLER_T;
 
     QString v_name = ":/vshader_passthrough";
-    QString f_name = ":/hw2/fshader_correlation";
+    QString f_name = ":/ops_neighborhood/fshader_correlation";
 
 #ifdef __APPLE__
     v_name += "_Mac";

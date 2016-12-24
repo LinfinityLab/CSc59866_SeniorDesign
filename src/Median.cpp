@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Median.h"
-// #include "hw2/HW_median.cpp"
+// #include "ops_neighborhood/HW_median.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, STEPX, STEPY, SAMPLER };

@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "HistoMatch.h"
-#include "hw1/HW_histoMatch.cpp"
+#include "ops_point/HW_histoMatch.cpp"
 
 extern MainWindow *g_mainWindowP;
 bool	initLut(ImagePtr, int);

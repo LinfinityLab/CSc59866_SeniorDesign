@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Quantize.h"
-#include "hw1/HW_quantize.cpp"
+#include "ops_point/HW_quantize.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { LEVELS, DITHER, SAMPLER };
@@ -211,7 +211,7 @@ Quantize::initShader()
 	uniforms["u_Sampler"] = SAMPLER;
 
         QString v_name = ":/vshader_passthrough";
-        QString f_name = ":/hw1/fshader_quantize";
+        QString f_name = ":/ops_point/fshader_quantize";
         
 #ifdef __APPLE__
         v_name += "_Mac";

@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Contrast.h"
-#include "hw1/HW_contrast.cpp"
+#include "ops_point/HW_contrast.cpp"
 
 void Contrast::changeBrightnessD(double val) { changeBrightnessI((int) val); }
 void Contrast::changeContrastD  (double val) { changeContrastI  ((int) val); }
@@ -227,7 +227,7 @@ Contrast::initShader()
 	uniforms["u_Sampler"   ] = SAMPLER;
 
         QString v_name = ":/vshader_passthrough";
-        QString f_name = ":/hw1/fshader_contrast";
+        QString f_name = ":/ops_point/fshader_contrast";
         
 #ifdef __APPLE__
         v_name += "_Mac";

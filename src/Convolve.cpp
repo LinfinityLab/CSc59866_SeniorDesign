@@ -9,7 +9,7 @@
 
 #include "MainWindow.h"
 #include "Convolve.h"
-#include "hw2/HW_convolve.cpp"
+#include "ops_neighborhood/HW_convolve.cpp"
 
 extern MainWindow *g_mainWindowP;
 enum { WSIZE, HSIZE, STEPX, STEPY, KERNEL, SAMPLER };
@@ -186,7 +186,7 @@ Convolve::initShader()
     uniforms["u_Sampler"] = SAMPLER;
 
     QString v_name = ":/vshader_passthrough";
-    QString f_name = ":/hw2/fshader_convolve";
+    QString f_name = ":/ops_neighborhood/fshader_convolve";
 
 #ifdef __APPLE__
     v_name += "_Mac";
