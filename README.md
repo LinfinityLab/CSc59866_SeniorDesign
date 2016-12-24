@@ -34,7 +34,17 @@ make
 generates an executable file called 'qip', then run qip.
 
 ## Examples
+- Contrast Enhancement
+
+![contrast input](/screenshots/contrast_in.png)
+![contrast output](/screenshots/contrast_out.png)
+
 - Blur
 
 ![blur input](/screenshots/blur_in.png)
 ![blur output](/screenshots/blur_out.png)
+
+- Median Filter
+
+![median input](/screenshots/median_in.png)
+![median output](/screenshots/median_out.png)
