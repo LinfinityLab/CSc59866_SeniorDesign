@@ -1,5 +1,5 @@
 # Image Processing Application
-*Basic image processing application written in C++ and OpenGL with Qt*
+Basic image processing application written in C++ and OpenGL with Qt on a starter program given by Professor [George Wolberg](http://www-cs.engr.ccny.cuny.edu/~wolberg/)
 
 ## Interface
 The application interface is implemented with Qt.
@@ -26,6 +26,7 @@ Qt libraries are used in this application to create windows, layouts, menus, but
   * [x] Correlation
 
 ## Compile & Run Application
+[Qt](https://www.qt.io/) must be installed.
 ```
 cd src/
 qmake qip.pro
