@@ -6,6 +6,8 @@
 // Written by: Weifan Lin, 2016
 //
 
+#include <QVector>
+
 extern void copyRowToBuffer(ChannelPtr<uchar>, short*, int, int); // see implementation in HW_errDiffusion.cpp
 
 void
@@ -22,30 +24,34 @@ HW_convolve(ImagePtr I1, ImagePtr Ikernel, ImagePtr I2)
     int type;
     ChannelPtr<uchar> p1, p2, endd;
 
-    if (sz == 1) {
+    if (sz == 1)
+    {
         for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
             IP_getChannel(I2, ch, p2, type);
             for(endd = p1 + total; p1<endd;) *p2++ = *p1++;
         }
-    } else if (sz > 1) {
+    }
+    else if (sz > 1) {
 
         ChannelPtr<float> pKernel; // kernel value pointer
         IP_getChannel(Ikernel, 0, pKernel, type);
 
         int bufSz = sz+w-1; // size of buffer for each padded row
-        short* buffers[sz]; // array of sz pointers
-        for (int i=0; i<sz; i++) buffers[i] = new short[bufSz];
+        QVector<QVector<short>> buffers(sz); // array of sz pointers
+        for (int i=0; i<sz; i++)
+            buffers[i] = QVector<short>(bufSz);
 
-        for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++) {
+        for(int ch = 0; IP_getChannel(I1, ch, p1, type); ch++)
+        {
             IP_getChannel(I2, ch, p2, type);
             endd = p1+total;
 
             // copy first row to first sz/2 buffers, where are top padded rows
-            for (int i=0; i<sz/2; i++) copyRowToBuffer(p1, buffers[i], w, sz);
+            for (int i=0; i<sz/2; i++) copyRowToBuffer(p1, buffers[i].data(), w, sz);
 
             // continue to rest of buffers, note here we still begin copying from frist row of I1
             for (int i=sz/2; i<sz; i++) {
-                copyRowToBuffer(p1, buffers[i], w, sz);
+                copyRowToBuffer(p1, buffers[i].data(), w, sz);
                 if (p1 < endd-w) p1+=w;
             }
 
@@ -70,7 +76,7 @@ HW_convolve(ImagePtr I1, ImagePtr Ikernel, ImagePtr I2)
                   }
                 }
                 // copy next row to last buffer
-                copyRowToBuffer(p1, buffers[sz-1], w, sz); // copy new row to the last buffer
+                copyRowToBuffer(p1, buffers[sz-1].data(), w, sz); // copy new row to the last buffer
                 if (p1 < endd-w) p1+=w;
             }
         }

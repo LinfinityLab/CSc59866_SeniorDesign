@@ -9,7 +9,7 @@ uniform	sampler2D u_Sampler;	// uniform variable for the texture image
 
 void main() 
 {
-	vec3 clr = texture2D(u_Sampler, v_TexCoord).rgb;
-	clr = clamp(clr, u_Thr1, u_Thr2);
-	gl_FragColor = vec4(clr, 1.0);
+    vec3 clr = texture2D(u_Sampler, v_TexCoord).rgb;
+    clr = clamp(clr, u_Thr1, u_Thr2);
+    gl_FragColor = vec4(clr, 1.0);
 }

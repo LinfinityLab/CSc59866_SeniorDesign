@@ -11,11 +11,11 @@ Debug:OBJECTS_DIR   = debug/.obj
 Debug:MOC_DIR       = debug/.moc
 
 
-win32-msvc2015 {
+win32{
 	Release:DESTDIR = release
 	Debug:DESTDIR = debug
 	INCLUDEPATH 	+= ./IP/win/header
-	LIBS 		+= -L./IP/win/lib
+        LIBS 		+= -L$$PWD/IP/win/lib
 	CONFIG(release, debug|release) {
 		LIBS += -lIP
 	} else {
