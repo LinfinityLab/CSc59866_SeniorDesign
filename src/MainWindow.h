@@ -44,7 +44,7 @@ class MainWindow : public QMainWindow {
 
 public:
 	// constructor
-	MainWindow	(QWidget *parent = 0);
+    MainWindow	(QWidget *parent = nullptr);
 	ImagePtr	imageSrc	() const;
 	ImagePtr	imageDst	() const;
 	ImagePtr	imageIn		() const;
