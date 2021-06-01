@@ -15,17 +15,18 @@ highp float rand(vec2 co)
     return  fract(sin(sn) * c);
 }
 
-void main() {
+void main()
+{
 
-	highp	float scale = 1.0 / u_Levels;
-	highp	float bias  = scale / 2;
-	vec3	clr = texture2D(u_Sampler, v_TexCoord).rgb;
-	highp	float dither = u_Dither*bias*rand(vec2(gl_FragCoord.x, gl_FragCoord.y))*2.0;
+    highp	float scale = 1.0 / u_Levels;
+    highp	float bias  = scale / 2;
+    vec3	clr = texture2D(u_Sampler, v_TexCoord).rgb;
+    highp	float dither = u_Dither*bias*rand(vec2(gl_FragCoord.x, gl_FragCoord.y))*2.0;
 
-	float r = bias + scale * floor((clr.r+dither)*u_Levels);
-	float g = bias + scale * floor((clr.g+dither)*u_Levels);
-	float b = bias + scale * floor((clr.b+dither)*u_Levels);
+    float r = bias + scale * floor((clr.r+dither)*u_Levels);
+    float g = bias + scale * floor((clr.g+dither)*u_Levels);
+    float b = bias + scale * floor((clr.b+dither)*u_Levels);
 
-	gl_FragColor = vec4(r, g, b, 1.0);
+    gl_FragColor = vec4(r, g, b, 1.0);
 
 }

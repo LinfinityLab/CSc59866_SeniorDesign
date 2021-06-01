@@ -22,7 +22,7 @@ enum { PASS1, PASS2, ONEPASS };
 class ImageFilter : public QWidget, protected QGLFunctions {
 
 public:
-	ImageFilter(QWidget *parent = 0);
+    ImageFilter(QWidget *parent = nullptr);
 	virtual QGroupBox* controlPanel	();			    // create control panel
 	virtual bool	   applyFilter	(ImagePtr, bool, ImagePtr); // filter input image -> make output
 	virtual void	   reset	();			    // reset parameters
